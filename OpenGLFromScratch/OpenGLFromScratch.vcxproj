@@ -152,10 +152,10 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Display.cpp" />
     <ClCompile Include="Drawable.cpp" />
-    <ClCompile Include="Keyboard.cpp" />
+    <ClCompile Include="InputEventHandler.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="obj_loader.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="stb_image.c" />
@@ -166,10 +166,12 @@
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Display.h" />
     <ClInclude Include="Drawable.h" />
-    <ClInclude Include="Keyboard.h" />
+    <ClInclude Include="InputEventHandler.h" />
+    <ClInclude Include="KeyboardListener.h" />
     <ClInclude Include="main.h" />
-    <ClInclude Include="Mouse.h" />
+    <ClInclude Include="MouseListener.h" />
     <ClInclude Include="obj_loader.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="stb_image.h" />

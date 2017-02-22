@@ -1,5 +1,7 @@
 #include <iostream>
 #include <GL/glew.h>
+#include <windows.h>
+#include <SDL_syswm.h>
 
 #include "Display.h"
 #include "main.h"
@@ -31,7 +33,10 @@ Display::Display(int width, int height, const std::string& title) {
 	//Enable double buffering.
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 
-	m_window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_OPENGL);
+	m_window = SDL_CreateWindow(title.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
+
+    SDL_SetWindowMinimumSize(m_window, 800, 600);
+    SDL_SetWindowMaximumSize(m_window, 2560, 1600);
 
 	//Create the GL context.
 	m_glContext = SDL_GL_CreateContext(m_window);
@@ -51,6 +56,61 @@ Display::Display(int width, int height, const std::string& title) {
 
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
+
+    SetMouseClip(true);
+}
+
+//@Refactor. Move this so that the 'main controller' chooses when to clip and not clip the mouse.
+void Display::NotifyKeyEvent(SDL_Event e) {
+    if (e.type == SDL_KEYDOWN) {
+        switch (e.key.keysym.sym) {
+        case SDLK_ESCAPE:
+            if (m_mouseIsClipped) {
+                SetMouseClip(false);
+            }
+            else {
+                SetMouseClip(true);
+                //GLOBAL_shouldClose = true;
+            }
+            break;
+        }
+    }
+}
+
+//@Robustness, this may have to be re-called every time the window is resized.
+void Display::SetMouseClip(bool clip) {
+    m_mouseIsClipped = clip;
+    if (!clip) {
+        ClipCursor(nullptr);
+    }
+    else {
+        SDL_SysWMinfo wmInfo;
+        SDL_VERSION(&wmInfo.version);
+        SDL_GetWindowWMInfo(m_window, &wmInfo);
+        HWND hwnd = wmInfo.info.win.window;
+
+        RECT rect;
+        GetClientRect(hwnd, &rect);
+
+        POINT ul;
+        ul.x = rect.left;
+        ul.y = rect.top;
+
+        POINT lr;
+        lr.x = rect.right;
+        lr.y = rect.bottom;
+
+        MapWindowPoints(hwnd, nullptr, &ul, 1);
+        MapWindowPoints(hwnd, nullptr, &lr, 1);
+
+        rect.left = ul.x;
+        rect.top = ul.y;
+
+        rect.right = lr.x;
+        rect.bottom = lr.y;
+
+        ClipCursor(&rect);
+    }
 }
 
 void Display::Clear(float r, float g, float b, float a) {

@@ -2,7 +2,9 @@
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp> 
 
-class Camera
+#include "MouseListener.h"
+
+class Camera : public MouseListener
 {
 	public:
 		Camera(const glm::vec3& pos, glm::vec3 look_direction, glm::vec3 up_direction, float fov, float aspect, float z_near, float z_far);
@@ -20,6 +22,8 @@ class Camera
 		void SetAspectRatio(float aspect);
 		void SetZNear(float z_near);
 		void SetZFar(float z_far);
+
+        void NotifyMouseEvent(SDL_Event e);
 
 
 	private:

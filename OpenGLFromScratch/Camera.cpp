@@ -1,4 +1,5 @@
 #include "Camera.h"
+#include <iostream>
 
 Camera::Camera(const glm::vec3& pos, glm::vec3 look_direction, glm::vec3 up_direction, float fov, float aspect, float z_near, float z_far)
 {
@@ -23,6 +24,31 @@ glm::vec3 Camera::GetPosition() {
     return m_position;
 }
 
+
+
+void Camera::NotifyMouseEvent(SDL_Event e) {
+    using std::cout;
+    using std::endl;
+    switch (e.type) {
+    case SDL_MOUSEMOTION:
+        //cout << "{Camera}: Mouse Moved: (" << e.motion.x << ", " << e.motion.y << ")" << endl;
+        break;
+    case SDL_MOUSEWHEEL:
+        //cout << "{Camera}: Mouse wheel: " << e.wheel.direction << endl;
+        break;
+    case SDL_MOUSEBUTTONDOWN:
+        //cout << "{Camera}: Mosue clicked: " << e.button.button << endl;
+        break;
+    case SDL_MOUSEBUTTONUP:
+        //Empty
+        break;
+    default:
+        cout << "{Camera}: Unknown mouse event: " << e.type << endl;
+    }
+}
+
+
+
 void Camera::SetPosition(glm::vec3 pos) {
 	m_position = pos;
 }
@@ -34,7 +60,6 @@ void Camera::SetLookDirection(glm::vec3 look_direction) {
 void Camera::SetUpDirection(glm::vec3 up_direction) {
 	m_up = up_direction;
 }
-
 
 void Camera::UpdatePerspective() {
 	m_perspective = glm::perspective(m_fov, m_aspect, m_zNear, m_zFar);

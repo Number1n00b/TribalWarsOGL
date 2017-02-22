@@ -1,25 +1,21 @@
 /*
 TODO LIST:
-DECIDE ON MY PERSONAL NAMING CONVENTION! Full CamelCase ? Alternating camelCase ? under_scores ?
+NAMING CONVENTION:
+Classes and Functions: FULL CamelCase
+Variables/Parameters: under_scores
+Class Member Variables: m_VariableName
 
 1) User input.
     - Camera movement:
         Learn how 'look at' and 'up' correlate. Seems that those two vector must be perpendicular at all times. Learn how to update this.
     - Object movement:
-        Eventually I want a Player class to own a Drawable class, so that when a key input is detected, the player class can decide
-        how to handle it, moving the player as necessary. (Player movement done simply by changing the transform, not velocity (???))
-    - Input abstraction:
-        I should also make the Keyboard and Camera files into classes, so that they can have different event listeners and when an event occurs,
-        all of the event listeners attached to those objects can be notified, and use that event as they want.
+        Enable object movement.
 
 3) Main game loop.
     I want to update this so that it runs on a timer, being independant of CPU/GPU speeds.
     I want physics engine to run at 120 hz and framerate to be uncapped. (with max 120 i guess).
 
-4) General code cleanup / walkthrough.
-    - Add tags for future improvements (@Robustness @Hardcoded @Cleanup @TODO)
-    - Look for inefficiencies that can be improved (memory and timewise)
-    - Make sure I understand everything, rewrite what is not mine, or use free libaries (obj_loader and stb_image).
+4) Rewrite what is not mine, or use free libaries (obj_loader and stb_image).
 
 6) Find a way to initialise GLEW outside of Display.cpp so that if it fails we can close the program. (Do memory management too, deleting context etc).
 
@@ -27,12 +23,17 @@ DECIDE ON MY PERSONAL NAMING CONVENTION! Full CamelCase ? Alternating camelCase 
 
 8) Find out how to draw UI elements. (Possible use a different shader).
 
+9) Restructure main into an app class with all the variables required, use main to initialise and start the app class.
+
+11) Make 'escape' toggle a pause menu, during the pause menu the mouse is NOT clipped to the screen. else it is.
+
 NOTES:
 To make the camera track an object, simply set its lookDirection to object.pos - cam.pos
 */
 
 //Standard libs.
 #include <iostream>
+
 
 //Graphics libs.
 #include <GL/glew.h>
@@ -51,11 +52,10 @@ bool GLOBAL_shouldClose = false;
 #include "Transform.h"
 #include "Camera.h"
 #include "Drawable.h"
+#include "Player.h"
 
 //Input
-#include "Keyboard.h"
-#include "Mouse.h"
-
+#include "InputEventHandler.h"
 
 using std::cin;
 using std::cout;
@@ -71,6 +71,8 @@ int main(int argc, char *argv[]) {
 
 	//Craete the window and context.
 	Display window(WINDOW_WIDTH, WINDOW_HEIGHT, "Main window.");
+
+    InputEventHandler eventHandler = InputEventHandler();
 
     //Create the main camera.
     Camera mainCamera(glm::vec3(0, 5, 0), glm::vec3(0, -1, 0), glm::vec3(0, 0, 1), 70.0f, window.GetAspectRatio(), 0.01f, 1000.0f);
@@ -92,7 +94,7 @@ int main(int argc, char *argv[]) {
     origin_transform.SetScale(glm::vec3(0.5f, 0.5f, 0.5f));
 
     //Create our drawable game objects.
-    Drawable monkeyOneDrawable("Monkey Number One", &shader, &piranahs, &monkeyMesh);
+    Player monkeyOneDrawable("Monkey Number One", &shader, &piranahs, &monkeyMesh, &eventHandler);
     Drawable monkey_origin("Monkey Number Two", &shader, &bricks, &monkeyMesh, origin_transform);
     worldObjects.push_back(&monkeyOneDrawable);
     worldObjects.push_back(&monkey_origin);
@@ -103,45 +105,20 @@ int main(int argc, char *argv[]) {
 	float sinCounter;
 	float cosCounter;
 
+    //Register global event listeners.
+    eventHandler.RegisterMouseListener(&mainCamera);
+    eventHandler.RegisterKeyboardListener(&window);
+
 	//The main loop!
 	cout << "\nEntering main loop." << endl;
 	while (!GLOBAL_shouldClose) {
+        //Handle events first.
+        eventHandler.HandleSDLEvents();
+
         //A random counter to make things change!
         counter += 0.02f;
         sinCounter = sinf(counter);
         cosCounter = cosf(counter);
-
-        //Handle events. @Incomplete @Refactor into other classes later.
-        SDL_Event e;
-        while (SDL_PollEvent(&e)) {
-            if (e.type == SDL_QUIT) {
-                GLOBAL_shouldClose = true;
-            }
-            else if (e.type == SDL_KEYDOWN) {
-                //HandleKeyboardEvent(e);
-                SDL_Keycode keyCode = e.key.keysym.sym;
-                cout << "Button Pressed: " << SDL_GetKeyName(e.key.keysym.sym) << endl;
-
-                switch (keyCode) {
-                    case SDLK_ESCAPE:
-                        GLOBAL_shouldClose = true;
-                        break;
-                    case SDLK_SPACE:
-                        mainCamera.SetLookDirection(monkeyOneDrawable.GetTransform().GetPos() - mainCamera.GetPosition());
-                        break;
-                    case SDLK_RETURN:
-                        mainCamera.SetLookDirection(glm::vec3(0, -1, 0));
-                        break;
-                }
-
-                if (keyCode == SDLK_ESCAPE) {
-                    GLOBAL_shouldClose = true;
-                }
-            }
-            else if (e.type == SDL_MOUSEMOTION) {
-                HandleMouseEvent(e);
-            }
-        }
 
         //Do physics updates
         //Make the transform change based on the counter.
@@ -159,7 +136,7 @@ int main(int argc, char *argv[]) {
 	SDL_Quit();
 
 	cout << "====== Ending Program... ======" << endl;
-	cin.get();
+	//cin.get();
 	return 0;
 }
 

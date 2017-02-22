@@ -30,7 +30,7 @@ class Drawable
 
         static void SetCamera(Camera* cam);
 
-    private:
+    protected:
         //Flag to ensure camera is always set.
         static bool camera_set;
 
