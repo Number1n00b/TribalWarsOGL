@@ -1,7 +1,5 @@
 #include "Camera.h"
 
-
-
 Camera::Camera(const glm::vec3& pos, glm::vec3 look_direction, glm::vec3 up_direction, float fov, float aspect, float z_near, float z_far)
 {
 	m_perspective = glm::perspective(fov, aspect, z_near, z_far);

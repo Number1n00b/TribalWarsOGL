@@ -1,3 +1,4 @@
 #pragma once
+#include <SDL.h>
 
-void HandleSDLEvents();
+void HandleKeyboardEvent(SDL_Event e);
