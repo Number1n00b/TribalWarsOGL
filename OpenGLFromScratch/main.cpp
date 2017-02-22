@@ -23,7 +23,7 @@ Class Member Variables: m_VariableName
 
 8) Find out how to draw UI elements. (Possible use a different shader).
 
-9) Restructure main into an app class with all the variables required, use main to initialise and start the app class.
+9) Restructure main into an app class with all the variables required, use main to initialise and start the app class. 132
 
 11) Make 'escape' toggle a pause menu, during the pause menu the mouse is NOT clipped to the screen. else it is.
 
