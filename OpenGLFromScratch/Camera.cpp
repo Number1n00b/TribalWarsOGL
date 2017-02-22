@@ -1,0 +1,64 @@
+#include "Camera.h"
+
+
+
+Camera::Camera(const glm::vec3& pos, glm::vec3 look_direction, glm::vec3 up_direction, float fov, float aspect, float z_near, float z_far)
+{
+	m_perspective = glm::perspective(fov, aspect, z_near, z_far);
+
+	m_position = pos;
+
+	m_forward = look_direction;
+	m_up = up_direction;
+
+	m_fov = fov;
+	m_aspect = aspect;
+	m_zNear = z_near;
+	m_zFar = z_far;
+}
+
+glm::mat4 Camera::GetViewProjection() const{
+	return  m_perspective * glm::lookAt(m_position, m_position + m_forward, m_up);
+}
+
+glm::vec3 Camera::GetPosition() {
+    return m_position;
+}
+
+void Camera::SetPosition(glm::vec3 pos) {
+	m_position = pos;
+}
+
+void Camera::SetLookDirection(glm::vec3 look_direction) {
+	m_forward = look_direction;
+}
+
+void Camera::SetUpDirection(glm::vec3 up_direction) {
+	m_up = up_direction;
+}
+
+
+void Camera::UpdatePerspective() {
+	m_perspective = glm::perspective(m_fov, m_aspect, m_zNear, m_zFar);
+}
+
+void Camera::SetFOV(float fov) {
+	m_fov = fov;
+	UpdatePerspective();
+}
+
+void Camera::SetAspectRatio(float aspect) {
+	m_aspect = aspect;
+	UpdatePerspective();
+}
+
+void Camera::SetZNear(float z_near) {
+	m_zNear = z_near;
+	UpdatePerspective();
+}
+
+void Camera::SetZFar(float z_far) {
+	m_zFar = z_far;
+	UpdatePerspective();
+}
+
