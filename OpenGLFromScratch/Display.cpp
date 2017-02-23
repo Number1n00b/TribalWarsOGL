@@ -41,7 +41,6 @@ Display::Display(int width, int height, const std::string& title) {
 	//Create the GL context.
 	m_glContext = SDL_GL_CreateContext(m_window);
 
-
 	//Initialise GLEW.
 	std::cout << "Initialising GLEW..." << std::endl;
 	GLenum status = glewInit();
@@ -57,7 +56,7 @@ Display::Display(int width, int height, const std::string& title) {
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 
-    SetMouseClip(true);
+    SetMouseClip(false);
 }
 
 //@Refactor. Move this so that the 'main controller' chooses when to clip and not clip the mouse.

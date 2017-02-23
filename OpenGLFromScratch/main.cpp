@@ -23,6 +23,8 @@ Class Member Variables:
 
 11) Make 'escape' toggle a pause menu, during the pause menu the mouse is NOT clipped to the screen. else it is.
 
+12) Idk man... make the UI work with text. FreeType not working FeelsBadMan
+
 NOTES:
 To make the camera track an object, simply set its lookDirection to object.pos - cam.pos
 */
@@ -33,6 +35,7 @@ To make the camera track an object, simply set its lookDirection to object.pos -
 #pragma comment(lib, "glew32.lib")
 #pragma comment(lib, "SDL2.lib")
 #pragma comment(lib, "SDL2main.lib")
+//#pragma comment(lib, "freetype.lib")
 
 //Standard libs.
 #include <iostream>
@@ -57,6 +60,7 @@ bool GLOBAL_shouldClose = false;
 #include "Camera.h"
 #include "Drawable.h"
 #include "Player.h"
+//#include "UI.h"
 
 //Input
 #include "InputEventHandler.h"
@@ -83,6 +87,9 @@ int main(int argc, char *argv[]) {
 
     //Create the main camera.
     Camera mainCamera(glm::vec3(0, 5, 0), glm::vec3(0, -1, 0), glm::vec3(0, 0, 1), 70.0f, window.GetAspectRatio(), 0.01f, 1000.0f);
+
+    //Initialise the UI
+    //UI main_ui = UI();
 
     //Set the camera for our drawable class as the main camera.
     Drawable::SetCamera(&mainCamera);
@@ -151,7 +158,15 @@ int main(int argc, char *argv[]) {
             //Render
             Draw(window);
 
-            cout << "FPS: " << (double)(1000.0 / time_since_last_frame) << endl;
+            /*float sx = 2.0 / WINDOW_HEIGHT;
+            float sy = 2.0 / WINDOW_WIDTH;
+
+            main_ui.render_text("The Quick Brown Fox Jumps Over The Lazy Dog",
+                -1 + 8 * sx, 1 - 50 * sy, sx, sy);
+            main_ui.render_text("The Misaligned Fox Jumps Over The Lazy Dog",
+                -1 + 8.5 * sx, 1 - 100.5 * sy, sx, sy);*/
+
+            //cout << "FPS: " << (double)(1000.0 / time_since_last_frame) << endl;
 
             time_since_last_frame = 0.0;
         }

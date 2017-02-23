@@ -20,6 +20,6 @@ void main(){
     gl_Position = transform * vec4(position.x, position.y, position.z, translation_factor);
 
     //Set the texture coordinate.
-    texCoord0 = vec2(texCoord.x, -texCoord.y);
+    texCoord0 = vec2(texCoord.x, texCoord.y);
     normal0 = (transform * vec4(normal, 0.0)).xyz;
 }
