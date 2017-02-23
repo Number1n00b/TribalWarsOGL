@@ -13,10 +13,6 @@ Class Member Variables:
     - Object movement:
         Enable object movement.
 
-3) Main game loop.
-    I want to update this so that it runs on a timer, being independant of CPU/GPU speeds.
-    I want physics engine to run at 120 hz and framerate to be uncapped. (with max 120 i guess).
-
 4) Rewrite what is not mine, or use free libaries (obj_loader and stb_image).
 
 6) Find a way to initialise GLEW outside of Display.cpp so that if it fails we can close the program. (Do memory management too, deleting context etc).
@@ -40,6 +36,8 @@ To make the camera track an object, simply set its lookDirection to object.pos -
 
 //Standard libs.
 #include <iostream>
+#include <time.h>
+#include <windows.h>
 
 //Graphics libs.
 #include <GL/glew.h>
@@ -67,8 +65,11 @@ using std::cin;
 using std::cout;
 using std::endl;
 
-#define WINDOW_WIDTH 1080
-#define WINDOW_HEIGHT 800
+const int WINDOW_WIDTH = 1080;
+const int WINDOW_HEIGHT = 800;
+
+const int TARGET_FPS = 60;
+const double ms_per_frame = 1000.0 / TARGET_FPS;
 
 std::vector<Drawable*> worldObjects;
 
@@ -117,21 +118,43 @@ int main(int argc, char *argv[]) {
 
 	//The main loop!
 	cout << "\nEntering main loop." << endl;
+
+    double curr_time = 0;
+    double prev_time = timeGetTime();
+    double dt = 0;
+
+    double time_since_last_frame = 0;
+
 	while (!GLOBAL_shouldClose) {
         //Handle events first.
         eventHandler.HandleSDLEvents();
 
-        //A random counter to make things change!
-        counter += 0.02f;
-        sinCounter = sinf(counter);
-        cosCounter = cosf(counter);
+        curr_time = timeGetTime();
 
-        //Do physics updates
-        //Make the transform change based on the counter.
-        monkeyOneDrawable.GetTransform().SetPos(glm::vec3(2, 0, sinCounter));
+        //dt here is time per loop
+        dt = curr_time - prev_time;
+        prev_time = curr_time;
 
-        //Do the drawing
-        Draw(window);
+        time_since_last_frame += dt;
+
+        //Cap FPS and render only when needed.
+        if (time_since_last_frame >= ms_per_frame) {
+            //Do physics updates
+            //A random counter to make things change!
+            counter += 0.02f;
+            sinCounter = sinf(counter);
+            cosCounter = cosf(counter);
+
+            //Make the transform change based on the counter.
+            monkeyOneDrawable.GetTransform().SetPos(glm::vec3(2, 0, sinCounter));
+
+            //Render
+            Draw(window);
+
+            cout << "FPS: " << (double)(1000.0 / time_since_last_frame) << endl;
+
+            time_since_last_frame = 0.0;
+        }
 	}
 
 	cout << "End of main loop." << endl;
@@ -142,7 +165,7 @@ int main(int argc, char *argv[]) {
 	SDL_Quit();
 
 	cout << "====== Ending Program... ======" << endl;
-	//cin.get();
+	cin.get();
 	return 0;
 }
 
