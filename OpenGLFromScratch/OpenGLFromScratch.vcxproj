@@ -182,6 +182,22 @@
   <ItemGroup>
     <ResourceCompile Include="OpenGLFromScratch.rc" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="res\basicShader.f.glsl" />
+    <None Include="res\basicShader.v.glsl" />
+    <None Include="res\Niko.mtl" />
+    <None Include="res\testBoxNoUV.mtl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="res\bricks.jpg" />
+    <Image Include="res\download.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Object Include="res\monkey3.obj" />
+    <Object Include="res\monkeyNoUV.obj" />
+    <Object Include="res\Niko.obj" />
+    <Object Include="res\testBoxNoUV.obj" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
