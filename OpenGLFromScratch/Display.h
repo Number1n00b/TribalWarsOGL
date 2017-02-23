@@ -10,6 +10,7 @@ class Display : public KeyboardListener{
 		virtual ~Display();
 
 		void Clear(float r, float g, float b, float a);
+
 		void Update();
 
 		float GetAspectRatio();

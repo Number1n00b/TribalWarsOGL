@@ -16,8 +16,15 @@ class Camera : public MouseListener
 
 		//Mutators
 		void SetPosition(glm::vec3 pos);
+        void SetPosition(float x, float y, float z);
+
 		void SetLookDirection(glm::vec3 look_direction);
-		void SetUpDirection(glm::vec3 up_direction);
+        void SetLookDirection(float x, float y, float z);
+
+        void SetUpDirection(glm::vec3 up_direction);
+        void SetUpDirection(float x, float y, float z);
+
+
 		void SetFOV(float fov);
 		void SetAspectRatio(float aspect);
 		void SetZNear(float z_near);

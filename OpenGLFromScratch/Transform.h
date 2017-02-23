@@ -36,8 +36,13 @@ class Transform
 		inline glm::vec3& GetScale() { return m_scale; }
 
 		inline void SetPos(glm::vec3 pos) { m_pos = pos; }
+        inline void SetPos(float x, float y, float z) { m_pos = glm::vec3(x, y, z); }
+
 		inline void SetRotation(glm::vec3 rotation) { m_rotation = rotation; }
+        inline void SetRotation(float x, float y, float z) { m_rotation = glm::vec3(x, y, z); }
+
 		inline void SetScale(glm::vec3 scale) { m_scale = scale; }
+        inline void SetScale(float x, float y, float z) { m_scale = glm::vec3(x, y, z); }
 
 	private:
 		glm::vec3 m_pos;

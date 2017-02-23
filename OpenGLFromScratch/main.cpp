@@ -3,7 +3,9 @@ TODO LIST:
 NAMING CONVENTION:
 Classes and Functions: FULL CamelCase
 Variables/Parameters: under_scores
-Class Member Variables: m_VariableName
+Class Member Variables:
+                    private: m_VariableName
+                    public: variableName
 
 1) User input.
     - Camera movement:
@@ -19,11 +21,9 @@ Class Member Variables: m_VariableName
 
 6) Find a way to initialise GLEW outside of Display.cpp so that if it fails we can close the program. (Do memory management too, deleting context etc).
 
-7) Where possible: overload functions that take a single glm::vec3 to also be able to take 3 floats. (for convineince)
-
 8) Find out how to draw UI elements. (Possible use a different shader).
 
-9) Restructure main into an app class with all the variables required, use main to initialise and start the app class. 132
+9) Restructure main into an app class with all the variables required, use main to initialise and start the app class. 
 
 11) Make 'escape' toggle a pause menu, during the pause menu the mouse is NOT clipped to the screen. else it is.
 
@@ -31,9 +31,15 @@ NOTES:
 To make the camera track an object, simply set its lookDirection to object.pos - cam.pos
 */
 
+#pragma comment(lib, "winmm.lib")
+#pragma comment(lib, "opengl32.lib")
+#pragma comment(lib, "glu32.lib")
+#pragma comment(lib, "glew32.lib")
+#pragma comment(lib, "SDL2.lib")
+#pragma comment(lib, "SDL2main.lib")
+
 //Standard libs.
 #include <iostream>
-
 
 //Graphics libs.
 #include <GL/glew.h>

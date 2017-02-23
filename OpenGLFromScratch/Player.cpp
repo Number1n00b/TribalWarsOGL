@@ -15,7 +15,7 @@ Player::Player(std::string name, Shader *shader, Texture *texture, Mesh *mesh, I
 void Player::NotifyKeyEvent(SDL_Event e) {
     switch (e.type) {
         case SDL_KEYDOWN:
-            //std::cout << "{Player: " << name << "} Button pressed: " << SDL_GetKeyName(e.key.keysym.sym) << std::endl;
+            std::cout << "{Player: " << name << "} Button pressed: " << SDL_GetKeyName(e.key.keysym.sym) << std::endl;
             break;
     }
 }

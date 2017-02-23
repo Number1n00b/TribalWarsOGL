@@ -31,13 +31,13 @@ void Camera::NotifyMouseEvent(SDL_Event e) {
     using std::endl;
     switch (e.type) {
     case SDL_MOUSEMOTION:
-        //cout << "{Camera}: Mouse Moved: (" << e.motion.x << ", " << e.motion.y << ")" << endl;
+        cout << "{Camera}: Mouse Moved: (" << e.motion.x << ", " << e.motion.y << ")" << endl;
         break;
     case SDL_MOUSEWHEEL:
-        //cout << "{Camera}: Mouse wheel: " << e.wheel.direction << endl;
+        cout << "{Camera}: Mouse wheel: " << e.wheel.direction << endl;
         break;
     case SDL_MOUSEBUTTONDOWN:
-        //cout << "{Camera}: Mosue clicked: " << e.button.button << endl;
+        cout << "{Camera}: Mosue clicked: " << e.button.button << endl;
         break;
     case SDL_MOUSEBUTTONUP:
         //Empty
@@ -53,13 +53,27 @@ void Camera::SetPosition(glm::vec3 pos) {
 	m_position = pos;
 }
 
+void Camera::SetPosition(float x, float y, float z) {
+    m_position = glm::vec3(x, y, z);
+}
+
+
 void Camera::SetLookDirection(glm::vec3 look_direction) {
 	m_forward = look_direction;
+}
+
+void Camera::SetLookDirection(float x, float y, float z) {
+    m_forward = glm::vec3(x, y, z);
 }
 
 void Camera::SetUpDirection(glm::vec3 up_direction) {
 	m_up = up_direction;
 }
+
+void Camera::SetUpDirection(float x, float y, float z) {
+    m_up = glm::vec3(x, y, z);
+}
+
 
 void Camera::UpdatePerspective() {
 	m_perspective = glm::perspective(m_fov, m_aspect, m_zNear, m_zFar);
