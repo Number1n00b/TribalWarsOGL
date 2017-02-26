@@ -39,7 +39,9 @@ void Drawable::Draw() {
     }
 }
 
-
+void Drawable::Update() {
+    //Empty.
+}
 
 Drawable::~Drawable() {
     //Empty

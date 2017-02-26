@@ -122,7 +122,7 @@ float Display::GetAspectRatio() {
 	return (float)m_width / (float)m_height;
 }
 
-void Display::Update() {
+void Display::SwapBuffers() {
 	SDL_GL_SwapWindow(m_window);
 }
 

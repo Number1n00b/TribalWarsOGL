@@ -16,6 +16,11 @@ class Drawable
 
         virtual void Draw();
 
+        //@Cleanup ? Maybe I should @Refactor this into a PhysicsObject class.
+        //Called every frame.
+        virtual void Update();
+        //Rectangle GetBounds(); @Incomplete
+
 	    virtual ~Drawable();
 
         //The name of the object, means nothing but is useful for debugging.
@@ -34,7 +39,7 @@ class Drawable
         //Flag to ensure camera is always set.
         static bool camera_set;
 
-        //Orientation in worldspace.
+        //Position and orientation in worldspace.
         Transform m_transform;
 
         //The shader to use when drawing this object.

@@ -10,8 +10,6 @@ Class Member Variables:
 1) User input.
     - Camera movement:
         Learn how 'look at' and 'up' correlate. Seems that those two vector must be perpendicular at all times. Learn how to update this.
-    - Object movement:
-        Enable object movement.
 
 4) Rewrite what is not mine, or use free libaries (obj_loader and stb_image).
 
@@ -35,7 +33,6 @@ To make the camera track an object, simply set its lookDirection to object.pos -
 #pragma comment(lib, "glew32.lib")
 #pragma comment(lib, "SDL2.lib")
 #pragma comment(lib, "SDL2main.lib")
-//#pragma comment(lib, "freetype.lib")
 
 //Standard libs.
 #include <iostream>
@@ -60,7 +57,7 @@ bool GLOBAL_shouldClose = false;
 #include "Camera.h"
 #include "Drawable.h"
 #include "Player.h"
-//#include "UI.h"
+#include "UI.h"
 
 //Input
 #include "InputEventHandler.h"
@@ -99,7 +96,7 @@ int main(int argc, char *argv[]) {
 
     //Load our tectures.
     Texture piranahs("./res/download.jpg");
-    Texture bricks("./res/bricks.jpg");
+    Texture bricks("./res/download.jpg");
 
     //Load the game object meshes.
 	Mesh monkeyMesh("./res/monkey3.obj");
@@ -108,12 +105,10 @@ int main(int argc, char *argv[]) {
     origin_transform.SetScale(glm::vec3(0.5f, 0.5f, 0.5f));
 
     //Create our drawable game objects.
-    Player monkeyOneDrawable("Monkey Number One", &shader, &piranahs, &monkeyMesh, &eventHandler);
-    Drawable monkey_origin("Monkey Number Two", &shader, &bricks, &monkeyMesh, origin_transform);
+    Drawable monkeyOneDrawable("Monkey Number One", &shader, &piranahs, &monkeyMesh);
+    Player monkey_origin("Monkey Number Two", &shader, &bricks, &monkeyMesh, &eventHandler, origin_transform);
     worldObjects.push_back(&monkeyOneDrawable);
     worldObjects.push_back(&monkey_origin);
-
-    monkeyOneDrawable.GetTransform().SetPos(glm::vec3(-2, 0, 0));
 
 	float counter = 0.0f;
 	float sinCounter;
@@ -152,21 +147,21 @@ int main(int argc, char *argv[]) {
             sinCounter = sinf(counter);
             cosCounter = cosf(counter);
 
+            //Update all out objects.
+            for (std::vector<Drawable*>::iterator it = worldObjects.begin(); it != worldObjects.end(); it++) {
+                (*it)->Update();
+            }
+
             //Make the transform change based on the counter.
+            // MOVE ME SOMEWHERE ELSE ===================================================================
+            // MOVE ME SOMEWHERE ELSE ===================================================================
+            // MOVE ME SOMEWHERE ELSE ===================================================================
+            // MOVE ME SOMEWHERE ELSE ===================================================================
+            // MOVE ME SOMEWHERE ELSE ===================================================================
             monkeyOneDrawable.GetTransform().SetPos(glm::vec3(2, 0, sinCounter));
 
             //Render
             Draw(window);
-
-            /*float sx = 2.0 / WINDOW_HEIGHT;
-            float sy = 2.0 / WINDOW_WIDTH;
-
-            main_ui.render_text("The Quick Brown Fox Jumps Over The Lazy Dog",
-                -1 + 8 * sx, 1 - 50 * sy, sx, sy);
-            main_ui.render_text("The Misaligned Fox Jumps Over The Lazy Dog",
-                -1 + 8.5 * sx, 1 - 100.5 * sy, sx, sy);*/
-
-            //cout << "FPS: " << (double)(1000.0 / time_since_last_frame) << endl;
 
             time_since_last_frame = 0.0;
         }
@@ -195,7 +190,7 @@ void Draw(Display& window) {
     }
 
     //Swap buffers.
-    window.Update();
+    window.SwapBuffers();
 }
 
 void FailAndExit(std::string message){

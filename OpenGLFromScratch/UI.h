@@ -1,12 +1,12 @@
 #pragma once
 
 #include <iostream>
-#include <ft2build.h>
-#include <freetype/freetype.h>
+//#include <ft2build.h>
+//#include <freetype/freetype.h>
 #include <GL/glew.h>
 
 class UI
-{
+{/*
     public:
         UI() {
             //Initialise FreeType
@@ -101,6 +101,6 @@ class UI
         GLuint m_texture;
 
         FT_Library m_ftLib;
-        FT_Face m_fontFaces[NUMBER_FONTS];
+        FT_Face m_fontFaces[NUMBER_FONTS];*/
 };
 

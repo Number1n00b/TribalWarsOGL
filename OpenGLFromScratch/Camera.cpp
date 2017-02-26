@@ -31,7 +31,7 @@ void Camera::NotifyMouseEvent(SDL_Event e) {
     using std::endl;
     switch (e.type) {
     case SDL_MOUSEMOTION:
-        cout << "{Camera}: Mouse Moved: (" << e.motion.x << ", " << e.motion.y << ")" << endl;
+        //cout << "{Camera}: Mouse Moved: (" << e.motion.x << ", " << e.motion.y << ")" << endl;
         break;
     case SDL_MOUSEWHEEL:
         cout << "{Camera}: Mouse wheel: " << e.wheel.direction << endl;
