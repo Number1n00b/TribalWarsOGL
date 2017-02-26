@@ -2,12 +2,19 @@
 #include "Display.h"
 #include "Camera.h"
 
-extern bool GLOBAL_shouldClose;
+namespace Main {
+    extern bool ShouldClose;
+    void FailAndExit(std::string message);
+}
 
-void NotiftWindowResize(int width, int height);
+namespace Window {
+    extern int Window_Height;
+    extern int Window_Width;
 
-Display* GetMainWindow();
-Camera* GetMainCamera();
+    void ResizeWindow(int width, int height);
 
-void Draw();
-void FailAndExit(std::string message);
+    void Draw();
+}
+
+
+

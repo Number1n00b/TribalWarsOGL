@@ -11,13 +11,13 @@ class Display : public KeyboardListener{
 
 		void Clear(float r, float g, float b, float a);
 
-		void SwapBuffers();
+		void Update();
 
 		float GetAspectRatio();
         
         void UpdateViewport(int width, int height);
 
-        void SetMouseClip(bool clip);
+        void SetMouseControl(bool clip);
 
         void NotifyKeyEvent(SDL_Event e);
 
@@ -25,7 +25,10 @@ class Display : public KeyboardListener{
 		int m_width;
 		int m_height;
 
-        bool m_mouseIsClipped;
+        bool m_ControlMouse;
+
+        int m_PrevMousePositionX;
+        int m_PrevMousePositionY;
 
 		SDL_Window *m_window;
 		SDL_GLContext m_glContext;

@@ -11,7 +11,7 @@ Class Member Variables:
     - Camera movement:
         Learn how 'look at' and 'up' correlate. Seems that those two vector must be perpendicular at all times. Learn how to update this.
 
-4) Rewrite what is not mine, or use free libaries (obj_loader and stb_image).
+4) Rewrite what is not mine, or use other, industry standard, free libaries (obj_loader and stb_image).
 
 6) Find a way to initialise GLEW outside of Display.cpp so that if it fails we can close the program. (Do memory management too, deleting context etc).
 
@@ -40,7 +40,6 @@ To make the camera track an object, simply set its lookDirection to object.pos -
 
 //Standard libs.
 #include <iostream>
-#include <time.h>
 #include <windows.h>
 
 //Graphics libs.
@@ -48,7 +47,10 @@ To make the camera track an object, simply set its lookDirection to object.pos -
 #include <SDL.h>
 
 #include "main.h"
-bool GLOBAL_shouldClose = false;
+bool Main::ShouldClose = false;
+int Window::Window_Width = 1080;
+int Window::Window_Height = 800;
+
 
 //Output
 #include "Display.h"
@@ -70,9 +72,6 @@ using std::cin;
 using std::cout;
 using std::endl;
 
-const int WINDOW_WIDTH = 1080;
-const int WINDOW_HEIGHT = 800;
-
 const int TARGET_FPS = 60;
 const double ms_per_frame = 1000.0 / TARGET_FPS;
 
@@ -85,7 +84,7 @@ int main(int argc, char *argv[]) {
 	cout << "====== Starting Program... ======" << endl;
 
 	//Craete the window and context.
-	main_window = new Display(WINDOW_WIDTH, WINDOW_HEIGHT, "Main window.");
+	main_window = new Display(Window::Window_Width, Window::Window_Height, "Main window.");
 
     InputEventHandler eventHandler = InputEventHandler();
 
@@ -129,16 +128,19 @@ int main(int argc, char *argv[]) {
 	cout << "\nEntering main loop." << endl;
 
     double curr_time = 0;
-    double prev_time = timeGetTime();
+    double prev_time = SDL_GetTicks();
     double dt = 0;
 
     double time_since_last_frame = 0;
 
-	while (!GLOBAL_shouldClose) {
+    int num_frames = 0;
+    int fps_timer_start = prev_time;
+    int fps_timer_end;
+	while (!Main::ShouldClose) {
         //Handle events first.
         eventHandler.HandleSDLEvents();
 
-        curr_time = timeGetTime();
+        curr_time = SDL_GetTicks();
 
         //dt here is time per loop
         dt = curr_time - prev_time;
@@ -148,6 +150,13 @@ int main(int argc, char *argv[]) {
 
         //Cap FPS and render only when needed.
         if (time_since_last_frame >= ms_per_frame) {
+            num_frames++;
+            if (num_frames == 100) {
+                fps_timer_end = curr_time;
+                cout << "FPS: " << (float(num_frames) / (float(fps_timer_end - fps_timer_start) / 1000.0) ) << endl;
+                fps_timer_start = fps_timer_end;
+                num_frames = 0;
+            }
             //Do physics updates
             //A random counter to make things change!
             counter += 0.02f;
@@ -167,8 +176,10 @@ int main(int argc, char *argv[]) {
             // MOVE ME SOMEWHERE ELSE ===================================================================
             monkey_one.GetTransform().SetPos(glm::vec3(2, 0, sinCounter));
 
+            //main_camera->SetLookDirection(player_one.GetTransform().GetPos() - main_camera->GetPosition());
+
             //Render
-            Draw();
+            Window::Draw();
 
             time_since_last_frame = 0.0;
         }
@@ -187,15 +198,15 @@ int main(int argc, char *argv[]) {
 }
 
 
-Display* GetMainWindow() {
-    return main_window;
+void Window::ResizeWindow(int width, int height) {
+    main_window->UpdateViewport(width, height);
+    main_camera->SetAspectRatio(float(width) / float(height));
+
+    Window::Window_Width = width;
+    Window::Window_Height = height;
 }
 
-Camera* GetMainCamera() {
-    return main_camera;
-}
-
-void Draw() {
+void Window::Draw() {
     //Clear the window.
     main_window->Clear(0.5, 0.5, 0.5, 0.5);
 
@@ -205,10 +216,10 @@ void Draw() {
     }
 
     //Swap buffers.
-    main_window->SwapBuffers();
+    main_window->Update();
 }
 
-void FailAndExit(std::string message){
+void Main::FailAndExit(std::string message){
 	cout << "\n======\nTHE PROGRAM HAS FAILED\n======\n" << message << endl;
 	cin.get();
 	exit(-1);

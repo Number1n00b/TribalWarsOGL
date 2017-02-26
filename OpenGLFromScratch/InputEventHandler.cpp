@@ -1,7 +1,6 @@
 #include <iostream>
 #include <SDL.h>
 
-#include "main.h"
 #include "InputEventHandler.h"
 
 using std::cout;
@@ -19,15 +18,14 @@ void InputEventHandler::HandleSDLEvents() {
             //Handle special quit event,
             case SDL_QUIT:
             {
-                GLOBAL_shouldClose = true;
+                Main::ShouldClose = true;
                 break;
             }
             //Handle resize events.
             case SDL_WINDOWEVENT:
             {
                 if (e.window.event == SDL_WINDOWEVENT_RESIZED) {
-                    GetMainWindow()->UpdateViewport(e.window.data1, e.window.data2);
-                    GetMainCamera()->SetAspectRatio(float(e.window.data1) / float(e.window.data2));
+                    Window::ResizeWindow(e.window.data1, e.window.data2);
                 }
                 break;
             }

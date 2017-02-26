@@ -1,9 +1,12 @@
-#include "Camera.h"
 #include <iostream>
+#include "Camera.h"
+#include "Main.h"
 
 Camera::Camera(const glm::vec3& pos, glm::vec3 look_direction, glm::vec3 up_direction, float fov, float aspect, float z_near, float z_far)
 {
-	m_perspective = glm::perspective(fov, aspect, z_near, z_far);
+    m_ZoomFactor = 1;
+    
+	m_perspective = glm::perspective(fov * m_ZoomFactor, aspect, z_near, z_far);
 
 	m_position = pos;
 
@@ -14,6 +17,8 @@ Camera::Camera(const glm::vec3& pos, glm::vec3 look_direction, glm::vec3 up_dire
 	m_aspect = aspect;
 	m_zNear = z_near;
 	m_zFar = z_far;
+
+    SDL_GetMouseState(&m_PrevMousePosX, &m_PrevMousePosY);
 }
 
 glm::mat4 Camera::GetViewProjection() const{
@@ -25,25 +30,37 @@ glm::vec3 Camera::GetPosition() {
 }
 
 
-
 void Camera::NotifyMouseEvent(SDL_Event e) {
     using std::cout;
     using std::endl;
     switch (e.type) {
-    case SDL_MOUSEMOTION:
-        //cout << "{Camera}: Mouse Moved: (" << e.motion.x << ", " << e.motion.y << ")" << endl;
-        break;
-    case SDL_MOUSEWHEEL:
-        cout << "{Camera}: Mouse wheel: " << e.wheel.direction << endl;
-        break;
-    case SDL_MOUSEBUTTONDOWN:
-        cout << "{Camera}: Mosue clicked: " << e.button.button << endl;
-        break;
-    case SDL_MOUSEBUTTONUP:
-        //Empty
-        break;
-    default:
-        cout << "{Camera}: Unknown mouse event: " << e.type << endl;
+        case SDL_MOUSEMOTION:
+        {
+            cout << "{Camera}: Mouse Moved: (" << e.motion.x << ", " << e.motion.y << ")" << endl;
+            /*glm::vec2 direction = glm::normalize(glm::vec2(e.motion.x - m_PrevMousePosX, e.motion.y - m_PrevMousePosY));
+            cout << "Mouse moved: " << direction.x << ", " << direction.y << endl;*/
+
+            break;
+        }
+        case SDL_MOUSEWHEEL:
+        {
+            cout << "{Camera}: Mouse wheel: " << e.wheel.direction << endl;
+            break;
+        }
+        case SDL_MOUSEBUTTONDOWN:
+        {
+            cout << "{Camera}: Mosue clicked: " << e.button.button << endl;
+            break;
+        }
+        case SDL_MOUSEBUTTONUP:
+        {
+            //Empty
+            break;
+        }
+        default: 
+        {
+            cout << "{Camera}: Unknown mouse event: " << e.type << endl;
+        }
     }
 }
 

@@ -37,6 +37,10 @@ class Camera : public MouseListener
 		//Perspective variables.
 		glm::mat4 m_perspective;
 		glm::vec3 m_position;
+        int m_PrevMousePosX;
+        int m_PrevMousePosY;
+
+        float m_ZoomFactor;
 
 		float m_fov;
 		float m_aspect;

@@ -12,7 +12,7 @@ Display::Display(int width, int height, const std::string& title) {
 	//Initialise SDL.
 	std::cout << "Initialising SDL..." << std::endl;
 	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-		FailAndExit("SDL failed to initialize");
+        Main::FailAndExit("SDL failed to initialize");
 	}
 
 	m_width = width;
@@ -47,7 +47,7 @@ Display::Display(int width, int height, const std::string& title) {
 	if (status != GLEW_OK) {
 		std::cout << "GLEW Error: " << glewGetErrorString(status) << std::endl;
 		std::cout << "Glew failed to initialize!" << std::endl;
-		GLOBAL_shouldClose = true;
+        Main::ShouldClose = true;
 	}
 
 	//Enalble the depth buffer.
@@ -56,7 +56,8 @@ Display::Display(int width, int height, const std::string& title) {
 	glEnable(GL_CULL_FACE);
 	glCullFace(GL_BACK);
 
-    SetMouseClip(false);
+    SDL_GetMouseState(&m_PrevMousePositionX, &m_PrevMousePositionY);
+    SetMouseControl(true);
 }
 
 //@Refactor. Move this so that the 'main controller' chooses when to clip and not clip the mouse.
@@ -64,11 +65,11 @@ void Display::NotifyKeyEvent(SDL_Event e) {
     if (e.type == SDL_KEYDOWN) {
         switch (e.key.keysym.sym) {
         case SDLK_ESCAPE:
-            if (m_mouseIsClipped) {
-                SetMouseClip(false);
+            if (m_ControlMouse) {
+                SetMouseControl(false);
             }
             else {
-                SetMouseClip(true);
+                SetMouseControl(true);
                 //GLOBAL_shouldClose = true;
             }
             break;
@@ -81,12 +82,16 @@ void Display::UpdateViewport(int width, int height) {
 }
 
 //@Robustness, this may have to be re-called every time the window is resized.
-void Display::SetMouseClip(bool clip) {
-    m_mouseIsClipped = clip;
-    if (!clip) {
+void Display::SetMouseControl(bool control) {
+    m_ControlMouse = control;
+    if (!control) {
         ClipCursor(nullptr);
+        SDL_ShowCursor(true);
+        SDL_WarpMouseInWindow(NULL, m_PrevMousePositionX, m_PrevMousePositionY);
     }
     else {
+        SDL_GetMouseState(&m_PrevMousePositionX, &m_PrevMousePositionY);
+        SDL_ShowCursor(false);
         SDL_SysWMinfo wmInfo;
         SDL_VERSION(&wmInfo.version);
         SDL_GetWindowWMInfo(m_window, &wmInfo);
@@ -126,7 +131,10 @@ float Display::GetAspectRatio() {
 	return (float)m_width / (float)m_height;
 }
 
-void Display::SwapBuffers() {
+void Display::Update() {
+    if (m_ControlMouse) {
+        SDL_WarpMouseInWindow(NULL, Window::Window_Width / 2, Window::Window_Height / 2);
+    }
 	SDL_GL_SwapWindow(m_window);
 }
 
