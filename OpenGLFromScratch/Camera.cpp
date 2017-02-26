@@ -36,7 +36,7 @@ void Camera::NotifyMouseEvent(SDL_Event e) {
     switch (e.type) {
         case SDL_MOUSEMOTION:
         {
-            cout << "{Camera}: Mouse Moved: (" << e.motion.x << ", " << e.motion.y << ")" << endl;
+            //cout << "{Camera}: Mouse Moved: (" << e.motion.x << ", " << e.motion.y << ")" << endl;
             /*glm::vec2 direction = glm::normalize(glm::vec2(e.motion.x - m_PrevMousePosX, e.motion.y - m_PrevMousePosY));
             cout << "Mouse moved: " << direction.x << ", " << direction.y << endl;*/
 

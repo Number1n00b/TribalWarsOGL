@@ -102,7 +102,7 @@ int main(int argc, char *argv[]) {
 
     //Load our tectures.
     Texture piranahs("./res/download.jpg");
-    Texture bricks("./res/download.jpg");
+    Texture bricks("./res/bricks.jpg");
 
     //Load the game object meshes.
 	Mesh monkeyMesh("./res/monkey3.obj");
@@ -110,9 +110,9 @@ int main(int argc, char *argv[]) {
 	Transform origin_transform;
 
     //Create our drawable game objects.
-    WorldObject monkey_one("Monkey Number One", &shader, &piranahs, &monkeyMesh);
+    WorldObject monkey_one("Monkey Number One", &shader, &bricks, &monkeyMesh);
 
-    Player player_one("Monkey Number Two", &shader, &bricks, &monkeyMesh, &eventHandler, origin_transform);
+    Player player_one("Monkey Number Two", &shader, &piranahs, &monkeyMesh, &eventHandler, origin_transform);
     worldObjects.push_back(&monkey_one);
     worldObjects.push_back(&player_one);
 
