@@ -76,6 +76,10 @@ void Display::NotifyKeyEvent(SDL_Event e) {
     }
 }
 
+void Display::UpdateViewport(int width, int height) {
+    glViewport(0, 0, width, height);
+}
+
 //@Robustness, this may have to be re-called every time the window is resized.
 void Display::SetMouseClip(bool clip) {
     m_mouseIsClipped = clip;

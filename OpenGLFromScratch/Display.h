@@ -15,6 +15,8 @@ class Display : public KeyboardListener{
 
 		float GetAspectRatio();
         
+        void UpdateViewport(int width, int height);
+
         void SetMouseClip(bool clip);
 
         void NotifyKeyEvent(SDL_Event e);

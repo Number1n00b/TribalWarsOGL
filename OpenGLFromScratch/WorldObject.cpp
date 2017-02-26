@@ -1,16 +1,16 @@
-#include "Drawable.h"
+#include "WorldObject.h"
 
 
-bool Drawable::camera_set = false;
-Camera* Drawable::s_camera = nullptr;
+bool WorldObject::camera_set = false;
+Camera* WorldObject::s_camera = nullptr;
 
-void Drawable::SetCamera(Camera *cam) {
+void WorldObject::SetCamera(Camera *cam) {
     s_camera = cam;
     camera_set = true;
 }
 
 
-Drawable::Drawable(std::string name, Shader *shader, Texture *texture, Mesh *mesh, Transform transform) {
+WorldObject::WorldObject(std::string name, Shader *shader, Texture *texture, Mesh *mesh, Transform transform) {
     this->name = name;
     m_shader = shader;
     m_texture = texture;
@@ -19,7 +19,7 @@ Drawable::Drawable(std::string name, Shader *shader, Texture *texture, Mesh *mes
 }
 
 
-void Drawable::Draw() {
+void WorldObject::Draw() {
     if (!camera_set) {
         std::cout << "No camera set for Drawable class." << std::endl;
     }
@@ -39,11 +39,11 @@ void Drawable::Draw() {
     }
 }
 
-void Drawable::Update() {
-    //Empty.
+void WorldObject::Update() {
+    //Empty
 }
 
-Drawable::~Drawable() {
+WorldObject::~WorldObject() {
     //Empty
     //@Incomplete? Should i set all class member pointers to null? I dont think so, it should be done automatically.
 }

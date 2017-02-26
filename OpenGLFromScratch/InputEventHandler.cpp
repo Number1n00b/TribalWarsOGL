@@ -22,6 +22,15 @@ void InputEventHandler::HandleSDLEvents() {
                 GLOBAL_shouldClose = true;
                 break;
             }
+            //Handle resize events.
+            case SDL_WINDOWEVENT:
+            {
+                if (e.window.event == SDL_WINDOWEVENT_RESIZED) {
+                    GetMainWindow()->UpdateViewport(e.window.data1, e.window.data2);
+                    GetMainCamera()->SetAspectRatio(float(e.window.data1) / float(e.window.data2));
+                }
+                break;
+            }
             case SDL_KEYDOWN: case SDL_KEYUP: case SDL_TEXTINPUT:
             {
                 //Notify all Keyboard Listeners
@@ -38,12 +47,14 @@ void InputEventHandler::HandleSDLEvents() {
                 }
                 break;
             }
+
             //Common events I am unsure of.
-            case 512: case 770:
+            case 770:
             {
                 //Do nothign.
                 break;
             }
+
             default:
             {
                 cout << "Unknown event: " << e.type << endl;

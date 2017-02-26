@@ -23,6 +23,10 @@ Class Member Variables:
 
 12) Idk man... make the UI work with text. FreeType not working FeelsBadMan
 
+13) Sound! :O
+
+14) Framerate independant movement. (Change Update() to Update(timestep))
+
 NOTES:
 To make the camera track an object, simply set its lookDirection to object.pos - cam.pos
 */
@@ -55,7 +59,7 @@ bool GLOBAL_shouldClose = false;
 #include "Texture.h"
 #include "Transform.h"
 #include "Camera.h"
-#include "Drawable.h"
+#include "WorldObject.h"
 #include "Player.h"
 #include "UI.h"
 
@@ -72,24 +76,27 @@ const int WINDOW_HEIGHT = 800;
 const int TARGET_FPS = 60;
 const double ms_per_frame = 1000.0 / TARGET_FPS;
 
-std::vector<Drawable*> worldObjects;
+std::vector<WorldObject*> worldObjects;
+
+Display *main_window;
+Camera *main_camera;
 
 int main(int argc, char *argv[]) {
 	cout << "====== Starting Program... ======" << endl;
 
 	//Craete the window and context.
-	Display window(WINDOW_WIDTH, WINDOW_HEIGHT, "Main window.");
+	main_window = new Display(WINDOW_WIDTH, WINDOW_HEIGHT, "Main window.");
 
     InputEventHandler eventHandler = InputEventHandler();
 
     //Create the main camera.
-    Camera mainCamera(glm::vec3(0, 5, 0), glm::vec3(0, -1, 0), glm::vec3(0, 0, 1), 70.0f, window.GetAspectRatio(), 0.01f, 1000.0f);
+    main_camera = new Camera(glm::vec3(0, 5, 0), glm::vec3(0, -1, 0), glm::vec3(0, 0, 1), 70.0f, main_window->GetAspectRatio(), 0.01f, 1000.0f);
 
     //Initialise the UI
     //UI main_ui = UI();
 
     //Set the camera for our drawable class as the main camera.
-    Drawable::SetCamera(&mainCamera);
+    WorldObject::SetCamera(main_camera);
 
     //Create the basic shaders.
     Shader shader("./res/basicShader");
@@ -102,21 +109,21 @@ int main(int argc, char *argv[]) {
 	Mesh monkeyMesh("./res/monkey3.obj");
 
 	Transform origin_transform;
-    origin_transform.SetScale(glm::vec3(0.5f, 0.5f, 0.5f));
 
     //Create our drawable game objects.
-    Drawable monkeyOneDrawable("Monkey Number One", &shader, &piranahs, &monkeyMesh);
-    Player monkey_origin("Monkey Number Two", &shader, &bricks, &monkeyMesh, &eventHandler, origin_transform);
-    worldObjects.push_back(&monkeyOneDrawable);
-    worldObjects.push_back(&monkey_origin);
+    WorldObject monkey_one("Monkey Number One", &shader, &piranahs, &monkeyMesh);
+
+    Player player_one("Monkey Number Two", &shader, &bricks, &monkeyMesh, &eventHandler, origin_transform);
+    worldObjects.push_back(&monkey_one);
+    worldObjects.push_back(&player_one);
 
 	float counter = 0.0f;
 	float sinCounter;
 	float cosCounter;
 
     //Register global event listeners.
-    eventHandler.RegisterMouseListener(&mainCamera);
-    eventHandler.RegisterKeyboardListener(&window);
+    eventHandler.RegisterMouseListener(main_camera);
+    eventHandler.RegisterKeyboardListener(main_window);
 
 	//The main loop!
 	cout << "\nEntering main loop." << endl;
@@ -148,7 +155,7 @@ int main(int argc, char *argv[]) {
             cosCounter = cosf(counter);
 
             //Update all out objects.
-            for (std::vector<Drawable*>::iterator it = worldObjects.begin(); it != worldObjects.end(); it++) {
+            for (std::vector<WorldObject*>::iterator it = worldObjects.begin(); it != worldObjects.end(); it++) {
                 (*it)->Update();
             }
 
@@ -158,10 +165,10 @@ int main(int argc, char *argv[]) {
             // MOVE ME SOMEWHERE ELSE ===================================================================
             // MOVE ME SOMEWHERE ELSE ===================================================================
             // MOVE ME SOMEWHERE ELSE ===================================================================
-            monkeyOneDrawable.GetTransform().SetPos(glm::vec3(2, 0, sinCounter));
+            monkey_one.GetTransform().SetPos(glm::vec3(2, 0, sinCounter));
 
             //Render
-            Draw(window);
+            Draw();
 
             time_since_last_frame = 0.0;
         }
@@ -175,22 +182,30 @@ int main(int argc, char *argv[]) {
 	SDL_Quit();
 
 	cout << "====== Ending Program... ======" << endl;
-	cin.get();
+	//cin.get();
 	return 0;
 }
 
-void Draw(Display& window) {
+
+Display* GetMainWindow() {
+    return main_window;
+}
+
+Camera* GetMainCamera() {
+    return main_camera;
+}
+
+void Draw() {
     //Clear the window.
-    //window.Clear(cosCounter * sinCounter, cosCounter, sinCounter * sinCounter, cosCounter);
-    window.Clear(0.5, 0.5, 0.5, 0.5);
+    main_window->Clear(0.5, 0.5, 0.5, 0.5);
 
     //Draw our drawables.
-    for (std::vector<Drawable*>::iterator it = worldObjects.begin(); it != worldObjects.end(); it++) {
+    for (std::vector<WorldObject*>::iterator it = worldObjects.begin(); it != worldObjects.end(); it++) {
         (*it)->Draw();
     }
 
     //Swap buffers.
-    window.SwapBuffers();
+    main_window->SwapBuffers();
 }
 
 void FailAndExit(std::string message){

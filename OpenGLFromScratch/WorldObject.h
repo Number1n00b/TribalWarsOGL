@@ -9,19 +9,17 @@
 #include "Shader.h"
 
 //Anything that could appear on screen should inherit from this class.
-class Drawable
+class WorldObject
 {
     public:
-	    Drawable(std::string name, Shader *shader, Texture *texture, Mesh *mesh, Transform transform = Transform());
+	    WorldObject(std::string name, Shader *shader, Texture *texture, Mesh *mesh, Transform transform = Transform());
 
         virtual void Draw();
 
-        //@Cleanup ? Maybe I should @Refactor this into a PhysicsObject class.
-        //Called every frame.
         virtual void Update();
-        //Rectangle GetBounds(); @Incomplete
+        //Some3DContainer GetBounds(); @Incomplete
 
-	    virtual ~Drawable();
+	    virtual ~WorldObject();
 
         //The name of the object, means nothing but is useful for debugging.
         std::string name;

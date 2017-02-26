@@ -6,7 +6,7 @@
 
 
 Player::Player(std::string name, Shader *shader, Texture *texture, Mesh *mesh, InputEventHandler *handler, Transform transform)
-    : Drawable(name, shader, texture, mesh, transform)
+    : WorldObject(name, shader, texture, mesh, transform)
 {
     m_handler = handler;
     handler->RegisterKeyboardListener(this);

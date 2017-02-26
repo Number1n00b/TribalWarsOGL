@@ -2,11 +2,11 @@
 
 #include <SDL.h>
 
-#include "Drawable.h"
+#include "WorldObject.h"
 #include "KeyboardListener.h"
 #include "InputEventHandler.h"
 
-class Player : public Drawable, public KeyboardListener
+class Player : public WorldObject, public KeyboardListener
 {
     public:
         Player(std::string name, Shader *shader, Texture *texture, Mesh *mesh, InputEventHandler *handler, Transform transform = Transform());
