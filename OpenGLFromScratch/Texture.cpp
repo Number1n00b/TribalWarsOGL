@@ -35,7 +35,7 @@ Texture::Texture(const std::string& fileName){
 void Texture::Bind(unsigned int unit) {
 	assert(unit >= 0 && unit <= 31);
 
-	//@TODO @Hardcoded. Figure out how to set active tecture to the one I want.
+	//@TODO @Hardcoded. Figure out how to set active tecture to the one I want. I dont fully remember what this is, or how to use it.
 	glActiveTexture(GL_TEXTURE0 + unit);
 	glBindTexture(GL_TEXTURE_2D, m_texture);
 }

@@ -2,9 +2,24 @@
 #include "Display.h"
 #include "Camera.h"
 
-namespace Main {
+
+
+
+enum GAME_STATE {
+    RUNNING,
+    PAUSED,
+    CLOSING
+};
+
+extern GAME_STATE game_state;
+
+namespace Game {
     extern bool ShouldClose;
     void FailAndExit(std::string message);
+    void SetCursorClip(bool clip);
+    void TogglePause();
+    void PauseGame();
+    void ResumeGame();
 }
 
 namespace Window {
@@ -15,6 +30,3 @@ namespace Window {
 
     void Draw();
 }
-
-
-

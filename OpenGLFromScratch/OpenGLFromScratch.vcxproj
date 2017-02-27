@@ -187,8 +187,6 @@
   <ItemGroup>
     <None Include="res\basicShader.f.glsl" />
     <None Include="res\basicShader.v.glsl" />
-    <None Include="res\textShader.f.glsl" />
-    <None Include="res\textShader.v.glsl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

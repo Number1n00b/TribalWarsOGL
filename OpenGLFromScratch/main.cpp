@@ -45,9 +45,15 @@ To make the camera track an object, simply set its lookDirection to object.pos -
 //Graphics libs.
 #include <GL/glew.h>
 #include <SDL.h>
+#include <SDL_syswm.h>
 
 #include "main.h"
-bool Main::ShouldClose = false;
+int prev_cursor_X = 0;
+int prev_cursor_Y = 0;
+
+GAME_STATE game_state;
+
+bool Game::ShouldClose = false;
 int Window::Window_Width = 1080;
 int Window::Window_Height = 800;
 
@@ -79,23 +85,35 @@ std::vector<WorldObject*> worldObjects;
 
 Display *main_window;
 Camera *main_camera;
+InputEventHandler *eventHandler;
 
-int main(int argc, char *argv[]) {
-	cout << "====== Starting Program... ======" << endl;
+//UI *main_ui;
 
-	//Craete the window and context.
-	main_window = new Display(Window::Window_Width, Window::Window_Height, "Main window.");
+void Initialise() {
+    //Craete the window and context.
+    main_window = new Display(Window::Window_Width, Window::Window_Height, "Main window.");
 
-    InputEventHandler eventHandler = InputEventHandler();
+    //Create the event handler.
+    eventHandler = new InputEventHandler();
 
     //Create the main camera.
     main_camera = new Camera(glm::vec3(0, 5, 0), glm::vec3(0, -1, 0), glm::vec3(0, 0, 1), 70.0f, main_window->GetAspectRatio(), 0.01f, 1000.0f);
 
     //Initialise the UI
-    //UI main_ui = UI();
+    //main_ui = new UI();
 
     //Set the camera for our drawable class as the main camera.
     WorldObject::SetCamera(main_camera);
+
+    Game::ResumeGame();
+}
+
+
+int main(int argc, char *argv[]) {
+	cout << "====== Starting Program... ======" << endl;
+
+    //Initalise the basics, Camera, UI, window, eventhandler.
+    Initialise();
 
     //Create the basic shaders.
     Shader shader("./res/basicShader");
@@ -107,12 +125,12 @@ int main(int argc, char *argv[]) {
     //Load the game object meshes.
 	Mesh monkeyMesh("./res/monkey3.obj");
 
-	Transform origin_transform;
-
     //Create our drawable game objects.
     WorldObject monkey_one("Monkey Number One", &shader, &bricks, &monkeyMesh);
 
-    Player player_one("Monkey Number Two", &shader, &piranahs, &monkeyMesh, &eventHandler, origin_transform);
+    Player player_one("Monkey Number Two", &shader, &piranahs, &monkeyMesh, eventHandler);
+
+    //Add the objects to the list of all objects.
     worldObjects.push_back(&monkey_one);
     worldObjects.push_back(&player_one);
 
@@ -121,8 +139,7 @@ int main(int argc, char *argv[]) {
 	float cosCounter;
 
     //Register global event listeners.
-    eventHandler.RegisterMouseListener(main_camera);
-    eventHandler.RegisterKeyboardListener(main_window);
+    eventHandler->RegisterMouseListener(main_camera);
 
 	//The main loop!
 	cout << "\nEntering main loop." << endl;
@@ -132,58 +149,67 @@ int main(int argc, char *argv[]) {
     double dt = 0;
 
     double time_since_last_frame = 0;
-
+    
     int num_frames = 0;
     int fps_timer_start = prev_time;
     int fps_timer_end;
-	while (!Main::ShouldClose) {
-        //Handle events first.
-        eventHandler.HandleSDLEvents();
+	while (!Game::ShouldClose) {
+        //Always handle events regardless of state.
+        //Currently this works because WorldObjects only "Update" In the inner if statement: ie. when game is running. 
+        //However, the event norifications are ALWAYS sent. So if somethign changes in the "NotifyEvent" method, it will change even in pause menu.
+        eventHandler->HandleSDLEvents();
 
-        curr_time = SDL_GetTicks();
+        //@TODO @Incomplete. Decide how to handle screen resize while paused. I think we should just draw one frame on resize to draw the entire window.
+        //Like, dont even update, just draw the same frame again in the resized resolution. 
+        if(game_state == RUNNING){
+            curr_time = SDL_GetTicks();
 
-        //dt here is time per loop
-        dt = curr_time - prev_time;
-        prev_time = curr_time;
+            //dt here is time per loop
+            dt = curr_time - prev_time;
+            prev_time = curr_time;
 
-        time_since_last_frame += dt;
+            time_since_last_frame += dt;
 
-        //Cap FPS and render only when needed.
-        if (time_since_last_frame >= ms_per_frame) {
-            num_frames++;
-            if (num_frames == 100) {
-                fps_timer_end = curr_time;
-                cout << "FPS: " << (float(num_frames) / (float(fps_timer_end - fps_timer_start) / 1000.0) ) << endl;
-                fps_timer_start = fps_timer_end;
-                num_frames = 0;
+            //Cap FPS and render only when needed.
+            if (time_since_last_frame >= ms_per_frame) {
+                num_frames++;
+                if (num_frames == 100) {
+                    fps_timer_end = curr_time;
+                    cout << "FPS: " << (float(num_frames) / (float(fps_timer_end - fps_timer_start) / 1000.0)) << endl;
+                    fps_timer_start = fps_timer_end;
+                    num_frames = 0;
+                }
+
+                //Do physics updates
+                //A random counter to make things change!
+                counter += 0.02f;
+                sinCounter = sinf(counter);
+                cosCounter = cosf(counter);
+
+                //Update all out objects.
+                for (std::vector<WorldObject*>::iterator it = worldObjects.begin(); it != worldObjects.end(); it++) {
+                    (*it)->Update();
+                }
+
+                //Make the transform change based on the counter.
+                // MOVE ME SOMEWHERE ELSE ===================================================================
+                // MOVE ME SOMEWHERE ELSE ===================================================================
+                // MOVE ME SOMEWHERE ELSE ===================================================================
+                // MOVE ME SOMEWHERE ELSE ===================================================================
+                // MOVE ME SOMEWHERE ELSE ===================================================================
+                monkey_one.GetTransform().SetPos(glm::vec3(2, 0, sinCounter));
+
+                //main_camera->SetLookDirection(player_one.GetTransform().GetPos() - main_camera->GetPosition());
+
+                //Render
+                Window::Draw();
+
+                time_since_last_frame = 0.0;
             }
-            //Do physics updates
-            //A random counter to make things change!
-            counter += 0.02f;
-            sinCounter = sinf(counter);
-            cosCounter = cosf(counter);
-
-            //Update all out objects.
-            for (std::vector<WorldObject*>::iterator it = worldObjects.begin(); it != worldObjects.end(); it++) {
-                (*it)->Update();
-            }
-
-            //Make the transform change based on the counter.
-            // MOVE ME SOMEWHERE ELSE ===================================================================
-            // MOVE ME SOMEWHERE ELSE ===================================================================
-            // MOVE ME SOMEWHERE ELSE ===================================================================
-            // MOVE ME SOMEWHERE ELSE ===================================================================
-            // MOVE ME SOMEWHERE ELSE ===================================================================
-            monkey_one.GetTransform().SetPos(glm::vec3(2, 0, sinCounter));
-
-            //main_camera->SetLookDirection(player_one.GetTransform().GetPos() - main_camera->GetPosition());
-
-            //Render
-            Window::Draw();
-
-            time_since_last_frame = 0.0;
         }
 	}
+
+    game_state = CLOSING;
 
 	cout << "End of main loop." << endl;
 
@@ -219,8 +245,86 @@ void Window::Draw() {
     main_window->Update();
 }
 
-void Main::FailAndExit(std::string message){
+void Game::FailAndExit(std::string message){
 	cout << "\n======\nTHE PROGRAM HAS FAILED\n======\n" << message << endl;
 	cin.get();
 	exit(-1);
+}
+
+void Game::TogglePause() {
+    if (game_state == PAUSED) {
+        Game::ResumeGame();
+    }
+    else if (game_state == RUNNING) {
+        Game::PauseGame();
+    }
+}
+
+void Game::PauseGame() {
+    game_state = PAUSED;
+
+    //Let go of the cursor.
+    SetCursorClip(false);
+    SDL_ShowCursor(true);
+
+    //Put the cursor back to where it was before we took control.
+    //But first, ignore the mouse event generated.
+    SDL_EventState(SDL_MOUSEMOTION, SDL_IGNORE);
+    SDL_WarpMouseInWindow(NULL, prev_cursor_X, prev_cursor_Y);
+    SDL_EventState(SDL_MOUSEMOTION, SDL_ENABLE);
+}
+
+void Game::ResumeGame() {
+    game_state = RUNNING;
+
+    //Empty the event queue so that actions done while paused does not affect the game.
+    SDL_PumpEvents();
+    SDL_Event e;
+    while (SDL_PollEvent(&e)) {
+        //Do nothing.
+    }
+    //Grab the position of the mouse before we take over.
+    SDL_GetMouseState(&prev_cursor_X, &prev_cursor_Y);
+
+    //Grab the cursor.
+    SetCursorClip(true);
+    SDL_ShowCursor(false);
+}
+
+
+//@Robustness, this may have to be re-called every time the window is resized.
+void Game::SetCursorClip(bool clip) {
+    if (!clip) {
+        //Unclip the cursor.
+        ClipCursor(nullptr);
+    }
+    else {
+        //Clip the cursor to the window. (Just incase. This isn't really needed since we're warping the mouse to center all the time.)
+        SDL_SysWMinfo wmInfo;
+        SDL_VERSION(&wmInfo.version);
+        SDL_GetWindowWMInfo(main_window->GetWindow(), &wmInfo);
+        HWND hwnd = wmInfo.info.win.window;
+
+        RECT rect;
+        GetClientRect(hwnd, &rect);
+
+        POINT ul;
+        ul.x = rect.left;
+        ul.y = rect.top;
+
+        POINT lr;
+        lr.x = rect.right;
+        lr.y = rect.bottom;
+
+        MapWindowPoints(hwnd, nullptr, &ul, 1);
+        MapWindowPoints(hwnd, nullptr, &lr, 1);
+
+        rect.left = ul.x;
+        rect.top = ul.y;
+
+        rect.right = lr.x;
+        rect.bottom = lr.y;
+
+        ClipCursor(&rect);
+    }
 }

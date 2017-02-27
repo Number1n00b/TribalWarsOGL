@@ -18,7 +18,7 @@ void InputEventHandler::HandleSDLEvents() {
             //Handle special quit event,
             case SDL_QUIT:
             {
-                Main::ShouldClose = true;
+                Game::ShouldClose = true;
                 break;
             }
             //Handle resize events.
@@ -31,7 +31,19 @@ void InputEventHandler::HandleSDLEvents() {
             }
             case SDL_KEYDOWN: case SDL_KEYUP: case SDL_TEXTINPUT:
             {
-                //Notify all Keyboard Listeners
+                //Handle special button events.
+                //Ensure only to handle events on KeyDown.
+                if(e.type == SDL_KEYDOWN){
+                    switch (e.key.keysym.sym) {
+                        //Pause event.
+                        case SDLK_ESCAPE:
+                        {
+                            Game::TogglePause();
+                            break;
+                        }
+                    }
+                 }
+                 //Notify all Keyboard Listeners
                 for (std::vector<KeyboardListener*>::iterator it = m_keyboardListeners.begin(); it != m_keyboardListeners.end(); it++) {
                     (*it)->NotifyKeyEvent(e);
                 }
