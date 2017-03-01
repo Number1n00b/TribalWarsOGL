@@ -59,7 +59,8 @@ void Player::NotifyKeyEvent(SDL_Event e) {
 
             //Special events.
             case SDLK_RETURN:
-                m_transform.SetRotation(0, 0, 0);
+                //@Refactor, this isnt clean as this positio / orientation may not always be the right way.
+                m_transform.SetRotation(-3.14 / 2, 3.14, 0);
                 m_transform.SetPos(0, 0, 0);
                 break;
             }
@@ -117,54 +118,59 @@ void Player::Update() {
             glm::vec3 new_angle = m_transform.GetRotation() + glm::vec3(m_RotationSpeed, 0, 0);
             m_transform.SetRotation(new_angle);
         }
-        if (m_KeysDown[KEY_A]) {
-            glm::vec3 new_angle = m_transform.GetRotation() + glm::vec3(0, 0, -m_RotationSpeed);
-            m_transform.SetRotation(new_angle);
-        }
         if (m_KeysDown[KEY_S]) {
             glm::vec3 new_angle = m_transform.GetRotation() + glm::vec3(-m_RotationSpeed, 0, 0);
             m_transform.SetRotation(new_angle);
         }
-        if (m_KeysDown[KEY_D]) {
+        if (m_KeysDown[KEY_A]) {
             glm::vec3 new_angle = m_transform.GetRotation() + glm::vec3(0, 0, m_RotationSpeed);
             m_transform.SetRotation(new_angle);
         }
+        if (m_KeysDown[KEY_D]) {
+            glm::vec3 new_angle = m_transform.GetRotation() + glm::vec3(0, 0, -m_RotationSpeed);
+            m_transform.SetRotation(new_angle);
+        }
         if (m_KeysDown[KEY_Q]) {
-            glm::vec3 new_angle = m_transform.GetRotation() + glm::vec3(0, m_RotationSpeed, 0);
+            glm::vec3 new_angle = m_transform.GetRotation() + glm::vec3(0, -m_RotationSpeed, 0);
             m_transform.SetRotation(new_angle);
         }
         if (m_KeysDown[KEY_E]) {
-            glm::vec3 new_angle = m_transform.GetRotation() + glm::vec3(0, -m_RotationSpeed, 0);
+            glm::vec3 new_angle = m_transform.GetRotation() + glm::vec3(0, m_RotationSpeed, 0);
             m_transform.SetRotation(new_angle);
         }
     }
     else {
+        //Forward
         if (m_KeysDown[KEY_W]) {
-            glm::vec3 new_pos = m_transform.GetPos() + glm::vec3(0, 0, m_speed);
-            m_transform.SetPos(new_pos);
-        }
-        if (m_KeysDown[KEY_A]) {
-            glm::vec3 new_pos = m_transform.GetPos() + glm::vec3(m_speed, 0, 0);
-            m_transform.SetPos(new_pos);
-        }
-        if (m_KeysDown[KEY_S]) {
-            glm::vec3 new_pos = m_transform.GetPos() + glm::vec3(0, 0, -m_speed);
-            m_transform.SetPos(new_pos);
-        }
-        if (m_KeysDown[KEY_D]) {
-            glm::vec3 new_pos = m_transform.GetPos() + glm::vec3(-m_speed, 0, 0);
-            m_transform.SetPos(new_pos);
-        }
-
-        if (m_KeysDown[KEY_LCTRL]) {
-            glm::vec3 new_pos = m_transform.GetPos() + glm::vec3(0, -m_speed, 0);
-            m_transform.SetPos(new_pos);
-        }
-
-        if (m_KeysDown[KEY_SPACE]) {
             glm::vec3 new_pos = m_transform.GetPos() + glm::vec3(0, m_speed, 0);
             m_transform.SetPos(new_pos);
         }
+        //Down
+        if (m_KeysDown[KEY_S]) {
+            glm::vec3 new_pos = m_transform.GetPos() + glm::vec3(0, -m_speed, 0);
+            m_transform.SetPos(new_pos);
+        }
+        //Left
+        if (m_KeysDown[KEY_A]) {
+            glm::vec3 new_pos = m_transform.GetPos() + glm::vec3(-m_speed, 0, 0);
+            m_transform.SetPos(new_pos);
+        }
+        //Right
+        if (m_KeysDown[KEY_D]) {
+            glm::vec3 new_pos = m_transform.GetPos() + glm::vec3(m_speed, 0, 0);
+            m_transform.SetPos(new_pos);
+        }
+        //Up
+        if (m_KeysDown[KEY_SPACE]) {
+            glm::vec3 new_pos = m_transform.GetPos() + glm::vec3(0, 0, m_speed);
+            m_transform.SetPos(new_pos);
+        }
+        //Down
+        if (m_KeysDown[KEY_LCTRL]) {
+            glm::vec3 new_pos = m_transform.GetPos() + glm::vec3(0, 0, -m_speed);
+            m_transform.SetPos(new_pos);
+        }
+
     }
 
 }

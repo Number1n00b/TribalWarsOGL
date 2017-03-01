@@ -7,15 +7,11 @@ Class Member Variables:
                     private: m_VariableName
                     public: variableName
 
-1) User input.
-    - Camera movement:
-        Learn how 'look at' and 'up' correlate. Seems that those two vector must be perpendicular at all times. Learn how to update this.
-
 4) Rewrite what is not mine, or use other, industry standard, free libaries (obj_loader and stb_image).
 
 6) Find a way to initialise GLEW outside of Display.cpp so that if it fails we can close the program. (Do memory management too, deleting context etc).
 
-8) Find out how to draw UI elements. (Possible use a different shader).
+8) Find out how to draw UI elements. (Possibly use a different shader).
 
 9) Restructure main into an app class with all the variables required, use main to initialise and start the app class. 
 
@@ -26,6 +22,8 @@ Class Member Variables:
 13) Sound! :O
 
 14) Framerate independant movement. (Change Update() to Update(timestep))
+
+15) Load .mtl files and learn how to use them.
 
 NOTES:
 To make the camera track an object, simply set its lookDirection to object.pos - cam.pos
@@ -97,7 +95,7 @@ void Initialise() {
     eventHandler = new InputEventHandler();
 
     //Create the main camera.
-    main_camera = new Camera(glm::vec3(0, 5, 0), glm::vec3(0, -1, 0), glm::vec3(0, 0, 1), 70.0f, main_window->GetAspectRatio(), 0.01f, 1000.0f);
+    main_camera = new Camera(glm::vec3(0, 0, 10), glm::vec3(0, 0, -1), glm::vec3(0, 1, 0), 70.0f, main_window->GetAspectRatio(), 0.01f, 1000.0f);
 
     //Initialise the UI
     //main_ui = new UI();
@@ -121,17 +119,41 @@ int main(int argc, char *argv[]) {
     //Load our tectures.
     Texture piranahs("./res/download.jpg");
     Texture bricks("./res/bricks.jpg");
+    Texture floor_tex("./res/sand.jpg");
+
+    Texture tex_x("./res/x.jpg");
+    Texture tex_y("./res/y.jpg");
+    Texture tex_z("./res/z.jpg");
 
     //Load the game object meshes.
 	Mesh monkeyMesh("./res/monkey3.obj");
 
-    //Create our drawable game objects.
-    WorldObject monkey_one("Monkey Number One", &shader, &bricks, &monkeyMesh);
+    //@Temp: The floor LUL
+    Transform floor_transform;
+    floor_transform.SetScale(100, 100, 0.1);
+    floor_transform.SetPos(0, -5, 0);
 
-    Player player_one("Monkey Number Two", &shader, &piranahs, &monkeyMesh, eventHandler);
+    WorldObject floor("TempFloor", &shader, &floor_tex, &monkeyMesh, floor_transform);
+
+
+    //This transform ensures the monkeys face the right direction on spawn.
+    Transform oriented_monkey;
+    oriented_monkey.SetRotation(-3.14/2, 3.14, 0);
+
+    //Create our drawable game objects.
+    WorldObject monkey_x("Monkey Number One", &shader, &tex_x, &monkeyMesh, oriented_monkey);
+    WorldObject monkey_y("Monkey Number One", &shader, &tex_y, &monkeyMesh, oriented_monkey);
+    WorldObject monkey_z("Monkey Number One", &shader, &tex_z, &monkeyMesh, oriented_monkey);
+
+    Player player_one("Monkey Number Two", &shader, &piranahs, &monkeyMesh, eventHandler, oriented_monkey);
 
     //Add the objects to the list of all objects.
-    worldObjects.push_back(&monkey_one);
+    //@Temp
+    //worldObjects.push_back(&floor);
+
+    worldObjects.push_back(&monkey_x);
+    worldObjects.push_back(&monkey_y);
+    worldObjects.push_back(&monkey_z);
     worldObjects.push_back(&player_one);
 
 	float counter = 0.0f;
@@ -159,28 +181,26 @@ int main(int argc, char *argv[]) {
         //However, the event norifications are ALWAYS sent. So if somethign changes in the "NotifyEvent" method, it will change even in pause menu.
         eventHandler->HandleSDLEvents();
 
-        //@TODO @Incomplete. Decide how to handle screen resize while paused. I think we should just draw one frame on resize to draw the entire window.
-        //Like, dont even update, just draw the same frame again in the resized resolution. 
-        if(game_state == RUNNING){
-            curr_time = SDL_GetTicks();
+        curr_time = SDL_GetTicks();
 
-            //dt here is time per loop
-            dt = curr_time - prev_time;
-            prev_time = curr_time;
+        //dt here is time per loop
+        dt = curr_time - prev_time;
+        prev_time = curr_time;
 
-            time_since_last_frame += dt;
+        time_since_last_frame += dt;
 
-            //Cap FPS and render only when needed.
-            if (time_since_last_frame >= ms_per_frame) {
-                num_frames++;
-                if (num_frames == 100) {
-                    fps_timer_end = curr_time;
-                    cout << "FPS: " << (float(num_frames) / (float(fps_timer_end - fps_timer_start) / 1000.0)) << endl;
-                    fps_timer_start = fps_timer_end;
-                    num_frames = 0;
-                }
+        //Cap FPS and render only when needed.
+        if (time_since_last_frame >= ms_per_frame) {
+            num_frames++;
+            if (num_frames == 100) {
+                fps_timer_end = curr_time;
+                cout << "FPS: " << (float(num_frames) / (float(fps_timer_end - fps_timer_start) / 1000.0)) << endl;
+                fps_timer_start = fps_timer_end;
+                num_frames = 0;
+            }
 
-                //Do physics updates
+            //Do physics updates
+            if (game_state == RUNNING) {
                 //A random counter to make things change!
                 counter += 0.02f;
                 sinCounter = sinf(counter);
@@ -190,6 +210,8 @@ int main(int argc, char *argv[]) {
                 for (std::vector<WorldObject*>::iterator it = worldObjects.begin(); it != worldObjects.end(); it++) {
                     (*it)->Update();
                 }
+                //Update the main camera.
+                main_camera->Update();
 
                 //Make the transform change based on the counter.
                 // MOVE ME SOMEWHERE ELSE ===================================================================
@@ -197,15 +219,16 @@ int main(int argc, char *argv[]) {
                 // MOVE ME SOMEWHERE ELSE ===================================================================
                 // MOVE ME SOMEWHERE ELSE ===================================================================
                 // MOVE ME SOMEWHERE ELSE ===================================================================
-                monkey_one.GetTransform().SetPos(glm::vec3(2, 0, sinCounter));
+                monkey_x.GetTransform().SetPos(glm::vec3(sinCounter, 0, 0));
+                monkey_y.GetTransform().SetPos(glm::vec3(0, sinCounter, 0));
+                monkey_z.GetTransform().SetPos(glm::vec3(0, 0, sinCounter));
 
                 //main_camera->SetLookDirection(player_one.GetTransform().GetPos() - main_camera->GetPosition());
-
-                //Render
-                Window::Draw();
-
-                time_since_last_frame = 0.0;
             }
+            //Render
+            Window::DrawFrame();
+
+            time_since_last_frame = 0.0;
         }
 	}
 
@@ -226,13 +249,13 @@ int main(int argc, char *argv[]) {
 
 void Window::ResizeWindow(int width, int height) {
     main_window->UpdateViewport(width, height);
-    main_camera->SetAspectRatio(float(width) / float(height));
+    main_camera->NotifyScreenResize(width, height);
 
     Window::Window_Width = width;
     Window::Window_Height = height;
 }
 
-void Window::Draw() {
+void Window::DrawFrame() {
     //Clear the window.
     main_window->Clear(0.5, 0.5, 0.5, 0.5);
 
@@ -269,9 +292,9 @@ void Game::PauseGame() {
 
     //Put the cursor back to where it was before we took control.
     //But first, ignore the mouse event generated.
-    SDL_EventState(SDL_MOUSEMOTION, SDL_IGNORE);
     SDL_WarpMouseInWindow(NULL, prev_cursor_X, prev_cursor_Y);
-    SDL_EventState(SDL_MOUSEMOTION, SDL_ENABLE);
+    SDL_PumpEvents();
+    SDL_FlushEvent(SDL_MOUSEMOTION);
 }
 
 void Game::ResumeGame() {

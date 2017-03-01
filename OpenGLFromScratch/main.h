@@ -28,5 +28,5 @@ namespace Window {
 
     void ResizeWindow(int width, int height);
 
-    void Draw();
+    void DrawFrame();
 }

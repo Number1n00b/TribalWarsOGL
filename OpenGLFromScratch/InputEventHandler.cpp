@@ -26,9 +26,6 @@ void InputEventHandler::HandleSDLEvents() {
             {
                 if (e.window.event == SDL_WINDOWEVENT_RESIZED) {
                     Window::ResizeWindow(e.window.data1, e.window.data2);
-
-                    //Redraw the window with the new size, so that there are no blank spaces on edges of screen.
-                    Window::Draw();
                 }
                 break;
             }
