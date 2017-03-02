@@ -3,8 +3,9 @@
 #include <glm/gtx/transform.hpp> 
 
 #include "MouseListener.h"
+#include "KeyboardListener.h"
 
-class Camera : public MouseListener
+class Camera : public MouseListener, public KeyboardListener
 {
 	public:
 		Camera(const glm::vec3& pos, glm::vec3 look_direction, glm::vec3 up_direction, float fov, float aspect, float z_near, float z_far);
@@ -32,6 +33,8 @@ class Camera : public MouseListener
 		void SetZFar(float z_far);
 
         void NotifyMouseEvent(SDL_Event e);
+        void NotifyKeyEvent(SDL_Event e);
+
         void Camera::NotifyScreenResize(int width, int height);
 
         void Update();
@@ -55,7 +58,11 @@ class Camera : public MouseListener
 		glm::vec3 m_LookDirection;
 		glm::vec3 m_up;
 
-        glm::vec3 m_MouseMovement;
+        glm::vec2 m_MouseMovement;
+        bool m_MouseMoved;
+
+        //@Temp @Cleanup
+        bool m_CameraWasReset;
 
 		void UpdatePerspective();
 };

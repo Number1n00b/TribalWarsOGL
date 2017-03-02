@@ -19,7 +19,7 @@ Class Member Variables:
 
 12) Idk man... make the UI work with text. FreeType not working FeelsBadMan
 
-13) Sound! :O
+13) Sound?! :O
 
 14) Framerate independant movement. (Change Update() to Update(timestep))
 
@@ -100,6 +100,10 @@ void Initialise() {
     //Initialise the UI
     //main_ui = new UI();
 
+    //Register global event listeners.
+    eventHandler->RegisterMouseListener(main_camera);
+    eventHandler->RegisterKeyboardListener(main_camera);
+
     //Set the camera for our drawable class as the main camera.
     WorldObject::SetCamera(main_camera);
 
@@ -160,9 +164,6 @@ int main(int argc, char *argv[]) {
 	float sinCounter;
 	float cosCounter;
 
-    //Register global event listeners.
-    eventHandler->RegisterMouseListener(main_camera);
-
 	//The main loop!
 	cout << "\nEntering main loop." << endl;
 
@@ -194,7 +195,7 @@ int main(int argc, char *argv[]) {
             num_frames++;
             if (num_frames == 100) {
                 fps_timer_end = curr_time;
-                cout << "FPS: " << (float(num_frames) / (float(fps_timer_end - fps_timer_start) / 1000.0)) << endl;
+                //cout << "FPS: " << (float(num_frames) / (float(fps_timer_end - fps_timer_start) / 1000.0)) << endl;
                 fps_timer_start = fps_timer_end;
                 num_frames = 0;
             }
@@ -295,6 +296,8 @@ void Game::PauseGame() {
     SDL_WarpMouseInWindow(NULL, prev_cursor_X, prev_cursor_Y);
     SDL_PumpEvents();
     SDL_FlushEvent(SDL_MOUSEMOTION);
+
+    cout << "Pausing..." << endl;
 }
 
 void Game::ResumeGame() {
@@ -312,6 +315,8 @@ void Game::ResumeGame() {
     //Grab the cursor.
     SetCursorClip(true);
     SDL_ShowCursor(false);
+
+    cout << "Resuming... " << endl;
 }
 
 
