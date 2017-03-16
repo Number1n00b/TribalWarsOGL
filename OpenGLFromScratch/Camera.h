@@ -5,6 +5,7 @@
 #include "MouseListener.h"
 #include "KeyboardListener.h"
 
+//Camera class @todo finish.
 class Camera : public MouseListener, public KeyboardListener
 {
 	public:
