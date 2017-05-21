@@ -7,7 +7,6 @@
 #include "Camera.h"
 
 class Shader{
-
 	public:
 		Shader(const std::string& file_name);
 
@@ -17,11 +16,16 @@ class Shader{
 		virtual ~Shader();
 
 	private:
-		//One for vertex and one for fragment. (Could also have 'geometry shaders'). Should probably make this an enum to make referencing them explicit.
-		static const unsigned int NUM_SHADERS = 2;
+		//One for vertex and one for fragment. (Could also have 'geometry shaders').
+        enum shaders{
+            VERTEX,
+            FRAGMENT,
+
+            NUM_SHADERS
+        };
 
 		//Just a way to refer to all our uniform variables for the shader.
-		enum {
+		enum uniforms{
 			TRANSFORM_U,
 
 			NUM_UNIFORMS

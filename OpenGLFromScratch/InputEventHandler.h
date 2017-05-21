@@ -14,24 +14,59 @@ static enum e_keys {
     KEY_S,
     KEY_D,
 
-    //Less common movement keys.
+    //Close to WASD keys. (Can be used for inventroy management / peeking around corners / rotation etc).
+    KEY_Q,
+    KEY_E,
+
+    //Other letter keys.
+    KEY_R,
+    KEY_T,
+    KEY_Y,
+    KEY_U,
+    KEY_I,
+    KEY_O,
+    KEY_P,
+    KEY_F,
+    KEY_G,
+    KEY_H,
+    KEY_J,
+    KEY_K,
+    KEY_L,
+    KEY_Z,
+    KEY_X,
+    KEY_C,
+    KEY_V,
+    KEY_B,
+    KEY_N,
+    KEY_M,
+
+    //Arrow keys.
     KEY_UP,
     KEY_DOWN,
     KEY_LEFT,
     KEY_RIGHT,
 
-    //Close to WASD keys. (Can be used for inventroy management / peeking around corners / rotation etc).
-    KEY_Q,
-    KEY_E,
+    //Numpad. 
+    KEY_NUM0,
 
     //Special ability keys.
+    KEY_TAB,
+    KEY_CAPS,
+
     KEY_SPACE,
+
+    KEY_DEL,
+    
 
     //Modifiers
     KEY_LSHIFT,
     KEY_RSHIFT,
+
     KEY_LCTRL,
     KEY_RCTRL,
+
+    KEY_LALT,
+    KEY_RALT,
 
     NUM_KEYS
 };

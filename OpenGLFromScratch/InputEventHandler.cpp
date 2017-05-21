@@ -102,8 +102,77 @@ void InputEventHandler::UpdateKeyDownArray(SDL_Event e) {
                 keys_down[KEY_D] = true;
                 break;
 
+             //Close to WASD
+            case SDLK_q:
+                keys_down[KEY_Q] = true;
+                break;
+            case SDLK_e:
+                keys_down[KEY_E] = true;
+                break;
 
-            //U D L R
+            //Other letters.
+            case SDLK_r:
+                keys_down[KEY_R] = true;
+                break;
+            case SDLK_t:
+                keys_down[KEY_T] = true;
+                break;
+            case SDLK_y:
+                keys_down[KEY_Y] = true;
+                break;
+            case SDLK_u:
+                keys_down[KEY_U] = true;
+                break;
+            case SDLK_i:
+                keys_down[KEY_I] = true;
+                break;
+            case SDLK_o:
+                keys_down[KEY_O] = true;
+                break;
+            case SDLK_p:
+                keys_down[KEY_P] = true;
+                break;
+            case SDLK_f:
+                keys_down[KEY_F] = true;
+                break;
+            case SDLK_g:
+                keys_down[KEY_G] = true;
+                break;
+            case SDLK_h:
+                keys_down[KEY_H] = true;
+                break;
+            case SDLK_j:
+                keys_down[KEY_J] = true;
+                break;
+            case SDLK_k:
+                keys_down[KEY_K] = true;
+                break;
+            case SDLK_l:
+                keys_down[KEY_L] = true;
+                break;
+            case SDLK_z:
+                keys_down[KEY_Z] = true;
+                break;
+            case SDLK_x:
+                keys_down[KEY_X] = true;
+                break;
+            case SDLK_c:
+                keys_down[KEY_C] = true;
+                break;
+            case SDLK_v:
+                keys_down[KEY_V] = true;
+                break;
+            case SDLK_b:
+                keys_down[KEY_B] = true;
+                break;
+            case SDLK_n:
+                keys_down[KEY_N] = true;
+                break;
+            case SDLK_m:
+                keys_down[KEY_M] = true;
+                break;
+
+            //Arrow keys.
             case SDLK_UP:
                 keys_down[KEY_UP] = true;
                 break;
@@ -117,25 +186,31 @@ void InputEventHandler::UpdateKeyDownArray(SDL_Event e) {
                 keys_down[KEY_RIGHT] = true;
                 break;
 
-            //Close to WASD
-            case SDLK_q:
-                keys_down[KEY_Q] = true;
+            //Numpad
+            case SDLK_KP_0:
+                keys_down[KEY_NUM0] = true;
                 break;
-            case SDLK_e:
-                keys_down[KEY_E] = true;
-                break;
-
 
             //Special abilities.
+            case SDLK_TAB:
+                keys_down[KEY_TAB] = true;
+                break;
+            case SDLK_CAPSLOCK:
+                keys_down[KEY_CAPS] = true;
+                break;
+
             case SDLK_SPACE:
                 keys_down[KEY_SPACE] = true;
+                break;
+
+            case SDLK_DELETE:
+                keys_down[KEY_DEL] = true;
                 break;
 
             //Modifiers.
             case SDLK_LSHIFT:
                 keys_down[KEY_LSHIFT] = true;
                 break;
-
             case SDLK_RSHIFT:
                 keys_down[KEY_RSHIFT] = true;
                 break;
@@ -143,9 +218,15 @@ void InputEventHandler::UpdateKeyDownArray(SDL_Event e) {
             case SDLK_LCTRL:
                 keys_down[KEY_LCTRL] = true;
                 break;
-
             case SDLK_RCTRL:
                 keys_down[KEY_RCTRL] = true;
+                break;
+
+            case SDLK_LALT:
+                keys_down[KEY_LALT] = true;
+                break;
+            case SDLK_RALT:
+                keys_down[KEY_RALT] = true;
                 break;
             }
             break;
@@ -168,8 +249,77 @@ void InputEventHandler::UpdateKeyDownArray(SDL_Event e) {
                 keys_down[KEY_D] = false;
                 break;
 
+                //Close to WASD
+            case SDLK_q:
+                keys_down[KEY_Q] = false;
+                break;
+            case SDLK_e:
+                keys_down[KEY_E] = false;
+                break;
 
-                //U D L R
+                //Other letters.
+            case SDLK_r:
+                keys_down[KEY_R] = false;
+                break;
+            case SDLK_t:
+                keys_down[KEY_T] = false;
+                break;
+            case SDLK_y:
+                keys_down[KEY_Y] = false;
+                break;
+            case SDLK_u:
+                keys_down[KEY_U] = false;
+                break;
+            case SDLK_i:
+                keys_down[KEY_I] = false;
+                break;
+            case SDLK_o:
+                keys_down[KEY_O] = false;
+                break;
+            case SDLK_p:
+                keys_down[KEY_P] = false;
+                break;
+            case SDLK_f:
+                keys_down[KEY_F] = false;
+                break;
+            case SDLK_g:
+                keys_down[KEY_G] = false;
+                break;
+            case SDLK_h:
+                keys_down[KEY_H] = false;
+                break;
+            case SDLK_j:
+                keys_down[KEY_J] = false;
+                break;
+            case SDLK_k:
+                keys_down[KEY_K] = false;
+                break;
+            case SDLK_l:
+                keys_down[KEY_L] = false;
+                break;
+            case SDLK_z:
+                keys_down[KEY_Z] = false;
+                break;
+            case SDLK_x:
+                keys_down[KEY_X] = false;
+                break;
+            case SDLK_c:
+                keys_down[KEY_C] = false;
+                break;
+            case SDLK_v:
+                keys_down[KEY_V] = false;
+                break;
+            case SDLK_b:
+                keys_down[KEY_B] = false;
+                break;
+            case SDLK_n:
+                keys_down[KEY_N] = false;
+                break;
+            case SDLK_m:
+                keys_down[KEY_M] = false;
+                break;
+
+                //Arrow keys.
             case SDLK_UP:
                 keys_down[KEY_UP] = false;
                 break;
@@ -183,25 +333,31 @@ void InputEventHandler::UpdateKeyDownArray(SDL_Event e) {
                 keys_down[KEY_RIGHT] = false;
                 break;
 
-                //Close to WASD
-            case SDLK_q:
-                keys_down[KEY_Q] = false;
+                //Numpad
+            case SDLK_KP_0:
+                keys_down[KEY_NUM0] = false;
                 break;
-            case SDLK_e:
-                keys_down[KEY_E] = false;
-                break;
-
 
                 //Special abilities.
+            case SDLK_TAB:
+                keys_down[KEY_TAB] = false;
+                break;
+            case SDLK_CAPSLOCK:
+                keys_down[KEY_CAPS] = false;
+                break;
+
             case SDLK_SPACE:
                 keys_down[KEY_SPACE] = false;
+                break;
+
+            case SDLK_DELETE:
+                keys_down[KEY_DEL] = false;
                 break;
 
                 //Modifiers.
             case SDLK_LSHIFT:
                 keys_down[KEY_LSHIFT] = false;
                 break;
-
             case SDLK_RSHIFT:
                 keys_down[KEY_RSHIFT] = false;
                 break;
@@ -209,9 +365,15 @@ void InputEventHandler::UpdateKeyDownArray(SDL_Event e) {
             case SDLK_LCTRL:
                 keys_down[KEY_LCTRL] = false;
                 break;
-
             case SDLK_RCTRL:
                 keys_down[KEY_RCTRL] = false;
+                break;
+
+            case SDLK_LALT:
+                keys_down[KEY_LALT] = false;
+                break;
+            case SDLK_RALT:
+                keys_down[KEY_RALT] = false;
                 break;
             }
             break;

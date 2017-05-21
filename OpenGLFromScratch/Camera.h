@@ -17,7 +17,8 @@ class Camera : public MouseListener, public KeyboardListener
         glm::vec3 GetPosition();
 
 		//Mutators
-        void SetSensitivity(float sens);
+        void SetXSensitivity(float sens);
+        void SetYSensitivity(float sens);
         void SetMovementSpeed(float speed);
 
 		void SetPosition(glm::vec3 pos);
@@ -47,7 +48,8 @@ class Camera : public MouseListener, public KeyboardListener
         int m_ReferenceMousePositionX;
         int m_ReferenceMousePositionY;
 
-        float m_Sensitivity;
+        float m_XSensitivity;
+        float m_YSensitivity;
         float m_Speed;
 
         float m_ZoomFactor;
@@ -62,16 +64,13 @@ class Camera : public MouseListener, public KeyboardListener
 		glm::vec3 m_up;
 
         //The initial values for perspective, so that resetting is always consistant.
-        glm::vec3 m_starting_pos;
-        glm::vec3 m_starting_look_dir;
-        glm::vec3 m_starting_up;
+        glm::vec3 m_StartingPos;
+        glm::vec3 m_StartingLookDir;
+        glm::vec3 m_StartingUp;
 
         //A vector that stores the direction of the mouse movement.
-        glm::vec2 m_MouseMovement;
+        glm::vec2 m_MouseDelta;
         bool m_MouseMoved;
-
-        //Keeps track if the camera was reset by the user, so that 'clip' variables for camera movement can be reset.
-        bool m_CameraWasReset;
 
 		void UpdatePerspective();
 

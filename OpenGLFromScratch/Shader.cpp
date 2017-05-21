@@ -10,13 +10,11 @@ Shader::Shader(const std::string& fileName)
 {
 	std::cout << "Creating shaders..." << std::endl;
 
-	//Creates some space ont he GPU for a program. 
+	//Creates some space on the GPU for a program. 
 	m_program = glCreateProgram();
 
-	//[0] is vertex shader. 
-	m_shaders[0] = CreateShader(LoadShader(fileName + ".v.glsl"), GL_VERTEX_SHADER);
-	//[1] is fragment shader.
-	m_shaders[1] = CreateShader(LoadShader(fileName + ".f.glsl"), GL_FRAGMENT_SHADER);
+	m_shaders[VERTEX] = CreateShader(LoadShader(fileName + ".v.glsl"), GL_VERTEX_SHADER);
+	m_shaders[FRAGMENT] = CreateShader(LoadShader(fileName + ".f.glsl"), GL_FRAGMENT_SHADER);
 
 	//Add the shaders to the program.
 	for (unsigned int ii = 0; ii < NUM_SHADERS; ii++) {

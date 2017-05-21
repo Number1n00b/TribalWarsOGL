@@ -36,60 +36,60 @@ void Player::NotifyKeyEvent(SDL_Event e) {
 
 void Player::Update() {
     //Check for angle modifier first
-    if (keys_down[KEY_LSHIFT]) {
-        if (keys_down[KEY_W]) {
+    if (keys_down[KEY_DEL]) {
+        if (keys_down[KEY_UP]) {
             glm::vec3 new_angle = m_transform.GetRotation() + glm::vec3(m_RotationSpeed, 0, 0);
             m_transform.SetRotation(new_angle);
         }
-        if (keys_down[KEY_S]) {
+        if (keys_down[KEY_DOWN]) {
             glm::vec3 new_angle = m_transform.GetRotation() + glm::vec3(-m_RotationSpeed, 0, 0);
             m_transform.SetRotation(new_angle);
         }
-        if (keys_down[KEY_A]) {
+        if (keys_down[KEY_LEFT]) {
             glm::vec3 new_angle = m_transform.GetRotation() + glm::vec3(0, 0, m_RotationSpeed);
             m_transform.SetRotation(new_angle);
         }
-        if (keys_down[KEY_D]) {
+        if (keys_down[KEY_RIGHT]) {
             glm::vec3 new_angle = m_transform.GetRotation() + glm::vec3(0, 0, -m_RotationSpeed);
             m_transform.SetRotation(new_angle);
         }
-        if (keys_down[KEY_Q]) {
+        if (keys_down[KEY_RCTRL]) {
             glm::vec3 new_angle = m_transform.GetRotation() + glm::vec3(0, -m_RotationSpeed, 0);
             m_transform.SetRotation(new_angle);
         }
-        if (keys_down[KEY_E]) {
+        if (keys_down[KEY_NUM0]) {
             glm::vec3 new_angle = m_transform.GetRotation() + glm::vec3(0, m_RotationSpeed, 0);
             m_transform.SetRotation(new_angle);
         }
     }
     else {
         //Forward
-        if (keys_down[KEY_W]) {
+        if (keys_down[KEY_UP]) {
             glm::vec3 new_pos = m_transform.GetPos() + glm::vec3(0, m_speed, 0);
             m_transform.SetPos(new_pos);
         }
         //Down
-        if (keys_down[KEY_S]) {
+        if (keys_down[KEY_DOWN]) {
             glm::vec3 new_pos = m_transform.GetPos() + glm::vec3(0, -m_speed, 0);
             m_transform.SetPos(new_pos);
         }
         //Left
-        if (keys_down[KEY_A]) {
+        if (keys_down[KEY_LEFT]) {
             glm::vec3 new_pos = m_transform.GetPos() + glm::vec3(-m_speed, 0, 0);
             m_transform.SetPos(new_pos);
         }
         //Right
-        if (keys_down[KEY_D]) {
+        if (keys_down[KEY_RIGHT]) {
             glm::vec3 new_pos = m_transform.GetPos() + glm::vec3(m_speed, 0, 0);
             m_transform.SetPos(new_pos);
         }
         //Up
-        if (keys_down[KEY_SPACE]) {
+        if (keys_down[KEY_RCTRL]) {
             glm::vec3 new_pos = m_transform.GetPos() + glm::vec3(0, 0, m_speed);
             m_transform.SetPos(new_pos);
         }
         //Down
-        if (keys_down[KEY_LCTRL]) {
+        if (keys_down[KEY_NUM0]) {
             glm::vec3 new_pos = m_transform.GetPos() + glm::vec3(0, 0, -m_speed);
             m_transform.SetPos(new_pos);
         }
