@@ -12,21 +12,19 @@
 class WorldObject
 {
     public:
-	    WorldObject(std::string name, Shader *shader, Texture *texture, Mesh *mesh, Transform transform = Transform());
+	    WorldObject(std::string name, Shader *shader, Texture *texture, Mesh *mesh, Transform transform);
 
         virtual void Draw();
 
         virtual void Update();
-        //Some3DContainer GetBounds(); @Incomplete
+        //Some3DContainer GetBounds(); @Incomplete, this is where we would get the rough outlines for collision.
 
 	    virtual ~WorldObject();
 
         //The name of the object, means nothing but is useful for debugging.
         std::string name;
 
-        Transform& GetTransform() {
-            return m_transform;
-        }
+        Transform& GetTransform();
 
         //The camera input is to extract how the object should be drawn; from which perspective, and should be the same for all drawable objects.
         static Camera *s_camera;

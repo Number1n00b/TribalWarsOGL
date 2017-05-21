@@ -22,5 +22,5 @@ class Display{
 		int m_height;
 
 		SDL_Window *m_window;
-		SDL_GLContext m_glContext;
+		SDL_GLContext m_GLContext;
 };

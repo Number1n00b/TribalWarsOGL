@@ -1,0 +1,110 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="UI.cpp" />
+    <ClCompile Include="Camera.cpp">
+      <Filter>Display</Filter>
+    </ClCompile>
+    <ClCompile Include="Display.cpp">
+      <Filter>Display</Filter>
+    </ClCompile>
+    <ClCompile Include="Shader.cpp">
+      <Filter>Display</Filter>
+    </ClCompile>
+    <ClCompile Include="stb_image.c">
+      <Filter>Display</Filter>
+    </ClCompile>
+    <ClCompile Include="Texture.cpp">
+      <Filter>Display</Filter>
+    </ClCompile>
+    <ClCompile Include="obj_loader.cpp">
+      <Filter>Display</Filter>
+    </ClCompile>
+    <ClCompile Include="Mesh.cpp">
+      <Filter>Display</Filter>
+    </ClCompile>
+    <ClCompile Include="InputEventHandler.cpp">
+      <Filter>Input</Filter>
+    </ClCompile>
+    <ClCompile Include="WorldObject.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="Vertex.cpp">
+      <Filter>Display</Filter>
+    </ClCompile>
+    <ClCompile Include="OscilatingObject.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="main.h" />
+    <ClInclude Include="Transform.h" />
+    <ClInclude Include="UI.h" />
+    <ClInclude Include="Camera.h">
+      <Filter>Display</Filter>
+    </ClInclude>
+    <ClInclude Include="Display.h">
+      <Filter>Display</Filter>
+    </ClInclude>
+    <ClInclude Include="Shader.h">
+      <Filter>Display</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_image.h">
+      <Filter>Display</Filter>
+    </ClInclude>
+    <ClInclude Include="Texture.h">
+      <Filter>Display</Filter>
+    </ClInclude>
+    <ClInclude Include="obj_loader.h">
+      <Filter>Display</Filter>
+    </ClInclude>
+    <ClInclude Include="Mesh.h">
+      <Filter>Display</Filter>
+    </ClInclude>
+    <ClInclude Include="InputEventHandler.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyboardListener.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="MouseListener.h">
+      <Filter>Input</Filter>
+    </ClInclude>
+    <ClInclude Include="WorldObject.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
+    <ClInclude Include="Vertex.h">
+      <Filter>Display</Filter>
+    </ClInclude>
+    <ClInclude Include="OscilatingObject.h">
+      <Filter>Objects</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="OpenGLFromScratch.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\basicShader.v.glsl">
+      <Filter>Display</Filter>
+    </None>
+    <None Include="res\basicShader.f.glsl">
+      <Filter>Display</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Display">
+      <UniqueIdentifier>{ba56b8c1-5989-4cff-9481-538250620927}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Input">
+      <UniqueIdentifier>{583400a3-0bbb-4a46-9bb0-5b175164d911}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Objects">
+      <UniqueIdentifier>{72e133a5-9369-4187-ac31-9d15f027e35c}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

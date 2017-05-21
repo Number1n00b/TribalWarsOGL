@@ -25,6 +25,10 @@ Class Member Variables:
 
 15) Load .mtl files and learn how to use them.
 
+16) Overload WorldObject with Oscilating_Object so that I can create my monkeys again.
+
+17) Enable camera movement again by moveing all the key_down[] stuff to an Input class.
+
 NOTES:
 To make the camera track an object, simply set its lookDirection to object.pos - cam.pos
 */
@@ -42,19 +46,12 @@ To make the camera track an object, simply set its lookDirection to object.pos -
 
 //Graphics libs.
 #include <GL/glew.h>
+
+//Libraries for mouse pointer manipulation.
 #include <SDL.h>
 #include <SDL_syswm.h>
 
 #include "main.h"
-int prev_cursor_X = 0;
-int prev_cursor_Y = 0;
-
-GAME_STATE game_state;
-
-bool Game::ShouldClose = false;
-int Window::Window_Width = 1080;
-int Window::Window_Height = 800;
-
 
 //Output
 #include "Display.h"
@@ -67,47 +64,109 @@ int Window::Window_Height = 800;
 #include "Camera.h"
 #include "WorldObject.h"
 #include "Player.h"
-#include "UI.h"
+#include "OscilatingObject.h"
 
 //Input
 #include "InputEventHandler.h"
 
+//Moise position, used to capture and reset mouse on pause / unpause.
+int prev_cursor_X = 0;
+int prev_cursor_Y = 0;
+
+GAME_STATE game_state;
+bool Game::should_close = false;
+
+//Window paramentrs.
+int Window::window_width = 1080;
+int Window::window_height = 800;
+
+//FPS params.
+const int TARGET_FPS = 60;
+const double MS_PER_FRAME = 1000.0 / TARGET_FPS;
+
+//Container for all objects in the world, Iterated over every Update() call.
+std::vector<WorldObject*> world_objects;
+
+//Globals for display, camera and events.
+Display *main_window;
+Camera *main_camera;
+InputEventHandler *event_handler;
+
+//Using / Namespace declarations.
 using std::cin;
 using std::cout;
 using std::endl;
-
-const int TARGET_FPS = 60;
-const double ms_per_frame = 1000.0 / TARGET_FPS;
-
-std::vector<WorldObject*> worldObjects;
-
-Display *main_window;
-Camera *main_camera;
-InputEventHandler *eventHandler;
-
-//UI *main_ui;
+using glm::vec3;
 
 void Initialise() {
     //Craete the window and context.
-    main_window = new Display(Window::Window_Width, Window::Window_Height, "Main window.");
+    main_window = new Display(Window::window_width, Window::window_height, "Main window.");
 
     //Create the event handler.
-    eventHandler = new InputEventHandler();
+    event_handler = new InputEventHandler();
 
     //Create the main camera.
-    main_camera = new Camera(glm::vec3(0, 0, 10), glm::vec3(0, 0, -1), glm::vec3(0, 1, 0), 70.0f, main_window->GetAspectRatio(), 0.01f, 1000.0f);
-
-    //Initialise the UI
-    //main_ui = new UI();
+    vec3 cam_position = vec3(0, 0, 10);
+    vec3 cam_look_direction = vec3(0, 0, -1);
+    vec3 cam_up_direaction = vec3(0, 1, 0);
+    float cam_fov = 70;
+    float cam_z_near = 0.01;
+    float cam_z_far = 1000;
+    main_camera = new Camera(cam_position, cam_look_direction, cam_up_direaction, cam_fov, main_window->GetAspectRatio(), cam_z_near, cam_z_far);
 
     //Register global event listeners.
-    eventHandler->RegisterMouseListener(main_camera);
-    eventHandler->RegisterKeyboardListener(main_camera);
+    event_handler->RegisterMouseListener(main_camera);
+    event_handler->RegisterKeyboardListener(main_camera);
 
     //Set the camera for our drawable class as the main camera.
     WorldObject::SetCamera(main_camera);
 
     Game::ResumeGame();
+}
+
+
+void CreateWorldObjects() {
+    //Here we create all of the objects that start out in the world. Later we can have a list of startup objects and just iterate through it, creating them all.
+
+    //Create the basic shaders.
+    Shader *standard_shader = new Shader("./res/basicShader");
+
+    //Load our tectures.
+    Texture* piranahs_tex = new Texture("./res/download.jpg");
+    Texture* bricks_tex = new Texture("./res/bricks.jpg");
+    Texture* floor_tex = new Texture("./res/sand.jpg");
+
+    Texture* x_tex = new Texture("./res/x.jpg");
+    Texture* y_tex = new Texture("./res/y.jpg");
+    Texture* z_tex = new Texture("./res/z.jpg");
+
+    //Load the game object meshes.
+    Mesh* monkey_mesh = new Mesh("./res/monkey3.obj");
+
+    //This transform ensures the monkeys face the right direction on spawn.
+    Transform oriented_monkey;
+    oriented_monkey.SetRotation(-3.14 / 2, 3.14, 0);
+
+    //Create our drawable game objects.
+    glm::vec3 x_axis = glm::vec3(1, 0, 0);
+    glm::vec3 y_axis = glm::vec3(0, 1, 0);
+    glm::vec3 z_axis = glm::vec3(0, 0, 1);
+    float speed = 0.02;
+    float amplitude = 5;
+
+    WorldObject* monkey_x = new OscilatingObject("Monkey Number One", standard_shader, x_tex, monkey_mesh, oriented_monkey, x_axis, speed, amplitude);
+    WorldObject* monkey_y = new OscilatingObject("Monkey Number Two", standard_shader, y_tex, monkey_mesh, oriented_monkey, y_axis, speed, amplitude);
+    WorldObject* monkey_z = new OscilatingObject("Monkey Number Three", standard_shader, z_tex, monkey_mesh, oriented_monkey, z_axis, speed, amplitude);
+
+    //Create the player.
+    Player* player_one = new Player("Player One", standard_shader, piranahs_tex, monkey_mesh, oriented_monkey, event_handler);
+
+    //Add the objects to the list of all objects.
+    world_objects.push_back(monkey_x);
+    world_objects.push_back(monkey_y);
+    world_objects.push_back(monkey_z);
+
+    world_objects.push_back(player_one);
 }
 
 
@@ -117,54 +176,12 @@ int main(int argc, char *argv[]) {
     //Initalise the basics, Camera, UI, window, eventhandler.
     Initialise();
 
-    //Create the basic shaders.
-    Shader shader("./res/basicShader");
+    CreateWorldObjects();
+    for (std::vector<WorldObject*>::iterator it = world_objects.begin(); it != world_objects.end(); it++) {
+        cout << "Name: " << (*it)->name << endl;
+    }
 
-    //Load our tectures.
-    Texture piranahs("./res/download.jpg");
-    Texture bricks("./res/bricks.jpg");
-    Texture floor_tex("./res/sand.jpg");
-
-    Texture tex_x("./res/x.jpg");
-    Texture tex_y("./res/y.jpg");
-    Texture tex_z("./res/z.jpg");
-
-    //Load the game object meshes.
-	Mesh monkeyMesh("./res/monkey3.obj");
-
-    //@Temp: The floor LUL
-    Transform floor_transform;
-    floor_transform.SetScale(100, 100, 0.1);
-    floor_transform.SetPos(0, -5, 0);
-
-    WorldObject floor("TempFloor", &shader, &floor_tex, &monkeyMesh, floor_transform);
-
-
-    //This transform ensures the monkeys face the right direction on spawn.
-    Transform oriented_monkey;
-    oriented_monkey.SetRotation(-3.14/2, 3.14, 0);
-
-    //Create our drawable game objects.
-    WorldObject monkey_x("Monkey Number One", &shader, &tex_x, &monkeyMesh, oriented_monkey);
-    WorldObject monkey_y("Monkey Number One", &shader, &tex_y, &monkeyMesh, oriented_monkey);
-    WorldObject monkey_z("Monkey Number One", &shader, &tex_z, &monkeyMesh, oriented_monkey);
-
-    Player player_one("Monkey Number Two", &shader, &piranahs, &monkeyMesh, eventHandler, oriented_monkey);
-
-    //Add the objects to the list of all objects.
-    //@Temp
-    //worldObjects.push_back(&floor);
-
-    worldObjects.push_back(&monkey_x);
-    worldObjects.push_back(&monkey_y);
-    worldObjects.push_back(&monkey_z);
-    worldObjects.push_back(&player_one);
-
-	float counter = 0.0f;
-	float sinCounter;
-	float cosCounter;
-
-	//The main loop!
+    //Main loop setup.
 	cout << "\nEntering main loop." << endl;
 
     double curr_time = 0;
@@ -176,11 +193,13 @@ int main(int argc, char *argv[]) {
     int num_frames = 0;
     int fps_timer_start = prev_time;
     int fps_timer_end;
-	while (!Game::ShouldClose) {
+
+    //The main loop!
+	while (!Game::should_close) {
         //Always handle events regardless of state.
         //Currently this works because WorldObjects only "Update" In the inner if statement: ie. when game is running. 
         //However, the event norifications are ALWAYS sent. So if somethign changes in the "NotifyEvent" method, it will change even in pause menu.
-        eventHandler->HandleSDLEvents();
+        event_handler->HandleSDLEvents();
 
         curr_time = SDL_GetTicks();
 
@@ -190,9 +209,11 @@ int main(int argc, char *argv[]) {
 
         time_since_last_frame += dt;
 
-        //Cap FPS and render only when needed.
-        if (time_since_last_frame >= ms_per_frame) {
+        //Cap FPS and render only when needed. @NOTE: Physics updates done only on every render call.
+        if (time_since_last_frame >= MS_PER_FRAME) {
             num_frames++;
+
+            //This is just to display FPS, once I figure out how to do text in OpenGL.
             if (num_frames == 100) {
                 fps_timer_end = curr_time;
                 //cout << "FPS: " << (float(num_frames) / (float(fps_timer_end - fps_timer_start) / 1000.0)) << endl;
@@ -202,30 +223,15 @@ int main(int argc, char *argv[]) {
 
             //Do physics updates
             if (game_state == RUNNING) {
-                //A random counter to make things change!
-                counter += 0.02f;
-                sinCounter = sinf(counter);
-                cosCounter = cosf(counter);
-
-                //Update all out objects.
-                for (std::vector<WorldObject*>::iterator it = worldObjects.begin(); it != worldObjects.end(); it++) {
+                //Update all our objects.
+                for (std::vector<WorldObject*>::iterator it = world_objects.begin(); it != world_objects.end(); it++) {
                     (*it)->Update();
                 }
+
                 //Update the main camera.
                 main_camera->Update();
-
-                //Make the transform change based on the counter.
-                // MOVE ME SOMEWHERE ELSE ===================================================================
-                // MOVE ME SOMEWHERE ELSE ===================================================================
-                // MOVE ME SOMEWHERE ELSE ===================================================================
-                // MOVE ME SOMEWHERE ELSE ===================================================================
-                // MOVE ME SOMEWHERE ELSE ===================================================================
-                monkey_x.GetTransform().SetPos(glm::vec3(sinCounter, 0, 0));
-                monkey_y.GetTransform().SetPos(glm::vec3(0, sinCounter, 0));
-                monkey_z.GetTransform().SetPos(glm::vec3(0, 0, sinCounter));
-
-                //main_camera->SetLookDirection(player_one.GetTransform().GetPos() - main_camera->GetPosition());
             }
+
             //Render
             Window::DrawFrame();
 
@@ -243,7 +249,7 @@ int main(int argc, char *argv[]) {
 	SDL_Quit();
 
 	cout << "====== Ending Program... ======" << endl;
-	//cin.get();
+
 	return 0;
 }
 
@@ -252,8 +258,8 @@ void Window::ResizeWindow(int width, int height) {
     main_window->UpdateViewport(width, height);
     main_camera->NotifyScreenResize(width, height);
 
-    Window::Window_Width = width;
-    Window::Window_Height = height;
+    Window::window_width = width;
+    Window::window_height = height;
 }
 
 void Window::DrawFrame() {
@@ -261,11 +267,13 @@ void Window::DrawFrame() {
     main_window->Clear(0.5, 0.5, 0.5, 0.5);
 
     //Draw our drawables.
-    for (std::vector<WorldObject*>::iterator it = worldObjects.begin(); it != worldObjects.end(); it++) {
+    for (std::vector<WorldObject*>::iterator it = world_objects.begin(); it != world_objects.end(); it++) {
         (*it)->Draw();
     }
 
     //Swap buffers.
+    //@NOTE that main_window is of type Display. Naming could be better here.
+    //This is where the mouse warpng is done, while game is running.
     main_window->Update();
 }
 
@@ -292,8 +300,9 @@ void Game::PauseGame() {
     SDL_ShowCursor(true);
 
     //Put the cursor back to where it was before we took control.
-    //But first, ignore the mouse event generated.
     SDL_WarpMouseInWindow(NULL, prev_cursor_X, prev_cursor_Y);
+
+    //Then ignore the mouse event generated.
     SDL_PumpEvents();
     SDL_FlushEvent(SDL_MOUSEMOTION);
 
@@ -309,7 +318,7 @@ void Game::ResumeGame() {
     while (SDL_PollEvent(&e)) {
         //Do nothing.
     }
-    //Grab the position of the mouse before we take over.
+    //Save the position of the mouse before we take over.
     SDL_GetMouseState(&prev_cursor_X, &prev_cursor_Y);
 
     //Grab the cursor.

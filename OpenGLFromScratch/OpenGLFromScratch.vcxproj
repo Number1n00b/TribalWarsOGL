@@ -151,6 +151,8 @@
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Display.cpp" />
+    <ClCompile Include="OscilatingObject.cpp" />
+    <ClCompile Include="Util.cpp" />
     <ClCompile Include="WorldObject.cpp" />
     <ClCompile Include="InputEventHandler.cpp" />
     <ClCompile Include="main.cpp" />
@@ -166,6 +168,8 @@
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Display.h" />
+    <ClInclude Include="OscilatingObject.h" />
+    <ClInclude Include="Util.h" />
     <ClInclude Include="WorldObject.h" />
     <ClInclude Include="InputEventHandler.h" />
     <ClInclude Include="KeyboardListener.h" />
