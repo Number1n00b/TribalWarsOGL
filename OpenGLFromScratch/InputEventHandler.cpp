@@ -40,8 +40,8 @@ void InputEventHandler::HandleSDLEvents() {
                 //Ensure only to handle special events on KeyDown.
                 if(e.type == SDL_KEYDOWN){
                     switch (e.key.keysym.sym) {
-                        //Pause event.
-                        case SDLK_ESCAPE:
+                        //Pause event. RGUI and LGUI are the windows keys.
+                        case SDLK_ESCAPE: case SDLK_RGUI: case SDLK_LGUI:
                         {
                             Game::TogglePause();
                             break;

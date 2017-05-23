@@ -25,9 +25,9 @@ Class Member Variables:
 
 15) Load .mtl files and learn how to use them.
 
-16) Overload WorldObject with Oscilating_Object so that I can create my monkeys again.
+18) Fix camera movement jitter / stuttering and check why normalise sometimes returns NAN in camera.
 
-17) Enable camera movement again by moveing all the key_down[] stuff to an Input class.
+19) Create spawner class to spawn objects. (Factory Pattern?)
 
 NOTES:
 To make the camera track an object, simply set its lookDirection to object.pos - cam.pos
@@ -73,6 +73,7 @@ To make the camera track an object, simply set its lookDirection to object.pos -
 int prev_cursor_X = 0;
 int prev_cursor_Y = 0;
 
+//Game state variables.
 GAME_STATE game_state;
 bool Game::should_close = false;
 
@@ -139,34 +140,45 @@ void CreateWorldObjects() {
     Texture* x_tex = new Texture("./res/x.jpg");
     Texture* y_tex = new Texture("./res/y.jpg");
     Texture* z_tex = new Texture("./res/z.jpg");
+    Texture* blue = new Texture("./res/blue.jpg");
 
     //Load the game object meshes.
     Mesh* monkey_mesh = new Mesh("./res/monkey3.obj");
+    Mesh* car_mesh = new Mesh("./res/myCar.obj");
+    Mesh* plane_mesh = new Mesh("./res/6x6_plane.obj");
 
     //This transform ensures the monkeys face the right direction on spawn.
     Transform oriented_monkey;
     oriented_monkey.SetRotation(-3.14 / 2, 3.14, 0);
 
     //Create our drawable game objects.
-    glm::vec3 x_axis = glm::vec3(1, 0, 0);
-    glm::vec3 y_axis = glm::vec3(0, 1, 0);
-    glm::vec3 z_axis = glm::vec3(0, 0, 1);
+    vec3 x_axis = vec3(1, 0, 0);
+    vec3 y_axis = vec3(0, 1, 0);
+    vec3 z_axis = vec3(0, 0, 1);
     float speed = 0.02;
     float amplitude = 5;
 
+    //Create oscilating monkeys for perspective.
     WorldObject* monkey_x = new OscilatingObject("Monkey Number One", standard_shader, x_tex, monkey_mesh, oriented_monkey, x_axis, speed, amplitude);
-    WorldObject* monkey_y = new OscilatingObject("Monkey Number Two", standard_shader, y_tex, monkey_mesh, oriented_monkey, y_axis, speed, amplitude);
-    WorldObject* monkey_z = new OscilatingObject("Monkey Number Three", standard_shader, z_tex, monkey_mesh, oriented_monkey, z_axis, speed, amplitude);
-
-    //Create the player.
-    Player* player_one = new Player("Player One", standard_shader, piranahs_tex, monkey_mesh, oriented_monkey, event_handler);
-
-    //Add the objects to the list of all objects.
     world_objects.push_back(monkey_x);
+
+    WorldObject* monkey_y = new OscilatingObject("Monkey Number Two", standard_shader, y_tex, monkey_mesh, oriented_monkey, y_axis, speed, amplitude);
     world_objects.push_back(monkey_y);
+
+    WorldObject* monkey_z = new OscilatingObject("Monkey Number Three", standard_shader, z_tex, monkey_mesh, oriented_monkey, z_axis, speed, amplitude);
     world_objects.push_back(monkey_z);
 
-    world_objects.push_back(player_one);
+    //Create a plane. Floor?
+    vec3 floor_pos = vec3(0, -3, 0);
+    WorldObject* floor = new OscilatingObject("Monkey Number Three", standard_shader, z_tex, monkey_mesh, oriented_monkey, z_axis, speed, amplitude);
+    world_objects.push_back(floor);
+
+    //Create the player.
+    /*Transform car_behind;
+    car_behind.SetPos(0, -2, 20);
+    car_behind.SetRotation(0, 3.14/2, 0);
+    Player* car = new Player("Player One", standard_shader, blue, car_mesh, car_behind, event_handler);
+    world_objects.push_back(car);*/
 }
 
 
