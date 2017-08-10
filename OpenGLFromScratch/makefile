@@ -1,23 +1,25 @@
-IDIR =../../include
-GPP=g++
-CFLAGS=-I$(IDIR) -Wall -Werror -pedantic
+GLM_IDIR =include/glm
+GL_IDIR =include/
+
+CC=g++
+CFLAGS=-I $(GLM_IDIR) -I $(GL_IDIR)
 EXEC=MyGame
 
 LDIR =../../lib
 
-LIBS=-lm -lGL -lopengl32
+LIBS=-lm -lopengl32
 
-OBJ = main.o
+OBJ = new_main.o
 
 
 $(EXEC): $(OBJ)
-	gcc $(OBJ) -o $(EXEC) $(CFLAGS) $(LIBS)
+	$(CC) $(OBJ) -o $(EXEC) $(CFLAGS) $(LIBS)
 
-main.o:
-	gcc -c src/temp/new_main.cpp $(CFLAGS) $(LIBS)
+new_main.o:
+	$(CC) -c src/temp/new_main.cpp $(CFLAGS) $(LIBS)
 
 list:
 	ls
 
 clean:
-	rm -rf *.o
+	rm -rf *.o *.exe

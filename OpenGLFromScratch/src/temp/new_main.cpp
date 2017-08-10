@@ -1,10 +1,9 @@
 //Standard libs.
 #include <iostream>
-#include <windows.h>
+#include <windows.h> // Must come before GL/gl.h
 
 //Graphics libs.
-#include <GL/gl.h>
-#include <GL/glew.h>
+#include <GL/glew.h> //Must be preceded by windows.h
 
 //Libraries for mouse pointer manipulation and other IO.
 // #include <SDL.h>
@@ -14,8 +13,7 @@
 #include "new_main.h"
 
 //glm header.
-// #include "glm/glm.hpp"
-
+#include "glm/glm.hpp"
 
 //Using / Namespace declarations.
 using std::cin;
