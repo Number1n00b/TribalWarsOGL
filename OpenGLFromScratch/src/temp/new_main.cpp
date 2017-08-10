@@ -1,26 +1,21 @@
-#pragma comment(lib, "winmm.lib")
-#pragma comment(lib, "opengl32.lib")
-#pragma comment(lib, "glu32.lib")
-#pragma comment(lib, "glew32.lib")
-#pragma comment(lib, "SDL2.lib")
-#pragma comment(lib, "SDL2main.lib")
-
 //Standard libs.
 #include <iostream>
 #include <windows.h>
 
 //Graphics libs.
-// #include <GL/glew.h>
+#include <GL/gl.h>
+#include <GL/glew.h>
 
 //Libraries for mouse pointer manipulation and other IO.
 // #include <SDL.h>
 // #include <SDL_syswm.h>
 
 //Own header file.
-#include "main.h"
+#include "new_main.h"
 
 //glm header.
-#include <glm/glm.hpp>
+// #include "glm/glm.hpp"
+
 
 //Using / Namespace declarations.
 using std::cin;
