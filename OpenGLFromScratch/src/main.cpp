@@ -13,7 +13,7 @@ Class Member Variables:
 
 8) Find out how to draw UI elements. (Possibly use a different shader).
 
-9) Restructure main into an app class with all the variables required, use main to initialise and start the app class. 
+9) Restructure main into an app class with all the variables required, use main to initialise and start the app class.
 
 11) Make 'escape' toggle a pause menu, during the pause menu the mouse is NOT clipped to the screen. else it is.
 
@@ -48,26 +48,26 @@ To make the camera track an object, simply set its lookDirection to object.pos -
 #include <GL/glew.h>
 
 //Libraries for mouse pointer manipulation.
-#include <SDL.h>
-#include <SDL_syswm.h>
+#include <sdl/SDL.h>
+#include <sdl/SDL_syswm.h>
 
 #include "main.h"
 
 //Output
-#include "Display.h"
+#include "../display/Display.h"
 
 //Model Classes
-#include "Shader.h"
-#include "Mesh.h"
-#include "Texture.h"
-#include "Transform.h"
-#include "Camera.h"
-#include "WorldObject.h"
-#include "Player.h"
-#include "OscilatingObject.h"
+#include "../shaders/Shader.h"
+#include "../model/Mesh.h"
+#include "../model/Texture.h"
+#include "../model/Transform.h"
+#include "../model/Camera.h"
+#include "../model/WorldObject.h"
+#include "../model/Player.h"
+#include "../model/OscilatingObject.h"
 
 //Input
-#include "InputEventHandler.h"
+#include "../input/InputEventHandler.h"
 
 //Moise position, used to capture and reset mouse on pause / unpause.
 int prev_cursor_X = 0;
@@ -201,7 +201,7 @@ int main(int argc, char *argv[]) {
     double dt = 0;
 
     double time_since_last_frame = 0;
-    
+
     int num_frames = 0;
     int fps_timer_start = prev_time;
     int fps_timer_end;
@@ -209,7 +209,7 @@ int main(int argc, char *argv[]) {
     //The main loop!
 	while (!Game::should_close) {
         //Always handle events regardless of state.
-        //Currently this works because WorldObjects only "Update" In the inner if statement: ie. when game is running. 
+        //Currently this works because WorldObjects only "Update" In the inner if statement: ie. when game is running.
         //However, the event norifications are ALWAYS sent. So if somethign changes in the "NotifyEvent" method, it will change even in pause menu.
         event_handler->HandleSDLEvents();
 
