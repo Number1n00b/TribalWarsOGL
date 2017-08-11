@@ -1,7 +1,7 @@
 #pragma once
 #include <glm/glm.hpp>
 #include <GL/glew.h>
-#include "obj_loader.h"
+#include "../loaders/obj_loader.h"
 
 #include "Vertex.h"
 
@@ -34,4 +34,3 @@ class Mesh {
 		//How much of the vertexArrayObject we want to draw.
 		unsigned int m_drawCount;
 };
-

@@ -1,7 +1,7 @@
 #include <iostream>
 
 #include "Player.h"
-#include "InputEventHandler.h"
+#include "../input/InputEventHandler.h"
 
 Player::Player(std::string name, Shader *shader, Texture *texture, Mesh *mesh, Transform transform, InputEventHandler *handler)
     : WorldObject(name, shader, texture, mesh, transform)

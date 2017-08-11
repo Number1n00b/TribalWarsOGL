@@ -6,7 +6,7 @@
 #include "Texture.h"
 #include "Mesh.h"
 #include "Camera.h"
-#include "Shader.h"
+#include "../shaders/Shader.h"
 
 //Anything that could appear on screen should inherit from this class.
 class WorldObject
@@ -47,4 +47,3 @@ class WorldObject
         //The mesh of the object which will be drawn.
         Mesh *m_mesh;
 };
-

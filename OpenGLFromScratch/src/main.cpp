@@ -47,6 +47,10 @@ To make the camera track an object, simply set its lookDirection to object.pos -
 //Graphics libs.
 #include <GL/glew.h>
 
+//This took me much to long to solve. Stops SDL from redefining main causing
+//undefined reference to WinMain@16.
+#define SDL_MAIN_HANDLED
+
 //Libraries for mouse pointer manipulation.
 #include <sdl/SDL.h>
 #include <sdl/SDL_syswm.h>
@@ -54,20 +58,20 @@ To make the camera track an object, simply set its lookDirection to object.pos -
 #include "main.h"
 
 //Output
-#include "../display/Display.h"
+#include "display/Display.h"
 
 //Model Classes
-#include "../shaders/Shader.h"
-#include "../model/Mesh.h"
-#include "../model/Texture.h"
-#include "../model/Transform.h"
-#include "../model/Camera.h"
-#include "../model/WorldObject.h"
-#include "../model/Player.h"
-#include "../model/OscilatingObject.h"
+#include "shaders/Shader.h"
+#include "model/Mesh.h"
+#include "model/Texture.h"
+#include "model/Transform.h"
+#include "model/Camera.h"
+#include "model/WorldObject.h"
+#include "model/Player.h"
+#include "model/OscilatingObject.h"
 
 //Input
-#include "../input/InputEventHandler.h"
+#include "input/InputEventHandler.h"
 
 //Moise position, used to capture and reset mouse on pause / unpause.
 int prev_cursor_X = 0;

@@ -1,5 +1,5 @@
 #pragma once
-#include <SDL.h>
+#include <sdl/SDL.h>
 
 class KeyboardListener
 {
@@ -10,4 +10,3 @@ class KeyboardListener
 
         virtual void NotifyKeyEvent(SDL_Event e) = 0;
 };
-

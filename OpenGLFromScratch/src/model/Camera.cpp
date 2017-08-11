@@ -1,15 +1,15 @@
 #include <iostream>
 #include "Camera.h"
-#include "Main.h"
-#include "Util.h"
+#include "../main.h"
+#include "../util/Util.h"
 
-#include "KeyboardListener.h"
-#include "InputEventHandler.h"
+#include "../input/KeyboardListener.h"
+#include "../input/InputEventHandler.h"
 
 Camera::Camera(const glm::vec3& pos, glm::vec3 look_direction, glm::vec3 up_direction, float fov, float aspect, float z_near, float z_far)
 {
     m_ZoomFactor = 1;
-    
+
 	m_Perspective = glm::perspective(fov * m_ZoomFactor, aspect, z_near, z_far);
 
 	m_Position = m_StartingPos = pos;
@@ -138,7 +138,7 @@ void Camera::NotifyMouseEvent(SDL_Event e) {
 
                 HandleMouseMovement();
             }
-            
+
             break;
         }
         case SDL_MOUSEWHEEL:
@@ -156,7 +156,7 @@ void Camera::NotifyMouseEvent(SDL_Event e) {
             //Empty
             break;
         }
-        default: 
+        default:
         {
             cout << "{Camera}: Unknown mouse event: " << e.type << endl;
         }
@@ -223,4 +223,3 @@ void Camera::SetZFar(float z_far) {
 	m_zFar = z_far;
 	UpdatePerspective();
 }
-

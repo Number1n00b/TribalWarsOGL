@@ -1,15 +1,15 @@
 #pragma once
 
-#include <SDL.h>
+#include <sdl/SDL.h>
 
 #include "WorldObject.h"
-#include "KeyboardListener.h"
-#include "InputEventHandler.h"
+#include "../input/KeyboardListener.h"
+#include "../input/InputEventHandler.h"
 
 class OscilatingObject : public WorldObject
 {
 public:
-    OscilatingObject::OscilatingObject(std::string name, Shader *shader, Texture *texture, Mesh *mesh, Transform transform, glm::vec3 axis, float speed, float amplitude);
+    OscilatingObject(std::string name, Shader *shader, Texture *texture, Mesh *mesh, Transform transform, glm::vec3 axis, float speed, float amplitude);
 
     void Update();
 
@@ -24,4 +24,3 @@ private:
 
     glm::vec3 m_Axis;
 };
-

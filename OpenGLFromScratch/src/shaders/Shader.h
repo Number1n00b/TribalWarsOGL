@@ -3,8 +3,8 @@
 #include <string>
 #include <GL/glew.h>
 
-#include "Transform.h"
-#include "Camera.h"
+#include "../model/Transform.h"
+#include "../model/Camera.h"
 
 class Shader{
 	public:
@@ -35,4 +35,3 @@ class Shader{
 		GLuint m_shaders[NUM_SHADERS];
 		GLuint m_uniforms[NUM_UNIFORMS];
 };
-

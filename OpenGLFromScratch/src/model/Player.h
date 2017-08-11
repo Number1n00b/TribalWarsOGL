@@ -1,10 +1,10 @@
 #pragma once
 
-#include <SDL.h>
+#include <sdl/SDL.h>
 
 #include "WorldObject.h"
-#include "KeyboardListener.h"
-#include "InputEventHandler.h"
+#include "../input/KeyboardListener.h"
+#include "../input/InputEventHandler.h"
 
 class Player : public WorldObject, public KeyboardListener
 {
@@ -25,4 +25,3 @@ class Player : public WorldObject, public KeyboardListener
         float m_RotationSpeed;
 
 };
-

@@ -1,10 +1,10 @@
 #pragma once
 #include <glm/glm.hpp>
-#include <glm/gtx/transform.hpp> 
+#include <glm/gtx/transform.hpp>
 
-#include "MouseListener.h"
-#include "KeyboardListener.h"
-#include "InputEventHandler.h"
+#include "../input/MouseListener.h"
+#include "../input/KeyboardListener.h"
+#include "../input/InputEventHandler.h"
 
 class Camera : public MouseListener, public KeyboardListener
 {
@@ -81,4 +81,3 @@ class Camera : public MouseListener, public KeyboardListener
         //Reset the camera's position and orientation to it's origional values.
         void Reset();
 };
-

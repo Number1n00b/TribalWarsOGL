@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include <SDL.h>
+#include <sdl/SDL.h>
 
 class Display{
 	public:
@@ -12,7 +12,7 @@ class Display{
 		void Update();
 
 		float GetAspectRatio();
-        
+
         void UpdateViewport(int width, int height);
 
         SDL_Window* GetWindow();

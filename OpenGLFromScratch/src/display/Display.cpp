@@ -1,10 +1,10 @@
 #include <iostream>
 #include <GL/glew.h>
 #include <windows.h>
-#include <SDL_syswm.h>
+#include <sdl/SDL_syswm.h>
 
 #include "Display.h"
-#include "main.h"
+#include "../main.h"
 
 Display::Display(int width, int height, const std::string& title) {
 	std::cout << "Constructing Display..." << std::endl;

@@ -25,6 +25,9 @@ using std::cout;
 using std::endl;
 using glm::vec3;
 
-int main(void){
-   cout << "Test" << endl;
+int main(int argc, char** argv){
+   char temp;
+
+   cin >> temp;
+   cout << temp;
 }

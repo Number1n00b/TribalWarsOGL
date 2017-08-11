@@ -1,5 +1,5 @@
 #include <iostream>
-#include <SDL.h>
+#include <sdl/SDL.h>
 
 #include "InputEventHandler.h"
 

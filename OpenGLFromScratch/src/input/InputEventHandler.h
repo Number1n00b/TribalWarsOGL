@@ -1,13 +1,13 @@
 #pragma once
-#include <SDL.h>
+#include <sdl/SDL.h>
 #include <vector>
 
-#include "main.h"
+#include "../main.h"
 #include "KeyboardListener.h"
 #include "MouseListener.h"
 
 //This key enumeration combined with keys_down array is used only for keys that are usually held down.
-static enum e_keys {
+enum e_keys {
     //Common movement keys.
     KEY_W,
     KEY_A,
@@ -46,7 +46,7 @@ static enum e_keys {
     KEY_LEFT,
     KEY_RIGHT,
 
-    //Numpad. 
+    //Numpad.
     KEY_NUM0,
 
     //Special ability keys.
@@ -56,7 +56,7 @@ static enum e_keys {
     KEY_SPACE,
 
     KEY_DEL,
-    
+
 
     //Modifiers
     KEY_LSHIFT,
@@ -89,9 +89,8 @@ class InputEventHandler {
 
         void UpdateKeyDownArray(SDL_Event e);
 
-    private:    
+    private:
         std::vector<KeyboardListener*> m_keyboardListeners;
 
         std::vector<MouseListener*> m_mouseListeners;
 };
-
