@@ -4,7 +4,7 @@ GL_IDIR =include/
 SDL_LDIR =lib/sdl
 
 CC=g++
-CFLAGS=-std=c++11 -I $(GLM_IDIR) -I $(GL_IDIR) -L $(SDL_LDIR)
+CFLAGS=-I $(GLM_IDIR) -I $(GL_IDIR) -L $(SDL_LDIR)
 EXEC=MyGame
 EXEC2=temp
 
