@@ -15,6 +15,17 @@ gradle-app.setting
 # gradle/wrapper/gradle-wrapper.properties
 
 
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
 # User-specific files
 *.suo
 *.user
