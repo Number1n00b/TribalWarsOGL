@@ -1,4 +1,7 @@
+#include <stdio.h>
+
 #include "WorldObject.h"
+
 
 bool WorldObject::camera_set = false;
 Camera* WorldObject::s_camera = nullptr;

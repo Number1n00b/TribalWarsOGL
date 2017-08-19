@@ -1,5 +1,5 @@
 #pragma once
-#include <sdl/SDL.h>
+#include <SDL.h>
 
 class KeyboardListener
 {

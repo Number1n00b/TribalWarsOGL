@@ -9,7 +9,7 @@ class Transform
 		Transform(const glm::vec3& pos = glm::vec3(),
 			const glm::vec3& rotation = glm::vec3(),
 			const glm::vec3& scale = glm::vec3(1.0f, 1.0f, 1.0f))
-			:m_pos(pos), m_rotation(rotation), m_scale(scale) 
+			:m_pos(pos), m_rotation(rotation), m_scale(scale)
 		{
 			//Empty body.
 		}
@@ -44,9 +44,14 @@ class Transform
 		inline void SetScale(glm::vec3 scale) { m_scale = scale; }
         inline void SetScale(float x, float y, float z) { m_scale = glm::vec3(x, y, z); }
 
+	   ~Transform()
+      {
+			//Empty
+		}
+
+
 	private:
 		glm::vec3 m_pos;
 		glm::vec3 m_rotation;
 		glm::vec3 m_scale;
 };
-

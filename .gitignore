@@ -4,6 +4,7 @@
 #Gradle files.
 # Ignore Gradle GUI config
 gradle-app.setting
+.gradle/
 
 # Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
 !gradle-wrapper.jar
@@ -19,7 +20,7 @@ gradle-app.setting
 *.lai
 *.la
 *.a
-*.lib
+#*.lib
 
 # Executables
 *.exe

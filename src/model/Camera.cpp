@@ -42,6 +42,7 @@ glm::vec3 Camera::GetPosition() {
 
 
 void Camera::HandleMouseMovement() {
+   using std::isnan;
 
     if (m_MouseMoved) {
         if (!isnan(m_MouseDelta.x) && !isnan(m_MouseDelta.y)) {
@@ -129,7 +130,7 @@ void Camera::NotifyMouseEvent(SDL_Event e) {
     switch (e.type) {
         case SDL_MOUSEMOTION:
         {
-            if (game_state == GAME_STATE::RUNNING) {
+            if (game_state == RUNNING) {
                 //cout << "{Camera}: Mouse Moved: (" << e.motion.x << ", " << e.motion.y << ")" << endl;
                 glm::vec2 relative = glm::vec2(e.motion.x - m_ReferenceMousePositionX, e.motion.y - m_ReferenceMousePositionY);
                 m_MouseDelta = glm::normalize(relative);

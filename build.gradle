@@ -2,21 +2,65 @@ apply plugin: 'cpp'
 
 
 model {
-   components {
-      main(NativeExecutableSpec) {
-         sources {
-            cpp {
-               source {
-                  srcDir "src/temp"
-                  include "**/*.cpp"
-               }
-               exportedHeaders{
-                  srcDirs "include/glm", "include/gl", "include/sdl"
-                  include "*.h"
-                  include "*.hpp"
-               }
+   repositories{
+      print "====== repositories\n"
+      libs(PrebuiltLibraries){
+         SDL2{
+            print "SDL2 ==============\n"
+             binaries.withType(SharedLibraryBinary) {
+                print "binadirs============\n"
+               sharedLibraryFile = file("lib/sdl2/SDL2.dll")
+               sharedLibraryLinkFile = file("lib/sdl2/SDL2.lib")
+            }
+         }
+         OpenGL32{
+             binaries.withType(StaticLibraryBinary) {
+                staticLibraryFile = file("lib/gl/OpenGL32.Lib")
+            }
+         }
+         glew{
+             binaries.withType(StaticLibraryBinary) {
+                staticLibraryFile = file("lib/glew/glew32.lib")
             }
          }
       }
    }
-}
+
+   components {
+      main(NativeExecutableSpec) {
+         sources {
+            print "test"
+            cpp.lib library: 'SDL2'
+            cpp.lib library: 'OpenGL32', linkage: 'static'
+            cpp.lib library: 'glew', linkage: 'static'
+
+            cpp {
+               source {
+                  srcDir "src"
+                  include "**/*.cpp"
+
+                  exclude "temp/*.cpp"
+               } //End of source.
+
+               exportedHeaders{
+                  srcDirs "include/glm", "include/glew", "include/SDL2"
+                  include "*.h"
+                  include "*.hpp"
+               } //End of exportedHeaders.
+
+            } //End of cpp.
+
+         } //End of sources.
+
+      } //End of main.
+
+   } //End of components.
+
+   binaries{
+      all{
+         cppCompiler.args "-std=c++11 -Wall"
+         //linker.args "-lopengl32", "-lglew32", "-lSDL2"
+      }
+   }
+
+} //End of model.

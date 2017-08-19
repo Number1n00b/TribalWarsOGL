@@ -1,6 +1,6 @@
 #pragma once
 
-#include <sdl/SDL.h>
+#include <SDL.h>
 
 #include "WorldObject.h"
 #include "../input/KeyboardListener.h"

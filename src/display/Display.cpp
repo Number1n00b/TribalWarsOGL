@@ -1,7 +1,7 @@
 #include <iostream>
 #include <GL/glew.h>
 #include <windows.h>
-#include <sdl/SDL_syswm.h>
+#include <SDL_syswm.h>
 
 #include "Display.h"
 #include "../main.h"

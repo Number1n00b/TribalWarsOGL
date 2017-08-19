@@ -33,13 +33,6 @@ NOTES:
 To make the camera track an object, simply set its lookDirection to object.pos - cam.pos
 */
 
-#pragma comment(lib, "winmm.lib")
-#pragma comment(lib, "opengl32.lib")
-#pragma comment(lib, "glu32.lib")
-#pragma comment(lib, "glew32.lib")
-#pragma comment(lib, "SDL2.lib")
-#pragma comment(lib, "SDL2main.lib")
-
 //Standard libs.
 #include <iostream>
 #include <windows.h>
@@ -52,8 +45,8 @@ To make the camera track an object, simply set its lookDirection to object.pos -
 #define SDL_MAIN_HANDLED
 
 //Libraries for mouse pointer manipulation.
-#include <sdl/SDL.h>
-#include <sdl/SDL_syswm.h>
+#include <SDL.h>
+#include <SDL_syswm.h>
 
 #include "main.h"
 

@@ -10,8 +10,8 @@
 #define SDL_MAIN_HANDLED
 
 //Libraries for mouse pointer manipulation and other IO.
-// #include <sdl/SDL.h>
-// #include <sdl/SDL_syswm.h>
+#include <SDL.h>
+#include <SDL_syswm.h>
 
 //Own header file.
 #include "new_main.h"
