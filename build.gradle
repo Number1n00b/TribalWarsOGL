@@ -2,13 +2,12 @@ apply plugin: 'cpp'
 
 
 model {
+   //Here we set up the linking for the prebuilt libraries.
+
    repositories{
-      print "====== repositories\n"
       libs(PrebuiltLibraries){
          SDL2{
-            print "SDL2 ==============\n"
              binaries.withType(SharedLibraryBinary) {
-                print "binadirs============\n"
                sharedLibraryFile = file("lib/sdl2/SDL2.dll")
                sharedLibraryLinkFile = file("lib/sdl2/SDL2.lib")
             }
@@ -29,11 +28,14 @@ model {
    components {
       main(NativeExecutableSpec) {
          sources {
-            print "test"
+            // I believe this is where gradle is supposed to go 'ok i need to link these things'
+            // Not sure if I have to add more commands to actually make it link?
+
             cpp.lib library: 'SDL2'
             cpp.lib library: 'OpenGL32', linkage: 'static'
             cpp.lib library: 'glew', linkage: 'static'
 
+            // Specify source and headers.
             cpp {
                source {
                   srcDir "src"
@@ -43,6 +45,7 @@ model {
                } //End of source.
 
                exportedHeaders{
+                  // Specift external header locations.
                   srcDirs "include/glm", "include/glew", "include/SDL2"
                   include "*.h"
                   include "*.hpp"
@@ -58,8 +61,7 @@ model {
 
    binaries{
       all{
-         cppCompiler.args "-std=c++11 -Wall"
-         //linker.args "-lopengl32", "-lglew32", "-lSDL2"
+         cppCompiler.args "-std=c++11", "-Wall"
       }
    }
 
