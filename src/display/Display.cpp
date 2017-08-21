@@ -4,7 +4,7 @@
 #include <SDL_syswm.h>
 
 #include "Display.h"
-#include "../main.h"
+#include "../main/main.h"
 
 Display::Display(int width, int height, const std::string& title) {
 	std::cout << "Constructing Display..." << std::endl;

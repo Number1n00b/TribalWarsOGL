@@ -1,10 +1,12 @@
 #include <iostream>
 #include "Camera.h"
-#include "../main.h"
+#include "../main/main.h"
 #include "../util/Util.h"
 
 #include "../input/KeyboardListener.h"
 #include "../input/InputEventHandler.h"
+
+using std::isnan;
 
 Camera::Camera(const glm::vec3& pos, glm::vec3 look_direction, glm::vec3 up_direction, float fov, float aspect, float z_near, float z_far)
 {
@@ -13,6 +15,7 @@ Camera::Camera(const glm::vec3& pos, glm::vec3 look_direction, glm::vec3 up_dire
 	m_Perspective = glm::perspective(fov * m_ZoomFactor, aspect, z_near, z_far);
 
 	m_Position = m_StartingPos = pos;
+    m_DesiredLookDirection = look_direction;
 	m_LookDirection = m_StartingLookDir = look_direction;
 	m_up = m_StartingUp = up_direction;
 
@@ -24,12 +27,17 @@ Camera::Camera(const glm::vec3& pos, glm::vec3 look_direction, glm::vec3 up_dire
     m_ReferenceMousePositionX = Window::window_width / 2;
     m_ReferenceMousePositionY = Window::window_height / 2;
 
-    m_XSensitivity = 0.013;
-    m_YSensitivity = 0.013;
+    //Currently useless.
+    m_XSensitivity = 0.1;
+    m_YSensitivity = 0.1;
 
     m_MouseMoved = false;
 
-    m_Speed = 0.1;
+    //Units: m/s
+    m_Speed = 5;
+
+    //Units: deg / s
+    m_RotSpeed = 420;
 }
 
 glm::mat4 Camera::GetViewProjection() const{
@@ -41,45 +49,70 @@ glm::vec3 Camera::GetPosition() {
 }
 
 
-void Camera::HandleMouseMovement() {
-   using std::isnan;
-
+void Camera::UpdateRotation(double delta) {
     if (m_MouseMoved) {
         if (!isnan(m_MouseDelta.x) && !isnan(m_MouseDelta.y)) {
-            //Horizontal rotation.
-            m_LookDirection = glm::mat3(glm::rotate(-m_MouseDelta.x * m_XSensitivity, m_up)) * m_LookDirection;
+            glm::vec3 horizontal_axis = glm::cross(m_LookDirection, m_up);
+            glm::vec3 vertical_axis = m_up;
 
-            glm::vec3 vertical_rotation_axis = glm::cross(m_LookDirection, m_up);
+            //Calculate the new look direction.
+            //Rotate horizontaly. (About the vertical axis)
+            m_DesiredLookDirection = glm::mat3(glm::rotate(-m_MouseDelta.x * m_XSensitivity, vertical_axis)) * m_LookDirection;
 
-            //Vertical rotation.
-            m_LookDirection = glm::mat3(glm::rotate(-m_MouseDelta.y * m_YSensitivity, vertical_rotation_axis)) * m_LookDirection;
+            //Rotate vertically. (About the horisontal axis)
+            m_DesiredLookDirection = glm::mat3(glm::rotate(-m_MouseDelta.y * m_YSensitivity, horizontal_axis)) * m_DesiredLookDirection;
+
+            //Ensure look direction cannot go over the top, or below the bottom.
+            float vertical_angle = Math::angle_between_vectors(m_DesiredLookDirection, vertical_axis);
+
+            //If the angle is out of bounds, dont change the look direction at all.
+            if (vertical_angle >= 178 || vertical_angle <= 2) {
+                m_DesiredLookDirection = m_LookDirection;
+            }
 
             //Reset mouse movement so that the cam doesnt move automatically once mouse stops.
             m_MouseDelta = glm::vec2(0, 0);
             m_MouseMoved = false;
+
+            glm::vec3 rotation_axis = glm::cross(m_LookDirection, m_DesiredLookDirection);
+            using namespace std;
+
+            double degrees = m_RotSpeed * delta / 1000;
+            double radians = degrees / 180 * M_PI;
+            glm::vec3 new_look_dir = glm::mat3(glm::rotate(float(radians), rotation_axis)) * m_LookDirection;
+
+            if ( !(isnan(new_look_dir.x) || isnan(new_look_dir.y) || isnan(new_look_dir.z)) ) {
+                m_LookDirection = new_look_dir;
+            }
+
+            //@Debug
+            //std::cout << "looking: " << m_LookDirection.x << ", " << m_LookDirection.y << ", " << m_LookDirection.z << std::endl;
+
         }
         else {
             //@DEBUG
-            std::cout << "MouseDelta was NAN.\n";
+            //std::cout << "MouseDelta was NAN.\n";
         }
     }
 }
 
-void Camera::HandleKeyInput() {
+void Camera::HandleMovement(double delta) {
     glm::vec3 move_dir(0, 0, 0);
+
+    glm::vec3 curr_right = glm::cross(m_LookDirection, m_up);
 
     //WASD
     if (keys_down[KEY_W]) {
         move_dir += m_LookDirection;
     }
     if (keys_down[KEY_A]) {
-        move_dir += -glm::cross(m_LookDirection, m_up);
+        move_dir += -curr_right;
     }
     if (keys_down[KEY_S]) {
         move_dir += -m_LookDirection;
     }
     if (keys_down[KEY_D]) {
-        move_dir += glm::cross(m_LookDirection, m_up);
+        move_dir += curr_right;
     }
 
     //Up
@@ -95,12 +128,14 @@ void Camera::HandleKeyInput() {
     //@FIXME currently if the user is looking 'up' and presses UP and FORWARD at the same time,
     //the effective velocity is doubled. To fix use glm::normalise on move_dir,
     //but for some reason this makes the screen blank atm, so Ill fix it later.
-    m_Position += move_dir * m_Speed;
+    m_Position += move_dir * float(m_Speed * delta / 1000.0f);
 }
 
-void Camera::Update() {
-    HandleKeyInput();
+void Camera::Update(double delta) {
+    HandleMovement(delta);
+    UpdateRotation(delta);
 }
+
 
 void Camera::NotifyKeyEvent(SDL_Event e) {
     switch (e.type) {
@@ -120,7 +155,10 @@ void Camera::NotifyKeyEvent(SDL_Event e) {
 
 void Camera::Reset() {
     m_Position = m_StartingPos;
+
     m_LookDirection = m_StartingLookDir;
+    m_DesiredLookDirection = m_StartingLookDir;
+
     m_up = m_StartingUp;
 }
 
@@ -130,14 +168,12 @@ void Camera::NotifyMouseEvent(SDL_Event e) {
     switch (e.type) {
         case SDL_MOUSEMOTION:
         {
-            if (game_state == RUNNING) {
+            if (game_state == GAME_STATE::RUNNING) {
                 //cout << "{Camera}: Mouse Moved: (" << e.motion.x << ", " << e.motion.y << ")" << endl;
                 glm::vec2 relative = glm::vec2(e.motion.x - m_ReferenceMousePositionX, e.motion.y - m_ReferenceMousePositionY);
                 m_MouseDelta = glm::normalize(relative);
 
                 m_MouseMoved = true;
-
-                HandleMouseMovement();
             }
 
             break;

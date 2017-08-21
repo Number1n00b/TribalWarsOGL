@@ -1,7 +1,4 @@
-#include <stdio.h>
-
 #include "WorldObject.h"
-
 
 bool WorldObject::camera_set = false;
 Camera* WorldObject::s_camera = nullptr;
@@ -65,10 +62,6 @@ void WorldObject::Draw() {
         //Draw the object's mesh.
         m_mesh->Draw();
     }
-}
-
-void WorldObject::Update() {
-    //Empty, should be overwritten in subclasses to define custom behaviour.
 }
 
 WorldObject::~WorldObject() {

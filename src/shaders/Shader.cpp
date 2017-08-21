@@ -2,6 +2,8 @@
 #include <iostream>
 #include <fstream>
 
+#include "../util/Util.h"
+
 static std::string LoadShader(const std::string& fileName);
 static void CheckShaderError(GLuint shader, GLuint flag, bool isProgram, const std::string& errorMessage);
 static GLuint CreateShader(const std::string&& text, GLenum shaderType);
@@ -10,7 +12,7 @@ Shader::Shader(const std::string& fileName)
 {
 	std::cout << "Creating shaders..." << std::endl;
 
-	//Creates some space on the GPU for a program. 
+	//Creates some space on the GPU for a program.
 	m_program = glCreateProgram();
 
 	m_shaders[VERTEX] = CreateShader(LoadShader(fileName + ".v.glsl"), GL_VERTEX_SHADER);
@@ -22,6 +24,7 @@ Shader::Shader(const std::string& fileName)
 	}
 
 	//Ensure 'position' is spelled the same as in the shader program itself.
+    //These match up to the items defined in Mesh.cpp, each one is a VBO inside the VAO
 	glBindAttribLocation(m_program, 0, "position");
 	glBindAttribLocation(m_program, 1, "texCoord");
 	glBindAttribLocation(m_program, 2, "normal");
@@ -127,4 +130,3 @@ static void CheckShaderError(GLuint shader, GLuint flag, bool isProgram, const s
 		std::cout << errorMessage << " '" << error << "'" << std::endl;
 	}
 }
-

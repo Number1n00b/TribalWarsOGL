@@ -1,29 +1,17 @@
 #pragma once
-#include <glm/glm.hpp>
-#include <iostream>
-#include <stdio.h>
 
-#include "Transform.h"
+#include "WorldObject.h"
 #include "Texture.h"
 #include "Mesh.h"
 #include "Camera.h"
 #include "../shaders/Shader.h"
 
-//Anything that could appear on screen should inherit from this class.
-class WorldObject
+class DrawableObject : public WorldObject
 {
     public:
-	    WorldObject(std::string name, Shader *shader, Texture *texture, Mesh *mesh, Transform transform);
+        DrawableObject(std::string name, Shader* shader, Texture *texture, Mesh *mesh, Transform transform);
 
         virtual void Draw();
-
-        virtual void Update(double delta) = 0;
-        //Some3DContainer GetBounds(); @Incomplete, this is where we would get the rough outlines for collision.
-
-	    virtual ~WorldObject();
-
-        //The name of the object, means nothing but is useful for debugging.
-        std::string name;
 
         Transform& GetTransform();
 
@@ -32,12 +20,11 @@ class WorldObject
 
         static void SetCamera(Camera* cam);
 
+        ~DrawableObject();
+
     protected:
         //Flag to ensure camera is always set.
         static bool camera_set;
-
-        //Position and orientation in worldspace.
-        Transform m_transform;
 
         //The shader to use when drawing this object.
         Shader *m_shader;

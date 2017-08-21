@@ -2,7 +2,7 @@
 #include <SDL.h>
 #include <vector>
 
-#include "../main.h"
+#include "../main/main.h"
 #include "KeyboardListener.h"
 #include "MouseListener.h"
 

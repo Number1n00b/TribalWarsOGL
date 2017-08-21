@@ -51,20 +51,20 @@ To make the camera track an object, simply set its lookDirection to object.pos -
 #include "main.h"
 
 //Output
-#include "display/Display.h"
+#include "../display/Display.h"
 
 //Model Classes
-#include "shaders/Shader.h"
-#include "model/Mesh.h"
-#include "model/Texture.h"
-#include "model/Transform.h"
-#include "model/Camera.h"
-#include "model/WorldObject.h"
-#include "model/Player.h"
-#include "model/OscilatingObject.h"
+#include "../model/Mesh.h"
+#include "../shaders/Shader.h"
+#include "../model/Texture.h"
+#include "../model/Transform.h"
+#include "../model/Camera.h"
+#include "../model/Player.h"
+#include "../model/WorldObject.h"
+#include "../model/OscilatingObject.h"
 
 //Input
-#include "input/InputEventHandler.h"
+#include "../input/InputEventHandler.h"
 
 //Moise position, used to capture and reset mouse on pause / unpause.
 int prev_cursor_X = 0;

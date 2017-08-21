@@ -40,7 +40,7 @@ class Camera : public MouseListener, public KeyboardListener
 
         void NotifyScreenResize(int width, int height);
 
-        void Update();
+        void Update(double delta);
 
 	private:
 		//Perspective variables.
@@ -50,7 +50,12 @@ class Camera : public MouseListener, public KeyboardListener
 
         float m_XSensitivity;
         float m_YSensitivity;
+
+        //Units: m / s
         float m_Speed;
+
+        //Units: deg / s
+        float m_RotSpeed;
 
         float m_ZoomFactor;
 
@@ -63,6 +68,8 @@ class Camera : public MouseListener, public KeyboardListener
 		glm::vec3 m_LookDirection;
 		glm::vec3 m_up;
 
+        glm::vec3 m_DesiredLookDirection;
+
         //The initial values for perspective, so that resetting is always consistant.
         glm::vec3 m_StartingPos;
         glm::vec3 m_StartingLookDir;
@@ -72,11 +79,11 @@ class Camera : public MouseListener, public KeyboardListener
         glm::vec2 m_MouseDelta;
         bool m_MouseMoved;
 
-		void UpdatePerspective();
+        void UpdatePerspective();
 
-        //Handleing of input events.
-        void HandleMouseMovement();
-        void HandleKeyInput();
+        //Updateing position and rotation.
+        void UpdateRotation(double delta);
+        void HandleMovement(double delta);
 
         //Reset the camera's position and orientation to it's origional values.
         void Reset();

@@ -10,13 +10,15 @@ OscilatingObject::OscilatingObject(std::string name, Shader *shader, Texture *te
     m_Counter = 0;
 
     m_Amp = amplitude;
+
+    m_start_pos = transform.GetPos();
 }
 
 
-void OscilatingObject::Update() {
-    GetTransform().SetPos(m_Axis * (m_Amp * sinf(m_Counter)));
+void OscilatingObject::Update(double delta) {
+    GetTransform().SetPos(m_start_pos + (m_Axis * (m_Amp * sinf(m_Counter))));
 
-    m_Counter += m_Speed;
+    m_Counter += m_Speed * delta / 1000;
 }
 
 

@@ -53,17 +53,17 @@ OBJModel::OBJModel(const std::string& fileName)
 		std::cerr << "Unable to load mesh: " << fileName << std::endl;
 	}
 
-    //@HACK @FIXME @INCOMPLETE. 
-    //@HACK @FIXME @INCOMPLETE. 
-    //@HACK @FIXME @INCOMPLETE. 
-    //@HACK @FIXME @INCOMPLETE. 
-    //@HACK @FIXME @INCOMPLETE. 
+    //@HACK @FIXME @INCOMPLETE.
+    //@HACK @FIXME @INCOMPLETE.
+    //@HACK @FIXME @INCOMPLETE.
+    //@HACK @FIXME @INCOMPLETE.
+    //@HACK @FIXME @INCOMPLETE.
     //UV's currently cause segfault for out of bounds access, so I just disable them.
-    //hasUVs = false;
-    //@HACK @FIXME @INCOMPLETE. 
-    //@HACK @FIXME @INCOMPLETE. 
-    //@HACK @FIXME @INCOMPLETE. 
-    //@HACK @FIXME @INCOMPLETE. 
+    hasUVs = false;
+    //@HACK @FIXME @INCOMPLETE.
+    //@HACK @FIXME @INCOMPLETE.
+    //@HACK @FIXME @INCOMPLETE.
+    //@HACK @FIXME @INCOMPLETE.
 
 
 
