@@ -9,17 +9,16 @@ model {
          SDL2{
              binaries.withType(SharedLibraryBinary) {
                sharedLibraryFile = file("lib/sdl2/SDL2.dll")
-               sharedLibraryLinkFile = file("lib/sdl2/SDL2.lib")
+            }
+         }
+         glew32{
+             binaries.withType(SharedLibraryBinary) {
+                sharedLibraryFile = file("lib/glew/glew32.dll")
             }
          }
          OpenGL32{
              binaries.withType(StaticLibraryBinary) {
                 staticLibraryFile = file("lib/gl/OpenGL32.Lib")
-            }
-         }
-         glew{
-             binaries.withType(StaticLibraryBinary) {
-                staticLibraryFile = file("lib/glew/glew32.lib")
             }
          }
       }
@@ -32,20 +31,18 @@ model {
             // Not sure if I have to add more commands to actually make it link?
 
             cpp.lib library: 'SDL2'
+            cpp.lib library: 'glew32'
             cpp.lib library: 'OpenGL32', linkage: 'static'
-            cpp.lib library: 'glew', linkage: 'static'
 
             // Specify source and headers.
             cpp {
                source {
                   srcDir "src"
                   include "**/*.cpp"
-
-                  exclude "temp/*.cpp"
                } //End of source.
 
                exportedHeaders{
-                  // Specift external header locations.
+                  // Specify external header locations.
                   srcDirs "include/glm", "include/glew", "include/SDL2"
                   include "*.h"
                   include "*.hpp"
@@ -61,7 +58,7 @@ model {
 
    binaries{
       all{
-         cppCompiler.args "-std=c++11", "-Wall"
+         cppCompiler.args "-std=c++11", "-Wall", "-lSDL2", "-lglew32"
       }
    }
 
