@@ -26,8 +26,19 @@ Class Member Variables:
 15) Load .mtl files and learn how to use them.
 
 18) Fix camera movement jitter / stuttering and check why normalise sometimes returns NAN in camera.
+    This is due to the update being called at irregular intervals. Having a fixed - timestep loop in main would fix this issue.
+    (Linear interpolation).
 
 19) Create spawner class to spawn objects. (Factory Pattern?)
+
+
+
+=========== WARNING ============
+
+For all my rotating and oscilating objects, and possibly some others, I am incrementing their counters indefinately. (Mostly in their angles).
+When this runs for a long time it could cause overflow and crash.
+
+=========== WARNING ============
 
 NOTES:
 To make the camera track an object, simply set its lookDirection to object.pos - cam.pos
@@ -36,6 +47,7 @@ To make the camera track an object, simply set its lookDirection to object.pos -
 //Standard libs.
 #include <iostream>
 #include <windows.h>
+#include <string.h>
 
 //Graphics libs.
 #include <GL/glew.h>
@@ -53,15 +65,19 @@ To make the camera track an object, simply set its lookDirection to object.pos -
 //Output
 #include "../display/Display.h"
 
+//Shaders
+#include "../shaders/Shader.h"
+
 //Model Classes
 #include "../model/Mesh.h"
-#include "../shaders/Shader.h"
-#include "../model/Texture.h"
 #include "../model/Transform.h"
+#include "../model/Texture.h"
 #include "../model/Camera.h"
-#include "../model/Player.h"
 #include "../model/WorldObject.h"
+#include "../model/Player.h"
 #include "../model/OscilatingObject.h"
+#include "../model/RotatingObject.h"
+#include "../model/StaticObject.h"
 
 //Input
 #include "../input/InputEventHandler.h"
@@ -95,8 +111,9 @@ using std::cin;
 using std::cout;
 using std::endl;
 using glm::vec3;
+using std::string;
 
-void Initialise() {
+void Initialise_Display() {
     //Craete the window and context.
     main_window = new Display(Window::window_width, Window::window_height, "Main window.");
 
@@ -118,64 +135,87 @@ void Initialise() {
 
     //Set the camera for our drawable class as the main camera.
     WorldObject::SetCamera(main_camera);
-
-    Game::ResumeGame();
 }
 
 
 void CreateWorldObjects() {
     //Here we create all of the objects that start out in the world. Later we can have a list of startup objects and just iterate through it, creating them all.
 
+    string shader_dir = "F:/Programming_Projects/CPP/OpenGLFromScratch/src/shaders";
+    string resource_dir = "F:/Programming_Projects/CPP/OpenGLFromScratch/res";
+
     //Create the basic shaders.
-    Shader *standard_shader = new Shader("./res/basicShader");
+    Shader *standard_shader = new Shader(shader_dir + "/basicShader");
 
     //Load our tectures.
-    Texture* piranahs_tex = new Texture("./res/download.jpg");
-    Texture* bricks_tex = new Texture("./res/bricks.jpg");
-    Texture* floor_tex = new Texture("./res/sand.jpg");
+    Texture* bricks_tex = new Texture(resource_dir + "/bricks.jpg");
+    Texture* sand_tex = new Texture(resource_dir + "/sand.jpg");
 
-    Texture* x_tex = new Texture("./res/x.jpg");
-    Texture* y_tex = new Texture("./res/y.jpg");
-    Texture* z_tex = new Texture("./res/z.jpg");
-    Texture* blue = new Texture("./res/blue.jpg");
+    Texture* x_tex = new Texture(resource_dir + "/x.jpg");
+    Texture* y_tex = new Texture(resource_dir + "/y.jpg");
+    Texture* z_tex = new Texture(resource_dir + "/z.jpg");
+    Texture* blue_tex = new Texture(resource_dir + "/blue.jpg");
+    Texture* grid_tex = new Texture(resource_dir + "/grid.jpg");
 
     //Load the game object meshes.
-    Mesh* monkey_mesh = new Mesh("./res/monkey3.obj");
-    Mesh* car_mesh = new Mesh("./res/myCar.obj");
-    Mesh* plane_mesh = new Mesh("./res/6x6_plane.obj");
+    Mesh* monkey_mesh = new Mesh(resource_dir + "/monkey3.obj");
+    Mesh* car_mesh = /*monkey_mesh;*/new Mesh(resource_dir + "/myCar.obj");
+    Mesh* plane_mesh = new Mesh(resource_dir + "/6x6_plane.obj");
 
     //This transform ensures the monkeys face the right direction on spawn.
     Transform oriented_monkey;
-    oriented_monkey.SetRotation(-3.14 / 2, 3.14, 0);
+    oriented_monkey.SetPos(0, 0, 20);
+    oriented_monkey.SetRotation(0, 3.14, 0);
 
     //Create our drawable game objects.
     vec3 x_axis = vec3(1, 0, 0);
     vec3 y_axis = vec3(0, 1, 0);
     vec3 z_axis = vec3(0, 0, 1);
-    float speed = 0.02;
-    float amplitude = 5;
+    float speed = 3;
+    float amplitude = 6;
 
     //Create oscilating monkeys for perspective.
     WorldObject* monkey_x = new OscilatingObject("Monkey Number One", standard_shader, x_tex, monkey_mesh, oriented_monkey, x_axis, speed, amplitude);
     world_objects.push_back(monkey_x);
 
-    WorldObject* monkey_y = new OscilatingObject("Monkey Number Two", standard_shader, y_tex, monkey_mesh, oriented_monkey, y_axis, speed, amplitude);
+    WorldObject* monkey_y = new OscilatingObject("Monkey Number Two", standard_shader, y_tex, monkey_mesh, oriented_monkey, y_axis, speed, amplitude/2);
     world_objects.push_back(monkey_y);
 
-    WorldObject* monkey_z = new OscilatingObject("Monkey Number Three", standard_shader, z_tex, monkey_mesh, oriented_monkey, z_axis, speed, amplitude);
+    WorldObject* monkey_z = new OscilatingObject("Monkey Number Three", standard_shader, z_tex, monkey_mesh, oriented_monkey, z_axis, speed, amplitude/3);
     world_objects.push_back(monkey_z);
 
-    //Create a plane. Floor?
-    vec3 floor_pos = vec3(0, -3, 0);
-    WorldObject* floor = new OscilatingObject("Monkey Number Three", standard_shader, z_tex, monkey_mesh, oriented_monkey, z_axis, speed, amplitude);
+    //Create some rotating cars on the side too.
+    float rot_speed = 240; //deg/sec
+
+    Transform left_car_t;
+    left_car_t.SetPos(-10, 0, 1);
+    WorldObject* left_car = new RotatingObject("Left spinny car", standard_shader, blue_tex, car_mesh, left_car_t, z_axis, rot_speed);
+    world_objects.push_back(left_car);
+
+    Transform right_car_t;
+    right_car_t.SetPos(10, 0, 1);
+    WorldObject* right_car = new RotatingObject("Right spinny car", standard_shader, blue_tex, car_mesh, right_car_t, x_axis, rot_speed);
+    world_objects.push_back(right_car);
+
+    //Create a standing monkey.
+    Transform still_pos;
+    still_pos.SetPos(5, -1, -10);
+    WorldObject* still_monkey = new StaticObject("Monkey Still", standard_shader, grid_tex, monkey_mesh, still_pos);
+    world_objects.push_back(still_monkey);
+
+    //Create a gloor.
+    Transform floor_pos;
+    floor_pos.SetPos(0, -3, 0);
+    WorldObject* floor = new StaticObject("Floor", standard_shader, grid_tex, plane_mesh, floor_pos);
     world_objects.push_back(floor);
 
+
     //Create the player.
-    /*Transform car_behind;
-    car_behind.SetPos(0, -2, 20);
-    car_behind.SetRotation(0, 3.14/2, 0);
-    Player* car = new Player("Player One", standard_shader, blue, car_mesh, car_behind, event_handler);
-    world_objects.push_back(car);*/
+    Transform car_pos;
+    car_pos.SetPos(-5, -1, -10);
+    car_pos.SetRotation(0, 3.14/2, 0);
+    Player* car = new Player("Player One", standard_shader, grid_tex, car_mesh, car_pos, event_handler);
+    world_objects.push_back(car);
 }
 
 
@@ -183,8 +223,9 @@ int main(int argc, char *argv[]) {
 	cout << "====== Starting Program... ======" << endl;
 
     //Initalise the basics, Camera, UI, window, eventhandler.
-    Initialise();
+    Initialise_Display();
 
+    //Create all the objects in the world.
     CreateWorldObjects();
     for (std::vector<WorldObject*>::iterator it = world_objects.begin(); it != world_objects.end(); it++) {
         cout << "Name: " << (*it)->name << endl;
@@ -203,6 +244,9 @@ int main(int argc, char *argv[]) {
     int fps_timer_start = prev_time;
     int fps_timer_end;
 
+    //Start the game.
+    Game::ResumeGame();
+
     //The main loop!
 	while (!Game::should_close) {
         //Always handle events regardless of state.
@@ -218,6 +262,17 @@ int main(int argc, char *argv[]) {
 
         time_since_last_frame += dt;
 
+        //Do physics updates
+        if (game_state == RUNNING && dt != 0) {
+            //Update all our objects.
+            for (std::vector<WorldObject*>::iterator it = world_objects.begin(); it != world_objects.end(); it++) {
+                (*it)->Update(dt);
+            }
+
+            //Update the main camera.
+            main_camera->Update(dt);
+        }
+
         //Cap FPS and render only when needed. @NOTE: Physics updates done only on every render call.
         if (time_since_last_frame >= MS_PER_FRAME) {
             num_frames++;
@@ -228,17 +283,6 @@ int main(int argc, char *argv[]) {
                 //cout << "FPS: " << (float(num_frames) / (float(fps_timer_end - fps_timer_start) / 1000.0)) << endl;
                 fps_timer_start = fps_timer_end;
                 num_frames = 0;
-            }
-
-            //Do physics updates
-            if (game_state == RUNNING) {
-                //Update all our objects.
-                for (std::vector<WorldObject*>::iterator it = world_objects.begin(); it != world_objects.end(); it++) {
-                    (*it)->Update();
-                }
-
-                //Update the main camera.
-                main_camera->Update();
             }
 
             //Render

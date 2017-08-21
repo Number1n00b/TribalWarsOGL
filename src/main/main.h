@@ -1,6 +1,6 @@
 #pragma once
-#include "display/Display.h"
-#include "model/Camera.h"
+#include "../display/Display.h"
+#include "../model/Camera.h"
 
 enum GAME_STATE {
     RUNNING,
