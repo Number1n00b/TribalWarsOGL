@@ -146,6 +146,7 @@ void CreateWorldObjects() {
 
     //Create the basic shaders.
     Shader *standard_shader = new Shader(shader_dir + "/basicShader");
+    Shader *sphere_shader = new Shader(shader_dir + "/sphereShader");
 
     //Load our tectures.
     Texture* bricks_tex = new Texture(resource_dir + "/bricks.jpg");
@@ -161,6 +162,7 @@ void CreateWorldObjects() {
     Mesh* monkey_mesh = new Mesh(resource_dir + "/monkey3.obj");
     Mesh* car_mesh = /*monkey_mesh;*/new Mesh(resource_dir + "/myCar.obj");
     Mesh* plane_mesh = new Mesh(resource_dir + "/6x6_plane.obj");
+    Mesh* sphere_mesh = new Mesh(resource_dir + "/sphere.obj");
 
     //This transform ensures the monkeys face the right direction on spawn.
     Transform oriented_monkey;
@@ -199,15 +201,21 @@ void CreateWorldObjects() {
 
     //Create a standing monkey.
     Transform still_pos;
-    still_pos.SetPos(5, -1, -10);
-    WorldObject* still_monkey = new StaticObject("Monkey Still", standard_shader, grid_tex, monkey_mesh, still_pos);
-    world_objects.push_back(still_monkey);
+    still_pos.SetPos(0, 0, 0);
+    /*WorldObject* still_monkey = new StaticObject("Monkey Still", standard_shader, grid_tex, monkey_mesh, still_pos);
+    world_objects.push_back(still_monkey);*/
 
-    //Create a gloor.
+
+    //Create a sphere.
+    WorldObject* sphere = new StaticObject("Sphere", sphere_shader, blue_tex, sphere_mesh, still_pos);
+    world_objects.push_back(sphere);
+
+
+    //Create a floor.
     Transform floor_pos;
     floor_pos.SetPos(0, -3, 0);
-    WorldObject* floor = new StaticObject("Floor", standard_shader, grid_tex, plane_mesh, floor_pos);
-    world_objects.push_back(floor);
+    WorldObject* floor_tile = new StaticObject("Floor", standard_shader, grid_tex, plane_mesh, floor_pos);
+    //world_objects.push_back(floor_tile);
 
 
     //Create the player.
