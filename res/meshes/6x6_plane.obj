@@ -1,0 +1,13 @@
+# Blender v2.78 (sub 0) OBJ File: ''
+# www.blender.org
+mtllib 6x6_plane.mtl
+o Plane
+v -3.000000 0.000000 3.000000
+v 3.000000 0.000000 3.000000
+v -3.000000 0.000000 -3.000000
+v 3.000000 0.000000 -3.000000
+vn 0.0000 1.0000 0.0000
+usemtl None
+s off
+#We list in this order to outline the face. (1234 would make a triangle in the face, flipping half of it)
+f 1 2 4 3
