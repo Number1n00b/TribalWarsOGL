@@ -20,9 +20,9 @@ $(OUT_DIR)/EXE_NAME: CopyLibs
 .PHONY: getDeps
 getDeps:
 	# Not working in makefile, but this command works in shell:
-	#for f in src/*/*.c src/*/*.cpp; do g++ -MM $f >> dependancies/test.txt; done
-	
-	for f in src/*/*.c src/*/*.cpp; do (CC) -MM $(f) > $(DEPENDANCY_DIR)/test.txt; done
+	#rm dependancies/dependancies.txt; for f in src/*/*.c src/*/*.cpp; do g++ -MM $f >> dependancies/dependancies.txt; done
+
+	for f in src/*/*.c src/*/*.cpp; do $(CC) -MM $f >> $(DEPENDANCY_DIR)/dependancies.txt; done
 
 .PHONY: CopyLibs
 CopyLibs:
