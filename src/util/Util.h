@@ -5,7 +5,7 @@
 using std::string;
 
 namespace Math{
-    # define PI 3.1415926535897932384
+    # define PI 3.14159265358979323846
 
     float clamp(float val, float min, float max);
 

@@ -17,13 +17,6 @@ $(OUT_DIR)/EXE_NAME: CopyLibs
 	$(CC) $(CFLAGS) ${ALL_SOURCES} -o $(OUT_DIR)/$(EXE_NAME) $(INCLUDE_DIRS) $(LIB_DIRS) $(LINK_COMMANDS)
 
 
-.PHONY: getDeps
-getDeps:
-	# Not working in makefile, but this command works in shell:
-	#rm dependancies/dependancies.txt; for f in src/*/*.c src/*/*.cpp; do g++ -MM $f >> dependancies/dependancies.txt; done
-
-	for f in src/*/*.c src/*/*.cpp; do $(CC) -MM $f >> $(DEPENDANCY_DIR)/dependancies.txt; done
-
 .PHONY: CopyLibs
 CopyLibs:
 	cp lib/glew/glew32.dll bin
