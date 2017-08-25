@@ -63,7 +63,7 @@ void Camera::UpdateRotation(double delta) {
             m_DesiredLookDirection = glm::mat3(glm::rotate(-m_MouseDelta.y * m_YSensitivity, horizontal_axis)) * m_DesiredLookDirection;
 
             //Ensure look direction cannot go over the top, or below the bottom.
-            float vertical_angle = Math::angle_between_vectors(m_DesiredLookDirection, vertical_axis);
+            float vertical_angle = Math::angle_deg(m_DesiredLookDirection, vertical_axis);
 
             //If the angle is out of bounds, dont change the look direction at all.
             if (vertical_angle >= 178 || vertical_angle <= 2) {

@@ -1,11 +1,9 @@
 /*
 TODO LIST:
 NAMING CONVENTION:
-Classes and Functions: FULL CamelCase
-Variables/Parameters: under_scores
-Class Member Variables:
-                    private: m_VariableName
-                    public: variableName
+    Files and Classes: CamelCase
+    Variables/Parameters: under_scores
+    Functions: under_scores OR CamelCalse
 
 4) Rewrite what is not mine, or use other, industry standard, free libaries (obj_loader and stb_image).
 
@@ -17,11 +15,9 @@ Class Member Variables:
 
 11) Make 'escape' toggle a pause menu, during the pause menu the mouse is NOT clipped to the screen. else it is.
 
-12) Idk man... make the UI work with text. FreeType not working FeelsBadMan
+12) Draw text elements
 
-13) Sound?! :O
-
-14) Framerate independant movement. (Change Update() to Update(timestep))
+13) Sound
 
 15) Load .mtl files and learn how to use them.
 
@@ -29,9 +25,7 @@ Class Member Variables:
     This is due to the update being called at irregular intervals. Having a fixed - timestep loop in main would fix this issue.
     (Linear interpolation).
 
-19) Create spawner class to spawn objects. (Factory Pattern?)
-
-
+19) Make cross platform with ifdef guards fow windows and others.
 
 =========== WARNING ============
 
@@ -39,21 +33,17 @@ For all my rotating and oscilating objects, and possibly some others, I am incre
 When this runs for a long time it could cause overflow and crash.
 
 =========== WARNING ============
-
-NOTES:
-To make the camera track an object, simply set its lookDirection to object.pos - cam.pos
 */
 
 //Standard libs.
 #include <iostream>
-#include <windows.h>
+#include <windows.h> //For window events and manupulation. Also needed for glew.
 #include <string.h>
 
 //Graphics libs.
 #include <GL/glew.h>
 
-//This took me much to long to solve. Stops SDL from redefining main causing
-//undefined reference to WinMain@16.
+//Stops SDL from redefining main causing undefined reference to WinMain@16.
 #define SDL_MAIN_HANDLED
 
 //Libraries for mouse pointer manipulation.
@@ -235,9 +225,11 @@ int main(int argc, char *argv[]) {
 
     //Create all the objects in the world.
     CreateWorldObjects();
+    cout << "===== World Objects =====\n";
     for (std::vector<WorldObject*>::iterator it = world_objects.begin(); it != world_objects.end(); it++) {
         cout << "Name: " << (*it)->name << endl;
     }
+    cout << "===== World Objects =====\n";
 
     //Main loop setup.
 	cout << "\nEntering main loop." << endl;

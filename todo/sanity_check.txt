@@ -1,0 +1,50 @@
+============
+   Steps
+============
+- Do I need this file/class?
+- Use #pragma once
+- Check includes for redundancy.
+- Check naming convention:
+    Files and Classes: CamelCase
+    All others: under_scores
+- Efficiency: Pass references where possible.
+- Sanity: Use const on references and pointers where possible.
+
+============
+What's left:
+============
+src
+    display
+        Display
+        UI
+    input
+        InputEventHandler
+        Keyboard
+        KeyboardListener
+        Mouslistener
+    main
+        main
+    model
+        Camera
+        DrawableObject
+        Mesh
+        OscilatingObject
+        Player
+        RotatingObject
+        StaticObject
+        Texture
+        Transform
+        Vertex
+        WorldObject
+    shaders
+        basicShader
+        sphereShader
+
+============
+What's done:
+============
+src
+    util
+        Util
+    shaders
+        Shader

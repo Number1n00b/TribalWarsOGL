@@ -4,66 +4,71 @@
 
 #include "../util/Util.h"
 
+const static string   VERTEX_EXTENSION = ".v.glsl";
+const static string FRAGMENT_EXTENSION = ".f.glsl";
+
 static std::string LoadShader(const std::string& fileName);
 static void CheckShaderError(GLuint shader, GLuint flag, bool isProgram, const std::string& errorMessage);
 static GLuint CreateShader(const std::string&& text, GLenum shaderType);
 
 Shader::Shader(const std::string& fileName)
 {
-	std::cout << "Creating shaders..." << std::endl;
+	std::cout << "Creating shader..." << std::endl;
 
 	//Creates some space on the GPU for a program.
-	m_program = glCreateProgram();
+	program = glCreateProgram();
 
-	m_shaders[VERTEX] = CreateShader(LoadShader(fileName + ".v.glsl"), GL_VERTEX_SHADER);
-	m_shaders[FRAGMENT] = CreateShader(LoadShader(fileName + ".f.glsl"), GL_FRAGMENT_SHADER);
+	shaders[VERTEX] = CreateShader(LoadShader(fileName + VERTEX_EXTENSION), GL_VERTEX_SHADER);
+	shaders[FRAGMENT] = CreateShader(LoadShader(fileName + FRAGMENT_EXTENSION), GL_FRAGMENT_SHADER);
 
 	//Add the shaders to the program.
 	for (unsigned int ii = 0; ii < NUM_SHADERS; ii++) {
-		glAttachShader(m_program, m_shaders[ii]);
+		glAttachShader(program, shaders[ii]);
 	}
 
 	//Ensure 'position' is spelled the same as in the shader program itself.
     //These match up to the items defined in Mesh.cpp, each one is a VBO inside the VAO
-	glBindAttribLocation(m_program, 0, "position");
-	glBindAttribLocation(m_program, 1, "texCoord");
-	glBindAttribLocation(m_program, 2, "normal");
+	glBindAttribLocation(program, 0, "position");
+	glBindAttribLocation(program, 1, "texCoord");
+	glBindAttribLocation(program, 2, "normal");
 
 	//Link the program.
-	glLinkProgram(m_program);
+	glLinkProgram(program);
 
 	//Check for errors.
-	CheckShaderError(m_program, GL_LINK_STATUS, true, "Error: Program failed to link: ");
+	CheckShaderError(program, GL_LINK_STATUS, true, "Error: Program failed to link: ");
 
 	//Validate the program.
-	glValidateProgram(m_program);
+	glValidateProgram(program);
 
 	//Check for errors.
-	CheckShaderError(m_program, GL_VALIDATE_STATUS, true, "Error: Program is invalid: ");
+	CheckShaderError(program, GL_VALIDATE_STATUS, true, "Error: Program is invalid: ");
 
 	//Set our Uniform variables.
-	m_uniforms[TRANSFORM_U] = glGetUniformLocation(m_program, "transform");
+	uniforms[TRANSFORM_U] = glGetUniformLocation(program, "transform");
 }
 
 void Shader::Bind() {
-	glUseProgram(m_program);
+	glUseProgram(program);
 }
 
 void Shader::Update(const Transform& transform, const Camera& camera) {
+	//@Efficiency, calculating the model every update call when we can cache
+	//this value per frame.
 	glm::mat4 model = camera.GetViewProjection() * transform.GetModel();
-	glUniformMatrix4fv(m_uniforms[TRANSFORM_U], 1, GL_FALSE, &model[0][0]);
+	glUniformMatrix4fv(uniforms[TRANSFORM_U], 1, GL_FALSE, &model[0][0]);
 }
 
 Shader::~Shader()
 {
-	std::cout << "Deleting shaders..." << std::endl;
+	std::cout << "Deleting shader..." << std::endl;
 
 	for (int ii = 0; ii < NUM_SHADERS; ii++) {
-		glDetachShader(m_program, m_shaders[ii]);
-		glDeleteShader(m_shaders[ii]);
+		glDetachShader(program, shaders[ii]);
+		glDeleteShader(shaders[ii]);
 	}
 
-	glDeleteProgram(m_program);
+	glDeleteProgram(program);
 }
 
 static GLuint CreateShader(const std::string&& text, GLenum shaderType) {
