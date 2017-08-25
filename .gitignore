@@ -70,7 +70,10 @@ artifacts/
 *_i.h
 *.ilk
 *.meta
-*.obj
+
+# Keep obj files: They are my meshes.
+#*.obj
+
 *.pch
 *.pdb
 *.pgc

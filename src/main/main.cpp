@@ -1,4 +1,12 @@
 /*
+===========
+Next Steps:
+===========
+1) Get text to render.
+2) Use text to make buttons. (Command pattern with Networking)
+3) Networking -> Command pattern with buttons.
+
+
 TODO LIST:
 NAMING CONVENTION:
     Files and Classes: CamelCase
@@ -65,8 +73,6 @@ When this runs for a long time it could cause overflow and crash.
 #include "../model/Camera.h"
 #include "../model/WorldObject.h"
 #include "../model/Player.h"
-#include "../model/OscilatingObject.h"
-#include "../model/RotatingObject.h"
 #include "../model/StaticObject.h"
 
 //Input
@@ -146,7 +152,7 @@ void CreateWorldObjects() {
     Texture* y_tex = new Texture(resource_dir + "/y.jpg");
     Texture* z_tex = new Texture(resource_dir + "/z.jpg");
     Texture* blue_tex = new Texture(resource_dir + "/blue.jpg");
-    Texture* grid_tex = new Texture(resource_dir + "/grid.jpg");
+    Texture* grid_tex = new Texture(resource_dir + "/my_grid.jpg");
 
     //Load the game object meshes.
     Mesh* monkey_mesh = new Mesh(resource_dir + "/monkey3.obj");
@@ -166,40 +172,16 @@ void CreateWorldObjects() {
     float speed = 3;
     float amplitude = 6;
 
-    //Create oscilating monkeys for perspective.
-    WorldObject* monkey_x = new OscilatingObject("Monkey Number One", standard_shader, x_tex, monkey_mesh, oriented_monkey, x_axis, speed, amplitude);
-    world_objects.push_back(monkey_x);
-
-    WorldObject* monkey_y = new OscilatingObject("Monkey Number Two", standard_shader, y_tex, monkey_mesh, oriented_monkey, y_axis, speed, amplitude/2);
-    world_objects.push_back(monkey_y);
-
-    WorldObject* monkey_z = new OscilatingObject("Monkey Number Three", standard_shader, z_tex, monkey_mesh, oriented_monkey, z_axis, speed, amplitude/3);
-    world_objects.push_back(monkey_z);
-
-    //Create some rotating cars on the side too.
-    float rot_speed = 240; //deg/sec
-
-    Transform left_car_t;
-    left_car_t.SetPos(-10, 0, 1);
-    WorldObject* left_car = new RotatingObject("Left spinny car", standard_shader, blue_tex, car_mesh, left_car_t, z_axis, rot_speed);
-    world_objects.push_back(left_car);
-
-    Transform right_car_t;
-    right_car_t.SetPos(10, 0, 1);
-    WorldObject* right_car = new RotatingObject("Right spinny car", standard_shader, blue_tex, car_mesh, right_car_t, x_axis, rot_speed);
-    world_objects.push_back(right_car);
-
     //Create a standing monkey.
     Transform still_pos;
     still_pos.SetPos(0, 0, 0);
-    /*WorldObject* still_monkey = new StaticObject("Monkey Still", standard_shader, grid_tex, monkey_mesh, still_pos);
-    world_objects.push_back(still_monkey);*/
+    WorldObject* still_monkey = new StaticObject("Monkey Still", standard_shader, grid_tex, monkey_mesh, still_pos);
+    world_objects.push_back(still_monkey);
 
 
     //Create a sphere.
     WorldObject* sphere = new StaticObject("Sphere", sphere_shader, blue_tex, sphere_mesh, still_pos);
     world_objects.push_back(sphere);
-
 
     //Create a floor.
     Transform floor_pos;
