@@ -35,8 +35,16 @@ void Player::NotifyKeyEvent(SDL_Event e) {
 }
 
 void Player::Update(double delta) {
-    //Check for angle modifier first
+    //Check for rotataion modifier first
     if (keys_down[KEY_DEL]) {
+        //@FIX ME
+        //@FIX ME
+        //@FIX ME
+        // Currently rotational axis is not around itself,
+        // seems to be relative to where it's rotated or moved to.
+        //@FIX ME
+        //@FIX ME
+        //@FIX ME
         if (keys_down[KEY_UP]) {
             glm::vec3 new_angle = m_transform.GetRotation() + glm::vec3(m_RotationSpeed, 0, 0);
             m_transform.SetRotation(new_angle);
