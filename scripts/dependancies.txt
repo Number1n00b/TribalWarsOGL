@@ -20,30 +20,13 @@ main.o: src/main/main.cpp src/main/main.h src/main/../display/Display.h \
  src/main/../model/Mesh.h src/main/../model/../loaders/obj_loader.h \
  src/main/../model/Vertex.h src/main/../model/Texture.h \
  src/main/../model/WorldObject.h src/main/../model/Player.h \
- src/main/../model/OscilatingObject.h src/main/../model/RotatingObject.h \
  src/main/../model/StaticObject.h
 Camera.o: src/model/Camera.cpp src/model/Camera.h \
  src/model/../input/MouseListener.h src/model/../input/KeyboardListener.h \
  src/model/../input/InputEventHandler.h src/model/../input/../main/main.h \
  src/model/../input/../main/../display/Display.h src/model/../util/Util.h
-DrawableObject.o: src/model/DrawableObject.cpp src/model/DrawableObject.h \
- src/model/WorldObject.h src/model/Transform.h src/model/Texture.h \
- src/model/Mesh.h src/model/../loaders/obj_loader.h src/model/Vertex.h \
- src/model/Camera.h src/model/../input/MouseListener.h \
- src/model/../input/KeyboardListener.h \
- src/model/../input/InputEventHandler.h src/model/../input/../main/main.h \
- src/model/../input/../main/../display/Display.h \
- src/model/../shaders/Shader.h
 Mesh.o: src/model/Mesh.cpp src/model/Mesh.h \
  src/model/../loaders/obj_loader.h src/model/Vertex.h
-OscilatingObject.o: src/model/OscilatingObject.cpp \
- src/model/OscilatingObject.h src/model/WorldObject.h \
- src/model/Transform.h src/model/Texture.h src/model/Mesh.h \
- src/model/../loaders/obj_loader.h src/model/Vertex.h src/model/Camera.h \
- src/model/../input/MouseListener.h src/model/../input/KeyboardListener.h \
- src/model/../input/InputEventHandler.h src/model/../input/../main/main.h \
- src/model/../input/../main/../display/Display.h \
- src/model/../shaders/Shader.h
 Player.o: src/model/Player.cpp src/model/Player.h src/model/WorldObject.h \
  src/model/Transform.h src/model/Texture.h src/model/Mesh.h \
  src/model/../loaders/obj_loader.h src/model/Vertex.h src/model/Camera.h \
@@ -51,14 +34,6 @@ Player.o: src/model/Player.cpp src/model/Player.h src/model/WorldObject.h \
  src/model/../input/InputEventHandler.h src/model/../input/../main/main.h \
  src/model/../input/../main/../display/Display.h \
  src/model/../shaders/Shader.h
-RotatingObject.o: src/model/RotatingObject.cpp src/model/RotatingObject.h \
- src/model/WorldObject.h src/model/Transform.h src/model/Texture.h \
- src/model/Mesh.h src/model/../loaders/obj_loader.h src/model/Vertex.h \
- src/model/Camera.h src/model/../input/MouseListener.h \
- src/model/../input/KeyboardListener.h \
- src/model/../input/InputEventHandler.h src/model/../input/../main/main.h \
- src/model/../input/../main/../display/Display.h \
- src/model/../shaders/Shader.h src/model/../util/Util.h
 StaticObject.o: src/model/StaticObject.cpp src/model/StaticObject.h \
  src/model/WorldObject.h src/model/Transform.h src/model/Texture.h \
  src/model/Mesh.h src/model/../loaders/obj_loader.h src/model/Vertex.h \
