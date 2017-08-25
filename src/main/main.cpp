@@ -1,48 +1,3 @@
-/*
-===========
-Next Steps:
-===========
-1) Get text to render.
-2) Use text to make buttons. (Command pattern with Networking)
-3) Networking -> Command pattern with buttons.
-
-
-TODO LIST:
-NAMING CONVENTION:
-    Files and Classes: CamelCase
-    Variables/Parameters: under_scores
-    Functions: under_scores OR CamelCalse
-
-4) Rewrite what is not mine, or use other, industry standard, free libaries (obj_loader and stb_image).
-
-6) Find a way to initialise GLEW outside of Display.cpp so that if it fails we can close the program. (Do memory management too, deleting context etc).
-
-8) Find out how to draw UI elements. (Possibly use a different shader).
-
-9) Restructure main into an app class with all the variables required, use main to initialise and start the app class.
-
-11) Make 'escape' toggle a pause menu, during the pause menu the mouse is NOT clipped to the screen. else it is.
-
-12) Draw text elements
-
-13) Sound
-
-15) Load .mtl files and learn how to use them.
-
-18) Fix camera movement jitter / stuttering and check why normalise sometimes returns NAN in camera.
-    This is due to the update being called at irregular intervals. Having a fixed - timestep loop in main would fix this issue.
-    (Linear interpolation).
-
-19) Make cross platform with ifdef guards fow windows and others.
-
-=========== WARNING ============
-
-For all my rotating and oscilating objects, and possibly some others, I am incrementing their counters indefinately. (Mostly in their angles).
-When this runs for a long time it could cause overflow and crash.
-
-=========== WARNING ============
-*/
-
 //Standard libs.
 #include <iostream>
 #include <windows.h> //For window events and manupulation. Also needed for glew.
@@ -145,20 +100,20 @@ void CreateWorldObjects() {
     Shader *sphere_shader = new Shader(shader_dir + "/sphereShader");
 
     //Load our tectures.
-    Texture* bricks_tex = new Texture(resource_dir + "/bricks.jpg");
-    Texture* sand_tex = new Texture(resource_dir + "/sand.jpg");
+    Texture* bricks_tex = new Texture(resource_dir + "/images/bricks.jpg");
+    Texture* sand_tex = new Texture(resource_dir + "/images/sand.jpg");
 
-    Texture* x_tex = new Texture(resource_dir + "/x.jpg");
-    Texture* y_tex = new Texture(resource_dir + "/y.jpg");
-    Texture* z_tex = new Texture(resource_dir + "/z.jpg");
-    Texture* blue_tex = new Texture(resource_dir + "/blue.jpg");
-    Texture* grid_tex = new Texture(resource_dir + "/my_grid.jpg");
+    Texture* x_tex = new Texture(resource_dir + "/images/x.jpg");
+    Texture* y_tex = new Texture(resource_dir + "/images/y.jpg");
+    Texture* z_tex = new Texture(resource_dir + "/images/z.jpg");
+    Texture* blue_tex = new Texture(resource_dir + "/images/blue.jpg");
+    Texture* grid_tex = new Texture(resource_dir + "/images/my_grid.jpg");
 
     //Load the game object meshes.
-    Mesh* monkey_mesh = new Mesh(resource_dir + "/monkey3.obj");
-    Mesh* car_mesh = /*monkey_mesh;*/new Mesh(resource_dir + "/myCar.obj");
-    Mesh* plane_mesh = new Mesh(resource_dir + "/6x6_plane.obj");
-    Mesh* sphere_mesh = new Mesh(resource_dir + "/sphere.obj");
+    Mesh* monkey_mesh = new Mesh(resource_dir + "/meshes/monkey3.obj");
+    Mesh* car_mesh = /*monkey_mesh;*/new Mesh(resource_dir + "/meshes/myCar.obj");
+    Mesh* plane_mesh = new Mesh(resource_dir + "/meshes/6x6_plane.obj");
+    Mesh* sphere_mesh = new Mesh(resource_dir + "/meshes/sphere.obj");
 
     //This transform ensures the monkeys face the right direction on spawn.
     Transform oriented_monkey;

@@ -1,0 +1,6 @@
+===========
+Next Steps:
+===========
+1) Get text to render.
+2) Use text to make buttons. (Command pattern with Networking)
+3) Networking -> Command pattern with buttons.
