@@ -30,4 +30,4 @@ run:
 
 .PHONY: clean
 clean:
-	rm -f $(OUT_DIR)/*.o $(OUT_DIR)/*.exe *~ $(INCDIR)/*~
+	rm -rf $(OUT_DIR)/*.o $(OUT_DIR)/*.exe *~ 

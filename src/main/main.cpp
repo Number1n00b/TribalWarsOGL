@@ -92,8 +92,8 @@ void Initialise_Display() {
 void CreateWorldObjects() {
     //Here we create all of the objects that start out in the world. Later we can have a list of startup objects and just iterate through it, creating them all.
 
-    string shader_dir = "F:/Programming_Projects/CPP/OpenGLFromScratch/src/shaders";
-    string resource_dir = "F:/Programming_Projects/CPP/OpenGLFromScratch/res";
+    string shader_dir = "F:/Programming_Projects/CPP/TribalWarsOGL/src/shaders";
+    string resource_dir = "F:/Programming_Projects/CPP/TribalWarsOGL/res";
 
     //Create the basic shaders.
     Shader *standard_shader = new Shader(shader_dir + "/basicShader");
@@ -134,9 +134,12 @@ void CreateWorldObjects() {
     world_objects.push_back(still_monkey);
 
 
-    //Create a sphere.
-    WorldObject* sphere = new StaticObject("Sphere", sphere_shader, blue_tex, sphere_mesh, still_pos);
-    world_objects.push_back(sphere);
+    //Create a car.
+    Transform car_pos;
+    car_pos.SetPos(-5, -1, -10);
+    car_pos.SetRotation(0, 3.14/2, 0);
+    WorldObject* car = new StaticObject("Car", standard_shader, blue_tex, car_mesh, car_pos);
+    world_objects.push_back(car);
 
     //Create a floor.
     Transform floor_pos;
@@ -146,11 +149,8 @@ void CreateWorldObjects() {
 
 
     //Create the player.
-    Transform car_pos;
-    car_pos.SetPos(-5, -1, -10);
-    car_pos.SetRotation(0, 3.14/2, 0);
-    Player* car = new Player("Player One", standard_shader, grid_tex, car_mesh, car_pos, event_handler);
-    world_objects.push_back(car);
+    Player* sphere = new Player("Player One - Sphere", sphere_shader, grid_tex, sphere_mesh, still_pos, event_handler);
+    world_objects.push_back(sphere);
 }
 
 
@@ -164,7 +164,7 @@ int main(int argc, char *argv[]) {
     CreateWorldObjects();
     cout << "===== World Objects =====\n";
     for (std::vector<WorldObject*>::iterator it = world_objects.begin(); it != world_objects.end(); it++) {
-        cout << "Name: " << (*it)->name << endl;
+        cout << (*it)->name << endl;
     }
     cout << "===== World Objects =====\n";
 

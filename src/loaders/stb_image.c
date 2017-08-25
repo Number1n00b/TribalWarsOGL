@@ -1549,7 +1549,7 @@ typedef struct
 	resample_row_func resample;
 	uint8 *line0, *line1;
 	int hs, vs;   // expansion factor in each axis
-	int w_lores; // horizontal pixels pre-expansion 
+	int w_lores; // horizontal pixels pre-expansion
 	int ystep;   // how far through vertical expansion we are
 	int ypos;    // which pre-expansion row we're on
 } stbi_resample;
