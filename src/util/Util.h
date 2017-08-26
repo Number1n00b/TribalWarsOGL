@@ -9,7 +9,13 @@ namespace Math{
 
     float clamp(float val, float min, float max);
 
+    float angle_rad(const glm::vec3& a, const glm::vec3& b);
+
     float angle_deg(const glm::vec3& a, const glm::vec3& b);
+
+    float deg_to_rad(float degrees);
+
+    float rad_to_deg(float radians);
 
     glm::vec3 lerp(const glm::vec3& start, const glm::vec3& end, float percent);
 

@@ -18,14 +18,27 @@ float Math::clamp(float val, float min, float max) {
     return val;
 }
 
-float Math::angle_deg(const glm::vec3& a, const glm::vec3& b) {
+float Math::angle_rad(const glm::vec3& a, const glm::vec3& b) {
     float dot = glm::dot(a, b);
 
     float AB = glm::length(a) * glm::length(b);
 
     float angle = glm::acos(dot / AB);
 
-    return angle * 180 / PI;
+    return angle;
+}
+
+
+float Math::angle_deg(const glm::vec3& a, const glm::vec3& b) {
+    return rad_to_deg(angle_rad(a, b));
+}
+
+float Math::deg_to_rad(float degrees){
+    return degrees * (PI / 180.0);
+}
+
+float Math::rad_to_deg(float radians){
+    return radians * (180.0 / PI);
 }
 
 
