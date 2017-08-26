@@ -1,0 +1,5 @@
+Downlaod free fonts:
+    http://www.1001freefonts.com/
+
+Learn Freetype:
+    https://learnopengl.com/#!In-Practice/Text-Rendering
