@@ -92,28 +92,29 @@ void Initialise_Display() {
 void CreateWorldObjects() {
     //Here we create all of the objects that start out in the world. Later we can have a list of startup objects and just iterate through it, creating them all.
 
-    string shader_dir = "F:/Programming_Projects/CPP/TribalWarsOGL/src/shaders";
-    string resource_dir = "F:/Programming_Projects/CPP/TribalWarsOGL/res";
+    string shader_dir = "F:/Programming_Projects/CPP/TribalWarsOGL/res/shaders";
+    string image_dir  = "F:/Programming_Projects/CPP/TribalWarsOGL/res/images";
+    string mesh_dir   = "F:/Programming_Projects/CPP/TribalWarsOGL/res/meshes";
 
     //Create the basic shaders.
     Shader *standard_shader = new Shader(shader_dir + "/basicShader");
     Shader *sphere_shader = new Shader(shader_dir + "/sphereShader");
 
     //Load our tectures.
-    Texture* bricks_tex = new Texture(resource_dir + "/images/bricks.jpg");
-    Texture* sand_tex = new Texture(resource_dir + "/images/sand.jpg");
+    Texture* bricks_tex = new Texture(image_dir + "/bricks.jpg");
+    Texture* sand_tex = new Texture(image_dir + "/sand.jpg");
 
-    Texture* x_tex = new Texture(resource_dir + "/images/x.jpg");
-    Texture* y_tex = new Texture(resource_dir + "/images/y.jpg");
-    Texture* z_tex = new Texture(resource_dir + "/images/z.jpg");
-    Texture* blue_tex = new Texture(resource_dir + "/images/blue.jpg");
-    Texture* grid_tex = new Texture(resource_dir + "/images/my_grid.jpg");
+    Texture* x_tex = new Texture(image_dir + "/x.jpg");
+    Texture* y_tex = new Texture(image_dir + "/y.jpg");
+    Texture* z_tex = new Texture(image_dir + "/z.jpg");
+    Texture* blue_tex = new Texture(image_dir + "/blue.jpg");
+    Texture* grid_tex = new Texture(image_dir + "/my_grid.jpg");
 
     //Load the game object meshes.
-    Mesh* monkey_mesh = new Mesh(resource_dir + "/meshes/monkey3.obj");
-    Mesh* car_mesh = /*monkey_mesh;*/new Mesh(resource_dir + "/meshes/myCar.obj");
-    Mesh* plane_mesh = new Mesh(resource_dir + "/meshes/6x6_plane.obj");
-    Mesh* sphere_mesh = new Mesh(resource_dir + "/meshes/sphere.obj");
+    Mesh* monkey_mesh = new Mesh(mesh_dir + "/monkey3.obj");
+    Mesh* car_mesh = new Mesh(mesh_dir + "/myCar.obj");
+    Mesh* plane_mesh = new Mesh(mesh_dir + "/6x6_plane.obj");
+    Mesh* sphere_mesh = new Mesh(mesh_dir + "/sphere.obj");
 
     //This transform ensures the monkeys face the right direction on spawn.
     Transform oriented_monkey;
