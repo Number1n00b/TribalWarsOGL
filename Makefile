@@ -1,5 +1,5 @@
 CC=g++
-CFLAGS=-std=c++11
+CFLAGS=-std=c++11 -g -ggdb
 
 DEPENDANCY_DIR=dependancies
 
@@ -32,3 +32,8 @@ run:
 .PHONY: clean
 clean:
 	rm -rf $(OUT_DIR)/*.o $(OUT_DIR)/*.exe *~ $(OUT_DIR)/*.dll $(OUT_DIR)/*.lib
+
+
+.PHONY: runVal
+runVal:
+	drmemory ./bin/$(EXE_NAME).exe
