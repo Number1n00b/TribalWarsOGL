@@ -13,6 +13,6 @@ class Texture
 
 	private:
 		GLuint m_texture;
+
+		std::string m_name;
 };
-
-

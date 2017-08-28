@@ -54,7 +54,8 @@ Transform& WorldObject::GetTransform() {
 
 void WorldObject::Draw() {
     if (!camera_set) {
-        std::cout << "!!!!!!!!!!! No camera set for Drawable class. !!!!!!!!!!!" << std::endl;
+        //Camera must always be set before drawing, otherwise we dont have perspective.
+        Game::FailAndExit("No camera set for Drawable class.");
     }
     else {
         //@Speed, we shouldn't need to bind the shader every draw call, it most likely remains the same for multiple objects.

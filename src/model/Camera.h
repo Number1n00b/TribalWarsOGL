@@ -88,5 +88,5 @@ class Camera : public MouseListener, public KeyboardListener
         void HandleMovement(double delta);
 
         //Reset the camera's position and orientation to it's origional values.
-        void Reset();
+        void ResetPositionAndRotation();
 };

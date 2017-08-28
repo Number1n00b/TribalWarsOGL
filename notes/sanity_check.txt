@@ -14,34 +14,5 @@
 What's left:
 ============
 src
-    display
-        UI
     main
         main
-    model
-        Camera
-        DrawableObject
-        Mesh
-        OscilatingObject
-        Player
-        RotatingObject
-        StaticObject
-        Texture
-        Transform
-        Vertex
-        WorldObject
-
-============
-What's done:
-============
-src
-    display
-        Display
-    input
-        InputEventHandler
-        KeyboardListener
-        Mouslistener
-    util
-        Util
-    shaders
-        Shader

@@ -290,6 +290,15 @@ int main(int argc, char *argv[]) {
 	cout << "End of main loop." << endl;
 
 	cout << "\nFreeing resources..." << endl;
+	delete main_window;
+	delete main_camera;
+	delete event_handler;
+
+	//Free all world objects
+	for (std::vector<WorldObject*>::iterator it = world_objects.begin(); it != world_objects.end(); it++) {
+        delete *it;
+    }
+
 
 	cout << "Deinitialising SDL..." << endl;
 	SDL_Quit();

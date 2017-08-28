@@ -2,7 +2,6 @@
 #include <vector>
 #include <assert.h>
 
-#include "Mesh.h"
 #include "Texture.h"
 #include "../loaders/stb_image.h"
 
@@ -15,8 +14,10 @@ Texture::Texture(const std::string& fileName){
 	unsigned char* imageData = stbi_load(fileName.c_str(), &width, &height, &numComponents, 4);
 
 	if (imageData == NULL) {
-		std::cout << "Texture loading failed for texture: " << fileName << "!\n";
+		std::cout << "Texture loading failed for texture: '" << fileName << "'!\n";
 	}
+
+	m_name = fileName;
 
 	glGenTextures(1, &m_texture);
 	glBindTexture(GL_TEXTURE_2D, m_texture);
@@ -30,7 +31,6 @@ Texture::Texture(const std::string& fileName){
 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, imageData);
 
-
 	stbi_image_free(imageData);
 }
 
@@ -38,13 +38,14 @@ Texture::Texture(const std::string& fileName){
 void Texture::Bind(unsigned int unit) {
 	assert(unit >= 0 && unit <= 31);
 
-	//@TODO @Hardcoded. Figure out how to set active tecture to the one I want. I dont fully remember what this is, or how to use it.
+	//@TODO @Hardcoded. Figure out how to set active tecture to the one I want.
+	//I dont fully remember what this is, or how to use it.
 	glActiveTexture(GL_TEXTURE0 + unit);
 	glBindTexture(GL_TEXTURE_2D, m_texture);
 }
 
 Texture::~Texture(){
-	std::cout << "Destroying texture... " << std::endl;
+	std::cout << "Destroying texture... '" << m_name << "'" << std::endl;
 
 	glDeleteTextures(1, &m_texture);
 }

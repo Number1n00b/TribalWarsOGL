@@ -44,8 +44,8 @@ class Transform
 		inline void SetScale(glm::vec3 scale) { m_scale = scale; }
         inline void SetScale(float x, float y, float z) { m_scale = glm::vec3(x, y, z); }
 
-	   ~Transform()
-      {
+	   	~Transform()
+      	{
 			//Empty
 		}
 

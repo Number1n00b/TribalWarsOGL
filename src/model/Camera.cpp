@@ -147,7 +147,7 @@ void Camera::NotifyKeyEvent(SDL_Event e) {
             switch (e.key.keysym.sym) {
                 case SDLK_KP_ENTER:
                 {
-                    Reset();
+                    ResetPositionAndRotation();
                     break;
                 }
             }
@@ -156,7 +156,7 @@ void Camera::NotifyKeyEvent(SDL_Event e) {
     }
 }
 
-void Camera::Reset() {
+void Camera::ResetPositionAndRotation() {
     m_Position = m_StartingPos;
 
     m_LookDirection = m_StartingLookDir;
