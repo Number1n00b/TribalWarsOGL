@@ -29,7 +29,7 @@ void InputEventHandler::HandleSDLEvents() {
             case SDL_WINDOWEVENT:
             {
                 if (e.window.event == SDL_WINDOWEVENT_RESIZED) {
-                    ResizeWindow(e.window.data1, e.window.data2);
+                    Game::ResizeWindow(e.window.data1, e.window.data2);
                 }
                 break;
             }
@@ -59,6 +59,7 @@ void InputEventHandler::HandleSDLEvents() {
 
             case SDL_MOUSEMOTION: case SDL_MOUSEWHEEL: case SDL_MOUSEBUTTONDOWN: case SDL_MOUSEBUTTONUP:
             {
+                //Notify all Mouse Listeners
                 for (std::vector<MouseListener*>::iterator it = m_mouseListeners.begin(); it != m_mouseListeners.end(); it++) {
                     (*it)->NotifyMouseEvent(e);
                 }
@@ -68,7 +69,7 @@ void InputEventHandler::HandleSDLEvents() {
             //Common events I am unsure of.
             case 770:
             {
-                //Do nothign.
+                //Do nothing.
                 break;
             }
 
@@ -396,9 +397,9 @@ void InputEventHandler::RegisterMouseListener(MouseListener *listener) {
 }
 
 void InputEventHandler::RemoveKeyboardListener(KeyboardListener *listener) {
-    //@Incomplete @MemoryLeak. Idk how to remove items from a vector and it seems to hard for now so do this later.
+    //@Incomplete @MemoryLeak. Idk how to remove items from a vector and it seems too hard for now so do this later.
 }
 
 void InputEventHandler::RemoveMouseListener(MouseListener *listener) {
-    //@Incomplete @MemoryLeak. Idk how to remove items from a vector and it seems to hard for now so do this later.
+    //@Incomplete @MemoryLeak. Idk how to remove items from a vector and it seems too hard for now so do this later.
 }

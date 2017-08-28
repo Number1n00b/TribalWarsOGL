@@ -17,8 +17,7 @@ namespace Game {
     void TogglePause();
     void PauseGame();
     void ResumeGame();
+
+    void ResizeWindow(int width, int height);
+    void DrawFrame();
 }
-
-void ResizeWindow(int width, int height);
-
-void DrawFrame();

@@ -279,7 +279,7 @@ int main(int argc, char *argv[]) {
             }
 
             //Render
-            DrawFrame();
+            Game::DrawFrame();
 
             time_since_last_frame = 0.0;
         }
@@ -300,12 +300,12 @@ int main(int argc, char *argv[]) {
 }
 
 
-void ResizeWindow(int width, int height) {
+void Game::ResizeWindow(int width, int height) {
     main_window->UpdateViewport(width, height);
     main_camera->NotifyScreenResize(width, height);
 }
 
-void DrawFrame() {
+void Game::DrawFrame() {
     //Clear the window.
     main_window->Clear(0.5, 0.5, 0.5, 0.5);
 

@@ -5,6 +5,7 @@
 #include "KeyboardListener.h"
 #include "MouseListener.h"
 
+//@Refactor: Make a KeyBoard file with this inside to reduce clutter.
 //This key enumeration combined with keys_down array is used only for keys that are usually held down.
 enum e_keys {
     //Common movement keys.
