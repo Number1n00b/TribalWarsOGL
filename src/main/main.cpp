@@ -340,7 +340,12 @@ int main(int argc, char *argv[]) {
         delete *it;
     }
 
+	//Free shaders, meshes and textures.
+	delete shader_catalogue;
+	delete mesh_catalogue;
+	delete texture_catalogue;
 
+	//Free SDL resources.
 	cout << "Deinitialising SDL..." << endl;
 	SDL_Quit();
 
