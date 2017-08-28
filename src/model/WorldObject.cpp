@@ -1,5 +1,7 @@
 #include "WorldObject.h"
 
+#include "../main/main.h" //For FailAndExit()
+
 bool WorldObject::camera_set = false;
 Camera* WorldObject::s_camera = nullptr;
 

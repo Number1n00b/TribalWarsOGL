@@ -3,6 +3,8 @@
 
 #include "InputEventHandler.h"
 
+#include "../main/main.h" // For ResizeWindow event.
+
 using std::cout;
 using std::endl;
 
@@ -27,7 +29,7 @@ void InputEventHandler::HandleSDLEvents() {
             case SDL_WINDOWEVENT:
             {
                 if (e.window.event == SDL_WINDOWEVENT_RESIZED) {
-                    Window::ResizeWindow(e.window.data1, e.window.data2);
+                    ResizeWindow(e.window.data1, e.window.data2);
                 }
                 break;
             }

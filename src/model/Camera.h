@@ -9,7 +9,9 @@
 class Camera : public MouseListener, public KeyboardListener
 {
 	public:
-		Camera(const glm::vec3& pos, glm::vec3 look_direction, glm::vec3 up_direction, float fov, float aspect, float z_near, float z_far);
+		Camera(const glm::vec3& pos, glm::vec3 look_direction, glm::vec3 up_direction,
+		               float fov, float aspect, float z_near, float z_far,
+		               int window_width, int window_height);
 
         //Accessors
 		glm::mat4 GetViewProjection() const;

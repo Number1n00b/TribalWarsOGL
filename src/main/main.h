@@ -19,11 +19,6 @@ namespace Game {
     void ResumeGame();
 }
 
-namespace Window {
-    extern int window_width;
-    extern int window_height;
+void ResizeWindow(int width, int height);
 
-    void ResizeWindow(int width, int height);
-
-    void DrawFrame();
-}
+void DrawFrame();

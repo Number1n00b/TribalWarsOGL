@@ -8,7 +8,9 @@
 
 using std::isnan;
 
-Camera::Camera(const glm::vec3& pos, glm::vec3 look_direction, glm::vec3 up_direction, float fov, float aspect, float z_near, float z_far)
+Camera::Camera(const glm::vec3& pos, glm::vec3 look_direction, glm::vec3 up_direction,
+               float fov, float aspect, float z_near, float z_far,
+               int window_width, int window_height)
 {
     m_ZoomFactor = 1;
 
@@ -24,8 +26,9 @@ Camera::Camera(const glm::vec3& pos, glm::vec3 look_direction, glm::vec3 up_dire
 	m_zNear = z_near;
 	m_zFar = z_far;
 
-    m_ReferenceMousePositionX = Window::window_width / 2;
-    m_ReferenceMousePositionY = Window::window_height / 2;
+    //@Note: Do not modify these, as it causes undefined camera movement behaviour.
+    m_ReferenceMousePositionX = window_width / 2;
+    m_ReferenceMousePositionY = window_height / 2;
 
     //Currently useless.
     m_XSensitivity = 0.1;

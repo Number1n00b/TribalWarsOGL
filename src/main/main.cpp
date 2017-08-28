@@ -48,8 +48,8 @@ GAME_STATE game_state;
 bool Game::should_close = false;
 
 //Window paramentrs.
-int Window::window_width = 1080;
-int Window::window_height = 800;
+const int window_width = 1080;
+const int window_height = 800;
 
 //FPS params.
 const int TARGET_FPS = 60;
@@ -85,7 +85,7 @@ void Initialise_Graphics(){
     //     Display
     //===============
     //Craete the window and context.
-    main_window = new Display(Window::window_width, Window::window_height, "Main window.");
+    main_window = new Display(window_width, window_height, "Main window.");
 
     //===============
     //     GLEW
@@ -128,7 +128,9 @@ void Initialise_Game(){
     float cam_fov = 70;
     float cam_z_near = 0.01;
     float cam_z_far = 1000;
-    main_camera = new Camera(cam_position, cam_look_direction, cam_up_direaction, cam_fov, main_window->GetAspectRatio(), cam_z_near, cam_z_far);
+    main_camera = new Camera(cam_position, cam_look_direction, cam_up_direaction,
+		 					 cam_fov, main_window->GetAspectRatio(),
+							 cam_z_near, cam_z_far, window_width, window_height);
 
     //Register global event listeners.
     event_handler->RegisterMouseListener(main_camera);
@@ -277,7 +279,7 @@ int main(int argc, char *argv[]) {
             }
 
             //Render
-            Window::DrawFrame();
+            DrawFrame();
 
             time_since_last_frame = 0.0;
         }
@@ -298,15 +300,12 @@ int main(int argc, char *argv[]) {
 }
 
 
-void Window::ResizeWindow(int width, int height) {
+void ResizeWindow(int width, int height) {
     main_window->UpdateViewport(width, height);
     main_camera->NotifyScreenResize(width, height);
-
-    Window::window_width = width;
-    Window::window_height = height;
 }
 
-void Window::DrawFrame() {
+void DrawFrame() {
     //Clear the window.
     main_window->Clear(0.5, 0.5, 0.5, 0.5);
 
