@@ -16,18 +16,24 @@ WorldObject::WorldObject(std::string name, Shader *shader, Texture *texture, Mes
 
     //Check that none of the imports are null.
     if (!shader) {
+        //@Robustness: Error message buffer size is 100, could cause buffer overflow.
+        // Use safer sprintf function?
         char error_message[100];
         sprintf(error_message, "Shader for object %s was null.", name);
         std::string str_msg = error_message;
         Game::FailAndExit(str_msg);
     }
     if (!texture) {
+        //@Robustness: Error message buffer size is 100, could cause buffer overflow.
+        // Use safer sprintf function?
         char error_message[100];
         sprintf(error_message, "Texture for object %s was null.", name);
         std::string str_msg = error_message;
         Game::FailAndExit(str_msg);
     }
     if (!mesh) {
+        //@Robustness: Error message buffer size is 100, could cause buffer overflow.
+        // Use safer sprintf function?
         char error_message[100];
         sprintf(error_message, "Mesh for object %s was null.", name);
         std::string str_msg = error_message;

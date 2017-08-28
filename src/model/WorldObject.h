@@ -27,7 +27,8 @@ class WorldObject
 
         Transform& GetTransform();
 
-        //The camera input is to extract how the object should be drawn; from which perspective, and should be the same for all drawable objects.
+        //The camera input is to extract how the object should be drawn;
+        //from which perspective, and should be the same for all drawable objects.
         static Camera *s_camera;
 
         static void SetCamera(Camera* cam);

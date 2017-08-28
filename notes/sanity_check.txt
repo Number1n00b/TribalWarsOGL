@@ -16,10 +16,6 @@ What's left:
 src
     display
         UI
-    input
-        Keyboard
-        KeyboardListener
-        Mouslistener
     main
         main
     model
@@ -34,9 +30,6 @@ src
         Transform
         Vertex
         WorldObject
-    shaders
-        basicShader
-        sphereShader
 
 ============
 What's done:
@@ -46,6 +39,8 @@ src
         Display
     input
         InputEventHandler
+        KeyboardListener
+        Mouslistener
     util
         Util
     shaders

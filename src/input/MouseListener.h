@@ -3,10 +3,10 @@
 
 class MouseListener
 {
-public:
-    MouseListener() {
-        //Empty
-    }
+    public:
+        MouseListener() {
+            //Empty
+        }
 
-    virtual void NotifyMouseEvent(SDL_Event e) = 0;
+        virtual void NotifyMouseEvent(SDL_Event e) = 0;
 };
