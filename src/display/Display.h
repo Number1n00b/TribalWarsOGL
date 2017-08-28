@@ -5,7 +5,6 @@
 class Display{
 	public:
 		Display(int width, int height, const std::string& title);
-		virtual ~Display();
 
 		void Clear(float r, float g, float b, float a);
 
@@ -16,6 +15,11 @@ class Display{
         void UpdateViewport(int width, int height);
 
         SDL_Window* GetWindow();
+
+		int GetWidth();
+		int GetHeight();
+
+		virtual ~Display();
 
 	private:
 		int m_width;
