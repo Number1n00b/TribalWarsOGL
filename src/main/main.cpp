@@ -2,6 +2,7 @@
 #include <iostream>
 #include <windows.h> //For window events and manupulation. Also needed for glew.
 #include <string.h>
+#include <map>
 
 //Graphics libs.
 #include <GL/glew.h>
@@ -63,12 +64,26 @@ Display *main_window;
 Camera *main_camera;
 InputEventHandler *event_handler;
 
+//Dictionary of all textures.
+static std::map<std::string, Texture*> texture_catalogue;
+
+//Dictionary of all meshes.
+static std::map<std::string, Mesh*> mesh_catalogue;
+
+//Dictionary of all shaders.
+static std::map<std::string, Shader*> shader_catalogue;
+
 //Using / Namespace declarations.
 using std::cin;
 using std::cout;
 using std::endl;
 using glm::vec3;
 using std::string;
+
+//@TODO @cleanup @robustness: Have these directories be relative and auto-find them
+const static string shader_dir = "F:/Programming_Projects/CPP/TribalWarsOGL/res/shaders";
+const static string image_dir  = "F:/Programming_Projects/CPP/TribalWarsOGL/res/images";
+const static string mesh_dir   = "F:/Programming_Projects/CPP/TribalWarsOGL/res/meshes";
 
 void Initialise_Graphics(){
 	//===============
@@ -138,35 +153,44 @@ void Initialise_Game(){
 
     //Set the camera for our drawable class as the main camera.
     WorldObject::SetCamera(main_camera);
+
+	LoadShaders();
+	LoadMeshes();
+	LoadTextures();
+}
+
+void LoadShaders(){
+	//Standard
+    CreateShader(shader_dir + "/basicShader",  "standard", shader_catalogue);
+
+	//Sphere. (Colourful)
+    CreateShader(shader_dir + "/sphereShader", "sphere",   shader_catalogue);
+}
+
+void LoadMeshes(){
+	CreateMesh(mesh_dir + "/monkey3.obj",   "monkey3",   mesh_catalogue);
+	CreateMesh(mesh_dir + "/myCar.obj",     "my_car",    mesh_catalogue);
+	CreateMesh(mesh_dir + "/6x6_plane.obj", "6x6_plane", mesh_catalogue);
+	CreateMesh(mesh_dir + "/sphere.obj",    "sphere",    mesh_catalogue);
+}
+
+void LoadTextures(){
+	//Load our tectures.
+    CreateTexture(image_dir + "/bricks.jpg",  "bricks",  texture_catalogue);
+	CreateTexture(image_dir + "/sand.jpg",    "sand",    texture_catalogue);
+
+	CreateTexture(image_dir + "/x.jpg",       "x",       texture_catalogue);
+	CreateTexture(image_dir + "/y.jpg",       "y",       texture_catalogue);
+	CreateTexture(image_dir + "/z.jpg",       "z",       texture_catalogue);
+	CreateTexture(image_dir + "/blue.jpg",    "blue",    texture_catalogue);
+	CreateTexture(image_dir + "/my_grid.jpg", "my_grid", texture_catalogue);
 }
 
 
 void CreateWorldObjects() {
-    //Here we create all of the objects that start out in the world. Later we can have a list of startup objects and just iterate through it, creating them all.
-
-    string shader_dir = "F:/Programming_Projects/CPP/TribalWarsOGL/res/shaders";
-    string image_dir  = "F:/Programming_Projects/CPP/TribalWarsOGL/res/images";
-    string mesh_dir   = "F:/Programming_Projects/CPP/TribalWarsOGL/res/meshes";
-
-    //Create the basic shaders.
-    Shader *standard_shader = new Shader(shader_dir + "/basicShader");
-    Shader *sphere_shader = new Shader(shader_dir + "/sphereShader");
-
-    //Load our tectures.
-    Texture* bricks_tex = new Texture(image_dir + "/bricks.jpg");
-    Texture* sand_tex = new Texture(image_dir + "/sand.jpg");
-
-    Texture* x_tex = new Texture(image_dir + "/x.jpg");
-    Texture* y_tex = new Texture(image_dir + "/y.jpg");
-    Texture* z_tex = new Texture(image_dir + "/z.jpg");
-    Texture* blue_tex = new Texture(image_dir + "/blue.jpg");
-    Texture* grid_tex = new Texture(image_dir + "/my_grid.jpg");
-
-    //Load the game object meshes.
-    Mesh* monkey_mesh = new Mesh(mesh_dir + "/monkey3.obj");
-    Mesh* car_mesh = new Mesh(mesh_dir + "/myCar.obj");
-    Mesh* plane_mesh = new Mesh(mesh_dir + "/6x6_plane.obj");
-    Mesh* sphere_mesh = new Mesh(mesh_dir + "/sphere.obj");
+    //Here we create all of the objects that start out in the world.
+	//@TODO Have a list of startup objects and just iterate through it,
+	//creating them all.
 
     //This transform ensures the monkeys face the right direction on spawn.
     Transform oriented_monkey;
@@ -183,7 +207,11 @@ void CreateWorldObjects() {
     //Create a standing monkey.
     Transform still_pos;
     still_pos.SetPos(0, 0, 0);
-    WorldObject* still_monkey = new StaticObject("Monkey Still", standard_shader, grid_tex, monkey_mesh, still_pos);
+    WorldObject* still_monkey = new StaticObject("Monkey",
+											    shader_catalogue["standard"],
+	 									        texture_catalogue["my_grid"],
+												mesh_catalogue["monkey3"],
+												still_pos);
     world_objects.push_back(still_monkey);
 
 
@@ -191,18 +219,31 @@ void CreateWorldObjects() {
     Transform car_pos;
     car_pos.SetPos(-5, -1, -10);
     car_pos.SetRotation(0, 3.14/2, 0);
-    WorldObject* car = new StaticObject("Car", standard_shader, blue_tex, car_mesh, car_pos);
+    WorldObject* car = new StaticObject("Car",
+						 		      	shader_catalogue["standard"],
+ 									    texture_catalogue["blue"],
+										mesh_catalogue["my_car"],
+										car_pos);
     world_objects.push_back(car);
 
     //Create a floor.
     Transform floor_pos;
     floor_pos.SetPos(0, -3, 0);
-    WorldObject* floor_tile = new StaticObject("Floor", standard_shader, grid_tex, plane_mesh, floor_pos);
+	WorldObject* floor_tile = new StaticObject("Floor",
+										  shader_catalogue["standard"],
+										  texture_catalogue["grid"],
+										  mesh_catalogue["plane"],
+										  floor_pos);
     //world_objects.push_back(floor_tile);
 
 
     //Create the player.
-    Player* sphere = new Player("Player One - Sphere", sphere_shader, grid_tex, sphere_mesh, still_pos, event_handler);
+	Player* sphere = new Player("Floor",
+						 	  	shader_catalogue["sphere"],
+								texture_catalogue["grid"],
+								mesh_catalogue["sphere"],
+								still_pos,
+							  	event_handler);
     world_objects.push_back(sphere);
 }
 
@@ -339,7 +380,7 @@ void Game::DrawFrame() {
 
 void Game::FailAndExit(std::string message){
 	cout << "\n======\nTHE PROGRAM HAS FAILED\n======\n" << message << endl;
-	cin.get();
+	//cin.get();
 	exit(-1);
 }
 
@@ -424,4 +465,24 @@ void Game::SetCursorClip(bool clip) {
 
         ClipCursor(&rect);
     }
+}
+
+
+//@Refactor, maybe these methods should be in the respective class files?
+void CreateShader(std::string filename, std::string name, std::map<std::string, Shader*> catalogue){
+	Shader *s = new Shader(filename);
+	catalogue[name] = s;
+
+	printf("Added shader: '%s'\n", name);
+	printf("Proof: '%s'\n", catalogue[name]->GetName());
+}
+
+void CreateMesh(std::string filename, std::string name, std::map<std::string, Mesh*> catalogue){
+	Mesh *m = new Mesh(filename);
+	catalogue[name] = m;
+}
+
+void CreateTexture(std::string filename, std::string name, std::map<std::string, Texture*> catalogue){
+	Texture *t = new Texture(filename);
+	catalogue[name] = t;
 }

@@ -15,6 +15,8 @@ class Shader{
 
 		virtual ~Shader();
 
+		std::string GetName();
+
 	private:
 		//One for vertex and one for fragment. (Could also have 'geometry shaders').
         enum shaders{
@@ -30,6 +32,8 @@ class Shader{
 
 			NUM_UNIFORMS
 		};
+
+		const char* m_name;
 
 		GLuint program;
 		GLuint shaders[NUM_SHADERS];

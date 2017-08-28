@@ -13,7 +13,11 @@ static GLuint CreateShader(const std::string&& text, GLenum shaderType);
 
 Shader::Shader(const std::string& fileName)
 {
-	std::cout << "Creating shader..." << std::endl;
+	std::cout << "Creating shader... '" << fileName << "'" << std::endl;
+
+	m_name = fileName.c_str();
+
+	printf("My name: %s\n", m_name);
 
 	//Creates some space on the GPU for a program.
 	program = glCreateProgram();
@@ -46,6 +50,11 @@ Shader::Shader(const std::string& fileName)
 
 	//Set our Uniform variables.
 	uniforms[TRANSFORM_U] = glGetUniformLocation(program, "transform");
+}
+
+
+std::string Shader::GetName(){
+	return m_name;
 }
 
 void Shader::Bind() {

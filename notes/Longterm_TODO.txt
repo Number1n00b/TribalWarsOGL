@@ -4,6 +4,23 @@ NAMING CONVENTION:
     Variables/Parameters: under_scores
     Functions: under_scores OR CamelCalse
 
+
+====== New ======
+Find a better way to handle catalogues. Currently all the prettyNames for the
+textures, meshes and shaders are hard coded meaning I have to remember them
+all the time, is there a better way?
+
+I should also report errors when lookup fails, i.e shader_catalogue["test"]
+does not exist... Currently this will result in null pointers and possibly
+undefined behaviour.
+
+Solution = Create my own catalogue class.
+
+=================
+
+
+
+
 4) Rewrite what is not mine, or use other, industry standard, free libaries (obj_loader and stb_image).
 
 6) Find a way to initialise GLEW outside of Display.cpp so that if it fails we can close the program. (Do memory management too, deleting context etc).

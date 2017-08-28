@@ -1,2 +1,14 @@
 Player.cpp - L: 39-72
     rotation for player is rotating around a central axis instead of itself.
+
+
+
+
+WorldObject:
+    Right now I am using the exact SAME mesh and texture for all objects using
+    that type. I am not even making copies. That means if I change the mesh
+    at runtime for any of them, all objects using that mesh will change too.
+
+    I should have a texture/mesh catalogue instead, so that I only have to load
+    each one once, and once their loaded I can just copy the origional out for
+    each world object that requires it.

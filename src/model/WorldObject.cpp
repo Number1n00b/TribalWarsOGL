@@ -16,6 +16,7 @@ WorldObject::WorldObject(std::string name, Shader *shader, Texture *texture, Mes
 
     //Check that none of the imports are null.
     if (!shader) {
+        printf("name: %s", name);
         //@Robustness: Error message buffer size is 100, could cause buffer overflow.
         // Use safer sprintf function?
         char error_message[100];
