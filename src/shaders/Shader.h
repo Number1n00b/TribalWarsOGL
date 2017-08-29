@@ -8,7 +8,7 @@
 
 class Shader{
 	public:
-		Shader(const std::string& file_name);
+		Shader(std::string file_name);
 
 		void Bind();
 		void Update(const Transform& transform, const Camera& camera);
@@ -33,7 +33,7 @@ class Shader{
 			NUM_UNIFORMS
 		};
 
-		const char* m_name;
+		std::string m_name;
 
 		GLuint program;
 		GLuint shaders[NUM_SHADERS];

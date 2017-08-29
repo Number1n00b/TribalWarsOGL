@@ -5,13 +5,19 @@
 
 Mesh::Mesh(const std::string& file_name) {
 	std::cout << "Creating mesh from file: \"" << file_name << "\"..." << std::endl;
+
+	m_name = file_name;
+
 	IndexedModel model = OBJModel(file_name).ToIndexedModel();
 
 	InitMesh(model);
 }
 
+//@Deprecated
+//@Deprecated
+//@Deprecated
 Mesh::Mesh(Vertex *vertices, unsigned int num_vertices, unsigned int *indices, unsigned int num_indeces) {
-	std::cout << "Creating mesh... " << std::endl;
+	std::cout << "Creating mesh...  " << std::endl;
 
 	IndexedModel model;
 
@@ -27,6 +33,11 @@ Mesh::Mesh(Vertex *vertices, unsigned int num_vertices, unsigned int *indices, u
 
 	InitMesh(model);
 
+}
+
+
+std::string Mesh::GetName(){
+	return m_name;
 }
 
 
@@ -89,7 +100,7 @@ void Mesh::Draw() {
 }
 
 Mesh::~Mesh() {
-	std::cout << "Destroying mesh... " << std::endl;
+	std::cout << "Destroying mesh... '" << m_name << "'" << std::endl;
 
 	glDeleteVertexArrays(1, &m_vertexArrayObject);
 }

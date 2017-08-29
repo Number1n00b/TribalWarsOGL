@@ -1,5 +1,5 @@
 #pragma once
-#include <map>
+#include <unordered_map>
 
 #include "../display/Display.h"
 #include "../model/Camera.h"
@@ -8,6 +8,8 @@
 #include "../model/Mesh.h"
 #include "../model/Texture.h"
 
+using std::string;
+using std::unordered_map;
 
 enum GAME_STATE {
     RUNNING,
@@ -35,6 +37,6 @@ void LoadMeshes();
 void LoadTextures();
 
 //@Refactor, maybe these methods should be in the respective class files?
-void CreateShader(std::string filename, std::string name, std::map<std::string, Shader*> catalogue);
-void CreateMesh(std::string filename, std::string name, std::map<std::string, Mesh*> catalogue);
-void CreateTexture(std::string filename, std::string name, std::map<std::string, Texture*> catalogue);
+void CreateShader(string filename, string name, unordered_map<string, Shader*>* catalogue);
+void CreateMesh(string filename, string name, unordered_map<string, Mesh*>* catalogue);
+void CreateTexture(string filename, string name, unordered_map<string, Texture*>* catalogue);

@@ -40,7 +40,17 @@
 //Input
 #include "../input/InputEventHandler.h"
 
-//Moise position, used to capture and reset mouse on pause / unpause.
+//Using / Namespace declarations.
+using std::cin;
+using std::cout;
+using std::endl;
+using std::string;
+using std::unordered_map;
+using std::vector;
+using glm::vec3;
+
+
+//Mouse position, used to capture and reset mouse on pause / unpause.
 int prev_cursor_X = 0;
 int prev_cursor_Y = 0;
 
@@ -57,7 +67,7 @@ const int TARGET_FPS = 60;
 const double MS_PER_FRAME = 1000.0 / TARGET_FPS;
 
 //Container for all objects in the world, Iterated over every Update() call.
-std::vector<WorldObject*> world_objects;
+vector<WorldObject*> world_objects;
 
 //Globals for display, camera and events.
 Display *main_window;
@@ -65,20 +75,14 @@ Camera *main_camera;
 InputEventHandler *event_handler;
 
 //Dictionary of all textures.
-static std::map<std::string, Texture*> texture_catalogue;
+static unordered_map<string, Texture*>* texture_catalogue;
 
 //Dictionary of all meshes.
-static std::map<std::string, Mesh*> mesh_catalogue;
+static unordered_map<string, Mesh*>* mesh_catalogue;
 
 //Dictionary of all shaders.
-static std::map<std::string, Shader*> shader_catalogue;
+static unordered_map<string, Shader*>* shader_catalogue;
 
-//Using / Namespace declarations.
-using std::cin;
-using std::cout;
-using std::endl;
-using glm::vec3;
-using std::string;
 
 //@TODO @cleanup @robustness: Have these directories be relative and auto-find them
 const static string shader_dir = "F:/Programming_Projects/CPP/TribalWarsOGL/res/shaders";
@@ -159,7 +163,11 @@ void Initialise_Game(){
 	LoadTextures();
 }
 
+//================= Shaders =====================
 void LoadShaders(){
+	//Create the catalogue.
+	shader_catalogue = new unordered_map<string, Shader*>();
+
 	//Standard
     CreateShader(shader_dir + "/basicShader",  "standard", shader_catalogue);
 
@@ -167,15 +175,37 @@ void LoadShaders(){
     CreateShader(shader_dir + "/sphereShader", "sphere",   shader_catalogue);
 }
 
+//@Refactor, maybe these methods should be in the respective class files?
+void CreateShader(string filename, string name, unordered_map<string, Shader*>* catalogue){
+	Shader *s = new Shader(filename);
+	(*catalogue)[name] = s;
+}
+//=============== END Shaders ===================
+
+
+//================= Meshes =====================
 void LoadMeshes(){
+	//Create the catalogue.
+	mesh_catalogue = new unordered_map<string, Mesh*>();
+
 	CreateMesh(mesh_dir + "/monkey3.obj",   "monkey3",   mesh_catalogue);
 	CreateMesh(mesh_dir + "/myCar.obj",     "my_car",    mesh_catalogue);
 	CreateMesh(mesh_dir + "/6x6_plane.obj", "6x6_plane", mesh_catalogue);
 	CreateMesh(mesh_dir + "/sphere.obj",    "sphere",    mesh_catalogue);
 }
 
+void CreateMesh(string filename, string name, unordered_map<string, Mesh*>* catalogue){
+	Mesh *m = new Mesh(filename);
+	(*catalogue)[name] = m;
+}
+//=============== END Meshes ===================
+
+
+//================= Textures =====================
 void LoadTextures(){
-	//Load our tectures.
+	//Create the catalogue.
+	texture_catalogue = new unordered_map<string, Texture*>();
+
     CreateTexture(image_dir + "/bricks.jpg",  "bricks",  texture_catalogue);
 	CreateTexture(image_dir + "/sand.jpg",    "sand",    texture_catalogue);
 
@@ -185,6 +215,12 @@ void LoadTextures(){
 	CreateTexture(image_dir + "/blue.jpg",    "blue",    texture_catalogue);
 	CreateTexture(image_dir + "/my_grid.jpg", "my_grid", texture_catalogue);
 }
+
+void CreateTexture(string filename, string name, unordered_map<string, Texture*>* catalogue){
+	Texture *t = new Texture(filename);
+	(*catalogue)[name] = t;
+}
+//=============== END Textures ===================
 
 
 void CreateWorldObjects() {
@@ -207,10 +243,11 @@ void CreateWorldObjects() {
     //Create a standing monkey.
     Transform still_pos;
     still_pos.SetPos(0, 0, 0);
+
     WorldObject* still_monkey = new StaticObject("Monkey",
-											    shader_catalogue["standard"],
-	 									        texture_catalogue["my_grid"],
-												mesh_catalogue["monkey3"],
+											    (*shader_catalogue)["standard"],
+	 									        (*texture_catalogue)["x"],
+												(*mesh_catalogue)["monkey3"],
 												still_pos);
     world_objects.push_back(still_monkey);
 
@@ -220,9 +257,9 @@ void CreateWorldObjects() {
     car_pos.SetPos(-5, -1, -10);
     car_pos.SetRotation(0, 3.14/2, 0);
     WorldObject* car = new StaticObject("Car",
-						 		      	shader_catalogue["standard"],
- 									    texture_catalogue["blue"],
-										mesh_catalogue["my_car"],
+						 		      	(*shader_catalogue)["standard"],
+ 									    (*texture_catalogue)["blue"],
+										(*mesh_catalogue)["my_car"],
 										car_pos);
     world_objects.push_back(car);
 
@@ -230,18 +267,18 @@ void CreateWorldObjects() {
     Transform floor_pos;
     floor_pos.SetPos(0, -3, 0);
 	WorldObject* floor_tile = new StaticObject("Floor",
-										  shader_catalogue["standard"],
-										  texture_catalogue["grid"],
-										  mesh_catalogue["plane"],
+										  (*shader_catalogue)["standard"],
+										  (*texture_catalogue)["my_grid"],
+										  (*mesh_catalogue)["6x6_plane"],
 										  floor_pos);
-    //world_objects.push_back(floor_tile);
+    world_objects.push_back(floor_tile);
 
 
     //Create the player.
 	Player* sphere = new Player("Floor",
-						 	  	shader_catalogue["sphere"],
-								texture_catalogue["grid"],
-								mesh_catalogue["sphere"],
+						 	  	(*shader_catalogue)["sphere"],
+								(*texture_catalogue)["my_grid"],
+								(*mesh_catalogue)["sphere"],
 								still_pos,
 							  	event_handler);
     world_objects.push_back(sphere);
@@ -249,7 +286,7 @@ void CreateWorldObjects() {
 
 
 int main(int argc, char *argv[]) {
-	cout << "====== Starting Program... ======" << endl;
+	cout << "====== Starting Program ======" << endl;
 
     //Initialise SDL, GLEW and FreeType
     Initialise_Graphics();
@@ -257,13 +294,15 @@ int main(int argc, char *argv[]) {
     //Initalise the basics, Camera, UI, window, eventhandler.
     Initialise_Game();
 
+	cout << "\n====== Creating World Objects ======" << endl;
     //Create all the objects in the world.
     CreateWorldObjects();
-    cout << "===== World Objects =====\n";
+
+    cout << "Created:\n";
     for (std::vector<WorldObject*>::iterator it = world_objects.begin(); it != world_objects.end(); it++) {
-        cout << (*it)->name << endl;
+        cout << "\t" << (*it)->name << endl;
     }
-    cout << "===== World Objects =====\n";
+	cout << "======================================" << endl;
 
     //Main loop setup.
 	cout << "\nEntering main loop." << endl;
@@ -330,7 +369,7 @@ int main(int argc, char *argv[]) {
 
 	cout << "End of main loop." << endl;
 
-	cout << "\nFreeing resources..." << endl;
+	cout << "\n====== Freeing Resources ======" << endl;
 	delete main_window;
 	delete main_camera;
 	delete event_handler;
@@ -341,6 +380,16 @@ int main(int argc, char *argv[]) {
     }
 
 	//Free shaders, meshes and textures.
+	for( const auto& n : *shader_catalogue ) {
+		delete(n.second);
+	}
+	for( const auto& n : *mesh_catalogue ) {
+		delete(n.second);
+	}
+	for( const auto& n : *texture_catalogue ) {
+		delete(n.second);
+	}
+
 	delete shader_catalogue;
 	delete mesh_catalogue;
 	delete texture_catalogue;
@@ -349,7 +398,11 @@ int main(int argc, char *argv[]) {
 	cout << "Deinitialising SDL..." << endl;
 	SDL_Quit();
 
-	cout << "====== Ending Program... ======" << endl;
+
+	//Free FreeType resources.
+	//@TODO unload fonts and de-initialise freetype.
+
+	cout << "====== Ending Program ======" << endl;
 
 	return 0;
 }
@@ -470,24 +523,4 @@ void Game::SetCursorClip(bool clip) {
 
         ClipCursor(&rect);
     }
-}
-
-
-//@Refactor, maybe these methods should be in the respective class files?
-void CreateShader(std::string filename, std::string name, std::map<std::string, Shader*> catalogue){
-	Shader *s = new Shader(filename);
-	catalogue[name] = s;
-
-	printf("Added shader: '%s'\n", name);
-	printf("Proof: '%s'\n", catalogue[name]->GetName());
-}
-
-void CreateMesh(std::string filename, std::string name, std::map<std::string, Mesh*> catalogue){
-	Mesh *m = new Mesh(filename);
-	catalogue[name] = m;
-}
-
-void CreateTexture(std::string filename, std::string name, std::map<std::string, Texture*> catalogue){
-	Texture *t = new Texture(filename);
-	catalogue[name] = t;
 }

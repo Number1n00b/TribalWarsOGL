@@ -1,4 +1,5 @@
 #pragma once
+#include <string.h>
 #include <glm/glm.hpp>
 #include <GL/glew.h>
 #include "../loaders/obj_loader.h"
@@ -13,6 +14,8 @@ class Mesh {
 		void Draw();
 
 		virtual ~Mesh();
+
+		std::string GetName();
 
 	private:
 		void InitMesh(const IndexedModel& model);
@@ -33,4 +36,6 @@ class Mesh {
 
 		//How much of the vertexArrayObject we want to draw.
 		unsigned int m_drawCount;
+
+		std::string m_name;
 };

@@ -1,6 +1,12 @@
 ===========
 Next Steps:
 ===========
+1) Get makefiles to work with incremental builds. (Proper dependancy trees)
+2) Create tests directory and make a Makefile rule to compile tests.
+3) Create a HashMap/Catalogue class (also because cpp is shit)
+4) Move the loading of textures shaders and meshes somewhere better.....
+
+
 1) Get text to render.
 2) Use text to make buttons. (Command pattern with Networking)
 3) Networking -> Command pattern with buttons.

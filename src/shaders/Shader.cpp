@@ -11,13 +11,11 @@ static std::string LoadShader(const std::string& fileName);
 static void CheckShaderError(GLuint shader, GLuint flag, bool isProgram, const std::string& errorMessage);
 static GLuint CreateShader(const std::string&& text, GLenum shaderType);
 
-Shader::Shader(const std::string& fileName)
+Shader::Shader(std::string fileName)
 {
 	std::cout << "Creating shader... '" << fileName << "'" << std::endl;
 
-	m_name = fileName.c_str();
-
-	printf("My name: %s\n", m_name);
+	m_name = fileName;
 
 	//Creates some space on the GPU for a program.
 	program = glCreateProgram();
@@ -70,7 +68,7 @@ void Shader::Update(const Transform& transform, const Camera& camera) {
 
 Shader::~Shader()
 {
-	std::cout << "Deleting shader..." << std::endl;
+	std::cout << "Destroying shader... '" << m_name << "'" << std::endl;
 
 	for (int ii = 0; ii < NUM_SHADERS; ii++) {
 		glDetachShader(program, shaders[ii]);
