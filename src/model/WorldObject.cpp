@@ -66,7 +66,7 @@ void WorldObject::Draw() {
         m_texture->Bind(0);
 
         //@Speed, the camera should remain unchanging between draw calls in a single frame, shader should not need to update it all the time.
-        m_shader->Update(m_transform, *s_camera);
+        m_shader->Update(m_transform, s_camera->GetViewProjection());
 
         //Draw the object's mesh.
         m_mesh->Draw();

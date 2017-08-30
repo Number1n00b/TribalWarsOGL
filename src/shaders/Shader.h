@@ -4,14 +4,13 @@
 #include <GL/glew.h>
 
 #include "../model/Transform.h"
-#include "../model/Camera.h"
 
 class Shader{
 	public:
 		Shader(std::string file_name);
 
 		void Bind();
-		void Update(const Transform& transform, const Camera& camera);
+		void Update(const Transform& transform, const glm::mat4 view_projection);
 
 		virtual ~Shader();
 

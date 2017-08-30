@@ -59,10 +59,10 @@ void Shader::Bind() {
 	glUseProgram(program);
 }
 
-void Shader::Update(const Transform& transform, const Camera& camera) {
+void Shader::Update(const Transform& transform, const glm::mat4 view_projection) {
 	//@Efficiency, calculating the model every update call when we can cache
 	//this value per frame.
-	glm::mat4 model = camera.GetViewProjection() * transform.GetModel();
+	glm::mat4 model = view_projection * transform.GetModel();
 	glUniformMatrix4fv(uniforms[TRANSFORM_U], 1, GL_FALSE, &model[0][0]);
 }
 
