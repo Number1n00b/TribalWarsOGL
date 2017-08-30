@@ -20,21 +20,24 @@ OBJ_FILES=$(OUT_DIR)/stb_image.o $(OUT_DIR)/Display.o $(OUT_DIR)/UI.o \
 
 COMPILE_COMMAND= $(CC) $(CFLAGS) -c $(INCLUDE_DIRS) $(LIB_DIRS) $(LINK_COMMANDS)
 
+COMPILE_NO_EXTRAS=$(CC) $(CFLAG) -c
+COMPILE_INCLUDES_NO_LINKS=$(CC) $(CFLAGS) -c $(INCLUDE_DIRS)
+
 all: executable
 
 executable: $(OBJ_FILES) CopyLibs
 	$(CC) $(CFLAGS) $(OBJ_FILES) -o $(EXE_DIR)/$(EXE_NAME) $(INCLUDE_DIRS) $(LIB_DIRS) $(LINK_COMMANDS)
 
 $(OUT_DIR)/stb_image.o: src/loaders/stb_image.c src/loaders/stb_image.h
-	$(COMPILE_COMMAND) src/loaders/stb_image.c -o $(OUT_DIR)/stb_image.o
+	$(COMPILE_NO_EXTRAS) src/loaders/stb_image.c -o $(OUT_DIR)/stb_image.o
 
 $(OUT_DIR)/obj_loader.o: src/loaders/obj_loader.cpp src/loaders/obj_loader.h
-	$(COMPILE_COMMAND) src/loaders/obj_loader.cpp -o $(OUT_DIR)/obj_loader.o
+	$(COMPILE_INCLUDES_NO_LINKS) src/loaders/obj_loader.cpp -o $(OUT_DIR)/obj_loader.o
 
 
 
 $(OUT_DIR)/Util.o: src/util/Util.cpp src/util/Util.h
-	$(COMPILE_COMMAND) src/util/Util.cpp -o $(OUT_DIR)/Util.o
+	$(COMPILE_INCLUDES_NO_LINKS) src/util/Util.cpp -o $(OUT_DIR)/Util.o
 
 $(OUT_DIR)/Display.o: src/display/Display.cpp src/display/Display.h
 	$(COMPILE_COMMAND) src/display/Display.cpp -o $(OUT_DIR)/Display.o
@@ -43,24 +46,24 @@ $(OUT_DIR)/UI.o: src/display/UI.cpp src/display/UI.h
 	$(COMPILE_COMMAND) src/display/UI.cpp -o $(OUT_DIR)/UI.o
 
 $(OUT_DIR)/Mesh.o: src/model/Mesh.cpp src/model/Mesh.h \
- src/model/../loaders/obj_loader.h src/model/Vertex.h
-	$(COMPILE_COMMAND) src/model/Mesh.cpp -o $(OUT_DIR)/Mesh.o
+ src/loaders/obj_loader.h src/model/Vertex.h
+	$(COMPILE_INCLUDES_NO_LINKS) src/model/Mesh.cpp -o $(OUT_DIR)/Mesh.o
 
 $(OUT_DIR)/Texture.o: src/model/Texture.cpp src/model/Texture.h \
  src/model/../loaders/stb_image.h
-	$(COMPILE_COMMAND) src/model/Texture.cpp -o $(OUT_DIR)/Texture.o
+	$(COMPILE_INCLUDES_NO_LINKS) src/model/Texture.cpp -o $(OUT_DIR)/Texture.o
 
 $(OUT_DIR)/Transform.o: src/model/Transform.cpp src/model/Transform.h
-	$(COMPILE_COMMAND) src/model/Transform.cpp -o $(OUT_DIR)/Transform.o
+	$(COMPILE_INCLUDES_NO_LINKS) src/model/Transform.cpp -o $(OUT_DIR)/Transform.o
 
 $(OUT_DIR)/Vertex.o: src/model/Vertex.cpp src/model/Vertex.h
-	$(COMPILE_COMMAND) src/model/Vertex.cpp -o $(OUT_DIR)/Vertex.o
+	$(COMPILE_INCLUDES_NO_LINKS) src/model/Vertex.cpp -o $(OUT_DIR)/Vertex.o
 
 
 
 $(OUT_DIR)/Shader.o: src/shaders/Shader.cpp src/shaders/Shader.h \
  src/model/Transform.h src/util/Util.h
-	$(COMPILE_COMMAND) src/shaders/Shader.cpp -o $(OUT_DIR)/Shader.o
+	$(COMPILE_INCLUDES_NO_LINKS) src/shaders/Shader.cpp -o $(OUT_DIR)/Shader.o
 
 $(OUT_DIR)/main.o: src/main/main.cpp src/main/main.h src/display/Display.h \
  src/model/Camera.h src/input/MouseListener.h src/input/KeyboardListener.h \
@@ -84,7 +87,7 @@ $(OUT_DIR)/Camera.o: src/model/Camera.cpp src/model/Camera.h \
  src/shaders/Shader.h src/model/Transform.h src/model/Mesh.h \
  src/loaders/obj_loader.h src/model/Vertex.h src/model/Texture.h\
  src/util/Util.h
-	$(COMPILE_COMMAND) src/model/Camera.cpp -o $(OUT_DIR)/Camera.o
+	$(COMPILE_INCLUDES_NO_LINKS) src/model/Camera.cpp -o $(OUT_DIR)/Camera.o
 
 $(OUT_DIR)/Player.o: src/model/Player.cpp src/model/Player.h src/model/WorldObject.h \
  src/model/Transform.h src/model/Texture.h src/model/Mesh.h \
@@ -98,7 +101,7 @@ $(OUT_DIR)/StaticObject.o: src/model/StaticObject.cpp src/model/StaticObject.h \
  src/model/Mesh.h src/loaders/obj_loader.h src/model/Vertex.h \
  src/model/Camera.h src/input/MouseListener.h src/input/KeyboardListener.h \
  src/input/InputEventHandler.h src/shaders/Shader.h
-	$(COMPILE_COMMAND) src/model/StaticObject.cpp -o $(OUT_DIR)/StaticObject.o
+	$(COMPILE_INCLUDES_NO_LINKS) src/model/StaticObject.cpp -o $(OUT_DIR)/StaticObject.o
 
 $(OUT_DIR)/WorldObject.o: src/model/WorldObject.cpp src/model/WorldObject.h \
  src/model/Transform.h src/model/Texture.h src/model/Mesh.h \
@@ -106,7 +109,7 @@ $(OUT_DIR)/WorldObject.o: src/model/WorldObject.cpp src/model/WorldObject.h \
  src/input/MouseListener.h src/input/KeyboardListener.h \
  src/input/InputEventHandler.h src/shaders/Shader.h src/main/main.h \
  src/display/Display.h
-	$(COMPILE_COMMAND) src/model/WorldObject.cpp -o $(OUT_DIR)/WorldObject.o
+	$(COMPILE_INCLUDES_NO_LINKS) src/model/WorldObject.cpp -o $(OUT_DIR)/WorldObject.o
 
 
 .PHONY: CopyLibs
