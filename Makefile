@@ -20,10 +20,10 @@ OBJ_FILES=$(OUT_DIR)/stb_image.o $(OUT_DIR)/Display.o $(OUT_DIR)/UI.o \
 
 COMPILE_COMMAND= $(CC) $(CFLAGS) -c $(INCLUDE_DIRS) $(LIB_DIRS) $(LINK_COMMANDS)
 
-all: $(EXE_DIR)/$(EXE_NAME)
+all: executable
 
-$(EXE_DIR)/$(EXE_NAME): CopyLibs $(OBJ_FILES)
-	$(CC) $(CFLAGS) $(OUT_DIR)/*.o -o $(EXE_DIR)/$(EXE_NAME) $(INCLUDE_DIRS) $(LIB_DIRS) $(LINK_COMMANDS)
+executable: $(OBJ_FILES) CopyLibs
+	$(CC) $(CFLAGS) $(OBJ_FILES) -o $(EXE_DIR)/$(EXE_NAME) $(INCLUDE_DIRS) $(LIB_DIRS) $(LINK_COMMANDS)
 
 $(OUT_DIR)/stb_image.o: src/loaders/stb_image.c src/loaders/stb_image.h
 	$(COMPILE_COMMAND) src/loaders/stb_image.c -o $(OUT_DIR)/stb_image.o
