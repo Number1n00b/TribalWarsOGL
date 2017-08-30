@@ -16,8 +16,8 @@
 
 
 //Freetype Libraries
-#include <ft2build.h>
-#include FT_FREETYPE_H
+//#include <ft2build.h>
+//#include FT_FREETYPE_H
 
 //=== My headers ===
 #include "main.h"
@@ -127,10 +127,10 @@ void Initialise_Graphics(){
     //===============
     //   FreeType
     //===============
-    FT_Library library;
+    /*FT_Library library;
     if(FT_Init_FreeType( &library )){
         Game::FailAndExit("FreeType failed to initialize.");
-    }
+    }*/
 
     //@TODO Load and store fonts, free library and loaders.
     //LoadFonts();
@@ -275,7 +275,7 @@ void CreateWorldObjects() {
 
 
     //Create the player.
-	Player* sphere = new Player("Floor",
+	Player* sphere = new Player("Player (Sphere)",
 						 	  	(*shader_catalogue)["sphere"],
 								(*texture_catalogue)["my_grid"],
 								(*mesh_catalogue)["sphere"],
