@@ -7,7 +7,7 @@
 #include "Texture.h"
 #include "Mesh.h"
 #include "Camera.h"
-#include "../shaders/Shader.h"
+#include "../model/Shader.h"
 
 //Anything that could appear on screen should inherit from this class.
 class WorldObject

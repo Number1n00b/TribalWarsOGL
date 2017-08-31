@@ -28,7 +28,7 @@
 #include "../display/Display.h"
 
 //Shaders
-#include "../shaders/Shader.h"
+#include "../model/Shader.h"
 
 //Model Classes
 #include "../model/Mesh.h"

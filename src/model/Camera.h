@@ -2,6 +2,9 @@
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
 
+#include "../main/main.h"
+#include "../util/Util.h"
+
 #include "../input/MouseListener.h"
 #include "../input/KeyboardListener.h"
 #include "../input/InputEventHandler.h"

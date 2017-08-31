@@ -4,7 +4,7 @@
 #include "../display/Display.h"
 #include "../model/Camera.h"
 
-#include "../shaders/Shader.h"
+#include "../model/Shader.h"
 #include "../model/Mesh.h"
 #include "../model/Texture.h"
 

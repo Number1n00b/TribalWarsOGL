@@ -1,10 +1,5 @@
 #include <iostream>
 #include "Camera.h"
-#include "../main/main.h"
-#include "../util/Util.h"
-
-#include "../input/KeyboardListener.h"
-#include "../input/InputEventHandler.h"
 
 using std::isnan;
 
