@@ -29,4 +29,4 @@ void CreateTexture(string filename, string name, unordered_map<string, Texture*>
 
 
 void LoadFonts(unordered_map<string, FT_Face*>* catalogue);
-void CreateFont(FT_Library ft_lib, string filename, string name, unordered_map<string, FT_Face*>* catalogue);
+void CreateFont(FT_Library* ft_lib, string filename, string name, unordered_map<string, FT_Face*>* catalogue);

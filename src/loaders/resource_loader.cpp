@@ -11,21 +11,25 @@ const static string font_dir   = "F:/Programming_Projects/CPP/TribalWarsOGL/res/
 
 //================= Fonts =====================
 void LoadFonts(unordered_map<string, FT_Face*>* catalogue){
-	FT_Library ft_lib;
-	if(FT_Init_FreeType( &ft_lib )){
+	FT_Library* ft_lib = new FT_Library();
+	if(FT_Init_FreeType( ft_lib )){
 		Game::FailAndExit("FreeType failed to initialize.");
 	}
 
     CreateFont(ft_lib, font_dir + "/28_days_later.ttf", "28_days_later", catalogue);
 }
 
-void CreateFont(FT_Library ft_lib, string filename, string name, unordered_map<string, FT_Face*>* catalogue){
+void CreateFont(FT_Library* ft_lib, string filename, string name, unordered_map<string, FT_Face*>* catalogue){
     std::cout << "Loading font: \"" << filename << "\"" << std::endl;
 
-    //FT_Face* face = new FT_Face();
-    FT_Face face;
-	if (FT_New_Face(ft_lib, (font_dir + "/28_days_later.ttf").c_str(), 0, &face)){
+    FT_Face* face = new FT_Face();
+	if (FT_New_Face(*ft_lib, (font_dir + "/28_days_later.ttf").c_str(), 0, face)){
+		//We don't close the program here because we can use a standard font
+		//if others failed to load.
+		//@Robustness: Not sure if this is the best way to handle it, lets wait and see.
 		std::cout << "::ERROR:: Non_Critical: Failed to load font: '" << font_dir + "/28_days_later.ttf" << "'" << std::endl;
+	}else{
+		(*catalogue)[name] = face;
 	}
 }
 //=============== END fonts ===================

@@ -229,7 +229,7 @@ void CreateWorldObjects() {
 
 
 int main(int argc, char *argv[]) {
-	cout << "Starting Program..." << endl;
+	cout << "------------------ Starting Program ------------------" << endl;
 
     //Initialise SDL, GLEW and FreeType
 	cout << "\n====== Initlialising Graphics ======" << endl;
@@ -351,7 +351,7 @@ int main(int argc, char *argv[]) {
 	//Free FreeType resources.
 	//@TODO unload fonts and de-initialise freetype.
 
-	cout << "====== Ending Program ======" << endl;
+	cout << "\n------------------ Ending Program ------------------" << endl;
 
 	return 0;
 }
