@@ -405,7 +405,7 @@ void Game::DrawFrame() {
 						25.0f, 25.0f, 1.0f, glm::vec3(0.0f, 0.8f, 0.8f));
 
 	main_ui->RenderText((*font_catalogue)["OpenSans_Regular"], "FPS: " + float_to_string(curr_fps),
-		window_width - 150, window_height - 50.0f, 0.6f, glm::vec3(0.5f, 0.8f, 0.2f));
+		window_width - 150, window_height - 40.0f, 0.6f, glm::vec3(0.5f, 0.8f, 0.2f));
 
     if (game_state == RUNNING) {
         //Warp the mouse to the center of the window.

@@ -136,6 +136,11 @@ ruin:
 	@echo "You ruined it! :("
 
 
+.PHONY: riun
+riun:
+	@echo "Dam dude... can't even ruin it right. :\\"
+
+
 .PHONY: clean
 clean:
 	rm -rf $(OUT_DIR)/*.o $(EXE_DIR)/*.exe *~ $(EXE_DIR)/*.dll $(EXE_DIR)/*.lib
