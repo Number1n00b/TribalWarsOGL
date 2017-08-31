@@ -1,16 +1,14 @@
 ===========
 Next Steps:
 ===========
-1) Edit makefile to look nicer and only link libaries when required.
-2) Create tests directory and make a Makefile rule to compile tests.
-3) Create a Catalogue class
-4) Move the loading of textures shaders and meshes somewhere better.....
-5) Decide how to deal with loading textures and meshes, should I load them all
+- Create a Catalogue class
+- Move the loading of textures shaders and meshes somewhere better.....
+- Decide how to deal with loading textures and meshes, should I load them all
     on startup, or should I only load them when required?
 
 
 
 
-1) Get text to render.
-2) Use text to make buttons. (Command pattern with Networking)
-3) Networking -> Command pattern with buttons.
+- Get text to render.
+- Use text to make buttons. (Command pattern with Networking)
+- Networking -> Command pattern with buttons.

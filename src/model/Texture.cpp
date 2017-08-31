@@ -7,7 +7,7 @@
 
 
 Texture::Texture(const std::string& fileName){
-	std::cout << "Loading texture... \"" << fileName << "\"..." << std::endl;
+	std::cout << "Loading texture: \"" << fileName << "\"" << std::endl;
 
 	int width, height, numComponents;
 

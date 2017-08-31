@@ -4,7 +4,7 @@
 #include "Mesh.h"
 
 Mesh::Mesh(const std::string& file_name) {
-	std::cout << "Creating mesh from file: \"" << file_name << "\"..." << std::endl;
+	std::cout << "Loading mesh: \"" << file_name << "\"" << std::endl;
 
 	m_name = file_name;
 

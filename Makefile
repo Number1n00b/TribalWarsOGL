@@ -16,7 +16,7 @@ OBJ_FILES=$(OUT_DIR)/stb_image.o $(OUT_DIR)/Display.o $(OUT_DIR)/UI.o \
 	$(OUT_DIR)/Camera.o $(OUT_DIR)/Mesh.o $(OUT_DIR)/Player.o \
 	$(OUT_DIR)/StaticObject.o $(OUT_DIR)/Texture.o $(OUT_DIR)/Transform.o \
 	$(OUT_DIR)/Vertex.o $(OUT_DIR)/WorldObject.o $(OUT_DIR)/Shader.o \
-	$(OUT_DIR)/Util.o
+	$(OUT_DIR)/Util.o $(OUT_DIR)/resource_loader.o
 
 COMPILE_COMMAND= $(CC) $(CFLAGS) -c $(INCLUDE_DIRS) $(LIB_DIRS) $(LINK_COMMANDS)
 
@@ -64,6 +64,11 @@ $(OUT_DIR)/Vertex.o: src/model/Vertex.cpp src/model/Vertex.h
 $(OUT_DIR)/Shader.o: src/shaders/Shader.cpp src/shaders/Shader.h \
  src/model/Transform.h src/util/Util.h
 	$(COMPILE_INCLUDES_NO_LINKS) src/shaders/Shader.cpp -o $(OUT_DIR)/Shader.o
+
+$(OUT_DIR)/resource_loader.o: src/loaders/resource_loader.cpp src/loaders/resource_loader.h \
+ src/shaders/Shader.h src/model/Mesh.h src/model/Texture.h src/main/main.h
+	$(COMPILE_INCLUDES_NO_LINKS) src/loaders/resource_loader.cpp -o $(OUT_DIR)/resource_loader.o
+
 
 $(OUT_DIR)/main.o: src/main/main.cpp src/main/main.h src/display/Display.h \
  src/model/Camera.h src/input/MouseListener.h src/input/KeyboardListener.h \

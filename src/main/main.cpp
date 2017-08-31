@@ -2,7 +2,6 @@
 #include <iostream>
 #include <windows.h> //For window events and manupulation. Also needed for glew.
 #include <string.h>
-#include <map>
 
 //Graphics libs.
 #include <GL/glew.h>
@@ -16,11 +15,14 @@
 
 
 //Freetype Libraries
-//#include <ft2build.h>
-//#include FT_FREETYPE_H
+#include <ft2build.h>
+#include FT_FREETYPE_H
 
 //=== My headers ===
 #include "main.h"
+
+//Loaders
+#include "../loaders/resource_loader.h"
 
 //Output
 #include "../display/Display.h"
@@ -83,11 +85,8 @@ static unordered_map<string, Mesh*>* mesh_catalogue;
 //Dictionary of all shaders.
 static unordered_map<string, Shader*>* shader_catalogue;
 
-
-//@TODO @cleanup @robustness: Have these directories be relative and auto-find them
-const static string shader_dir = "F:/Programming_Projects/CPP/TribalWarsOGL/res/shaders";
-const static string image_dir  = "F:/Programming_Projects/CPP/TribalWarsOGL/res/images";
-const static string mesh_dir   = "F:/Programming_Projects/CPP/TribalWarsOGL/res/meshes";
+//Dictionary of all fonts.
+static unordered_map<string, FT_Face*>* font_catalogue;
 
 void Initialise_Graphics(){
 	//===============
@@ -122,18 +121,6 @@ void Initialise_Graphics(){
     //Enable culling faces for proper depth handling.
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
-
-
-    //===============
-    //   FreeType
-    //===============
-    /*FT_Library library;
-    if(FT_Init_FreeType( &library )){
-        Game::FailAndExit("FreeType failed to initialize.");
-    }*/
-
-    //@TODO Load and store fonts, free library and loaders.
-    //LoadFonts();
 }
 
 void Initialise_Game(){
@@ -158,70 +145,26 @@ void Initialise_Game(){
     //Set the camera for our drawable class as the main camera.
     WorldObject::SetCamera(main_camera);
 
-	LoadShaders();
-	LoadMeshes();
-	LoadTextures();
-}
-
-//================= Shaders =====================
-void LoadShaders(){
-	//Create the catalogue.
+	//Set up the asset catalogues.
+	//Shader
 	shader_catalogue = new unordered_map<string, Shader*>();
 
-	//Standard
-    CreateShader(shader_dir + "/basicShader",  "standard", shader_catalogue);
-
-	//Sphere. (Colourful)
-    CreateShader(shader_dir + "/sphereShader", "sphere",   shader_catalogue);
-}
-
-//@Refactor, maybe these methods should be in the respective class files?
-void CreateShader(string filename, string name, unordered_map<string, Shader*>* catalogue){
-	Shader *s = new Shader(filename);
-	(*catalogue)[name] = s;
-}
-//=============== END Shaders ===================
-
-
-//================= Meshes =====================
-void LoadMeshes(){
-	//Create the catalogue.
+	//Mesh
 	mesh_catalogue = new unordered_map<string, Mesh*>();
 
-	CreateMesh(mesh_dir + "/monkey3.obj",   "monkey3",   mesh_catalogue);
-	CreateMesh(mesh_dir + "/myCar.obj",     "my_car",    mesh_catalogue);
-	CreateMesh(mesh_dir + "/6x6_plane.obj", "6x6_plane", mesh_catalogue);
-	CreateMesh(mesh_dir + "/sphere.obj",    "sphere",    mesh_catalogue);
-}
-
-void CreateMesh(string filename, string name, unordered_map<string, Mesh*>* catalogue){
-	Mesh *m = new Mesh(filename);
-	(*catalogue)[name] = m;
-}
-//=============== END Meshes ===================
-
-
-//================= Textures =====================
-void LoadTextures(){
-	//Create the catalogue.
+	//Texture
 	texture_catalogue = new unordered_map<string, Texture*>();
 
-    CreateTexture(image_dir + "/bricks.jpg",  "bricks",  texture_catalogue);
-	CreateTexture(image_dir + "/sand.jpg",    "sand",    texture_catalogue);
-
-	CreateTexture(image_dir + "/x.jpg",       "x",       texture_catalogue);
-	CreateTexture(image_dir + "/y.jpg",       "y",       texture_catalogue);
-	CreateTexture(image_dir + "/z.jpg",       "z",       texture_catalogue);
-	CreateTexture(image_dir + "/blue.jpg",    "blue",    texture_catalogue);
-	CreateTexture(image_dir + "/my_grid.jpg", "my_grid", texture_catalogue);
+	//Font
+	font_catalogue = new unordered_map<string, FT_Face*>();
 }
 
-void CreateTexture(string filename, string name, unordered_map<string, Texture*>* catalogue){
-	Texture *t = new Texture(filename);
-	(*catalogue)[name] = t;
+void LoadResources(){
+	LoadShaders(shader_catalogue);
+	LoadMeshes(mesh_catalogue);
+	LoadTextures(texture_catalogue);
+	LoadFonts(font_catalogue);
 }
-//=============== END Textures ===================
-
 
 void CreateWorldObjects() {
     //Here we create all of the objects that start out in the world.
@@ -286,13 +229,19 @@ void CreateWorldObjects() {
 
 
 int main(int argc, char *argv[]) {
-	cout << "====== Starting Program ======" << endl;
+	cout << "Starting Program..." << endl;
 
     //Initialise SDL, GLEW and FreeType
+	cout << "\n====== Initlialising Graphics ======" << endl;
     Initialise_Graphics();
 
     //Initalise the basics, Camera, UI, window, eventhandler.
+	cout << "\n====== Initlialising Game Elements. ======" << endl;
     Initialise_Game();
+
+	//Load all the resources: Fonts, Meshes, Textures and Shaders
+	cout << "\n====== Loading Resources ======" << endl;
+	LoadResources();
 
 	cout << "\n====== Creating World Objects ======" << endl;
     //Create all the objects in the world.
@@ -302,8 +251,8 @@ int main(int argc, char *argv[]) {
     for (std::vector<WorldObject*>::iterator it = world_objects.begin(); it != world_objects.end(); it++) {
         cout << "\t" << (*it)->name << endl;
     }
-	cout << "======================================" << endl;
 
+	cout << "======================================" << endl;
     //Main loop setup.
 	cout << "\nEntering main loop." << endl;
 

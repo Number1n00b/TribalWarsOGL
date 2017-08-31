@@ -13,7 +13,7 @@ static GLuint CreateShader(const std::string&& text, GLenum shaderType);
 
 Shader::Shader(std::string fileName)
 {
-	std::cout << "Creating shader... '" << fileName << "'" << std::endl;
+	std::cout << "Loading shader: \"" << fileName << "\"" << std::endl;
 
 	m_name = fileName;
 

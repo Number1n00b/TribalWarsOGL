@@ -19,6 +19,8 @@ enum GAME_STATE {
 
 extern GAME_STATE game_state;
 
+void LoadResources();
+
 namespace Game {
     extern bool should_close;
     void FailAndExit(std::string message);
@@ -30,13 +32,3 @@ namespace Game {
     void ResizeWindow(int width, int height);
     void DrawFrame();
 }
-
-
-void LoadShaders();
-void LoadMeshes();
-void LoadTextures();
-
-//@Refactor, maybe these methods should be in the respective class files?
-void CreateShader(string filename, string name, unordered_map<string, Shader*>* catalogue);
-void CreateMesh(string filename, string name, unordered_map<string, Mesh*>* catalogue);
-void CreateTexture(string filename, string name, unordered_map<string, Texture*>* catalogue);
