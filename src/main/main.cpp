@@ -1,7 +1,7 @@
 //Standard libs.
 #include <iostream>
 #include <windows.h> //For window events and manupulation. Also needed for glew.
-#include <string.h>
+#include <string>
 
 //Graphics libs.
 #include <GL/glew.h>
@@ -13,11 +13,6 @@
 #include <SDL.h>
 #include <SDL_syswm.h>
 
-
-//Freetype Libraries
-#include <ft2build.h>
-#include FT_FREETYPE_H
-
 //=== My headers ===
 #include "main.h"
 
@@ -26,6 +21,7 @@
 
 //Output
 #include "../display/Display.h"
+#include "../display/UI.h"
 
 //Shaders
 #include "../model/Shader.h"
@@ -38,6 +34,7 @@
 #include "../model/WorldObject.h"
 #include "../model/Player.h"
 #include "../model/StaticObject.h"
+#include "../model/Font.h"
 
 //Input
 #include "../input/InputEventHandler.h"
@@ -61,8 +58,8 @@ GAME_STATE game_state;
 bool Game::should_close = false;
 
 //Window paramentrs.
-const int window_width = 1080;
-const int window_height = 800;
+static int window_width = 1080;
+static int window_height = 800;
 
 //FPS params.
 const int TARGET_FPS = 60;
@@ -75,6 +72,7 @@ vector<WorldObject*> world_objects;
 Display *main_window;
 Camera *main_camera;
 InputEventHandler *event_handler;
+UI *main_ui;
 
 //Dictionary of all textures.
 static unordered_map<string, Texture*>* texture_catalogue;
@@ -86,7 +84,7 @@ static unordered_map<string, Mesh*>* mesh_catalogue;
 static unordered_map<string, Shader*>* shader_catalogue;
 
 //Dictionary of all fonts.
-static unordered_map<string, FT_Face*>* font_catalogue;
+static unordered_map<string, Font*>* font_catalogue;
 
 void Initialise_Graphics(){
 	//===============
@@ -121,6 +119,10 @@ void Initialise_Graphics(){
     //Enable culling faces for proper depth handling.
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
+
+
+    //Use this to draw wireframes.
+    //glPolygonMode(GL_FRONT, GL_LINE);
 }
 
 void Initialise_Game(){
@@ -156,7 +158,7 @@ void Initialise_Game(){
 	texture_catalogue = new unordered_map<string, Texture*>();
 
 	//Font
-	font_catalogue = new unordered_map<string, FT_Face*>();
+	font_catalogue = new unordered_map<string, Font*>();
 }
 
 void LoadResources(){
@@ -165,6 +167,12 @@ void LoadResources(){
 	LoadTextures(texture_catalogue);
 	LoadFonts(font_catalogue);
 }
+
+void Initialise_UI(){
+	//Create ui.
+	main_ui = new UI((*shader_catalogue)["text"], window_width, window_height);
+}
+
 
 void CreateWorldObjects() {
     //Here we create all of the objects that start out in the world.
@@ -242,6 +250,10 @@ int main(int argc, char *argv[]) {
 	//Load all the resources: Fonts, Meshes, Textures and Shaders
 	cout << "\n====== Loading Resources ======" << endl;
 	LoadResources();
+
+	//Initialise the UI.
+	cout << "\n====== Initialising UI ======" << endl;
+	Initialise_UI();
 
 	cout << "\n====== Creating World Objects ======" << endl;
     //Create all the objects in the world.
@@ -328,28 +340,33 @@ int main(int argc, char *argv[]) {
         delete *it;
     }
 
-	//Free shaders, meshes and textures.
+	//Free shaders, meshes, textures and fonts.
 	for( const auto& n : *shader_catalogue ) {
 		delete(n.second);
 	}
+	delete shader_catalogue;
+
 	for( const auto& n : *mesh_catalogue ) {
 		delete(n.second);
 	}
+	delete mesh_catalogue;
+
 	for( const auto& n : *texture_catalogue ) {
 		delete(n.second);
 	}
-
-	delete shader_catalogue;
-	delete mesh_catalogue;
 	delete texture_catalogue;
+
+	for( const auto& n : *font_catalogue ) {
+		delete(n.second);
+	}
+	delete font_catalogue;
+
+	//Destroy the UI
+	delete(main_ui);
 
 	//Free SDL resources.
 	cout << "Deinitialising SDL..." << endl;
 	SDL_Quit();
-
-
-	//Free FreeType resources.
-	//@TODO unload fonts and de-initialise freetype.
 
 	cout << "\n------------------ Ending Program ------------------" << endl;
 
@@ -358,8 +375,11 @@ int main(int argc, char *argv[]) {
 
 
 void Game::ResizeWindow(int width, int height) {
-    main_window->UpdateViewport(width, height);
-    main_camera->NotifyScreenResize(width, height);
+	window_width = width;
+	window_height = height;
+    main_window->UpdateViewport(window_width, window_height);
+    main_camera->NotifyScreenResize(window_width, window_height);
+	main_ui->UpdateWindowSize(window_width, window_height);
 }
 
 void Game::DrawFrame() {
@@ -370,6 +390,10 @@ void Game::DrawFrame() {
     for (std::vector<WorldObject*>::iterator it = world_objects.begin(); it != world_objects.end(); it++) {
         (*it)->Draw();
     }
+
+	//Draw the UI
+	main_ui->RenderText((*font_catalogue)["28_days_later"], "PogChamp?",
+						window_width / 2, window_height / 2, 1.0f, glm::vec3(0.0f, 1.0f, 1.0f));
 
     if (game_state == RUNNING) {
         //Warp the mouse to the center of the window.
@@ -386,7 +410,7 @@ void Game::DrawFrame() {
 }
 
 void Game::FailAndExit(std::string message){
-	cout << "\n======\nTHE PROGRAM HAS FAILED\n======\n" << message << endl;
+	cout << "\n++++++\nTHE PROGRAM HAS FAILED\n++++++\n" << message << endl;
 	//cin.get();
 	exit(-1);
 }

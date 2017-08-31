@@ -91,9 +91,6 @@ void Mesh::InitMesh(const IndexedModel& model) {
 void Mesh::Draw() {
 	glBindVertexArray(m_vertexArrayObject);
 
-    //Use this to draw wireframes.
-    glPolygonMode(GL_FRONT, GL_LINE);
-
 	glDrawElements(GL_TRIANGLES, m_drawCount, GL_UNSIGNED_INT, 0);
 
 	glBindVertexArray(0);

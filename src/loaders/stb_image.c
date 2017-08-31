@@ -76,7 +76,7 @@ If your name should be here but isn't, let Sean know.
 
 #ifndef STBI_NO_HDR
 #include <math.h>  // ldexp
-#include <string.h> // strcmp, strtok
+#include <string> // strcmp, strtok
 #endif
 
 #ifndef STBI_NO_STDIO

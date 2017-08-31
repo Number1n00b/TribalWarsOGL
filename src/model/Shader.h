@@ -16,6 +16,8 @@ class Shader{
 
 		std::string GetName();
 
+		GLuint GetProgram();
+
 	private:
 		//One for vertex and one for fragment. (Could also have 'geometry shaders').
         enum shaders{

@@ -1,14 +1,18 @@
 ===========
 Next Steps:
 ===========
+- Render Text:
+    Create a Font class that contains a map of char->Character
+    Load each Font into the font catalogue
+    Select font from catalogue and call Font.Reder() to render text on screen. (Every frame).
+        This probably means that all text rendering would have to be part of the UI.
+
+
 - Create a Catalogue class
 - Move the loading of textures shaders and meshes somewhere better.....
 - Decide how to deal with loading textures and meshes, should I load them all
     on startup, or should I only load them when required?
 
 
-
-
-- Get text to render.
 - Use text to make buttons. (Command pattern with Networking)
 - Networking -> Command pattern with buttons.

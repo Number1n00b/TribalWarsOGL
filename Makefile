@@ -16,7 +16,7 @@ OBJ_FILES=$(OUT_DIR)/stb_image.o $(OUT_DIR)/Display.o $(OUT_DIR)/UI.o \
 	$(OUT_DIR)/Camera.o $(OUT_DIR)/Mesh.o $(OUT_DIR)/Player.o \
 	$(OUT_DIR)/StaticObject.o $(OUT_DIR)/Texture.o $(OUT_DIR)/Transform.o \
 	$(OUT_DIR)/Vertex.o $(OUT_DIR)/WorldObject.o $(OUT_DIR)/Shader.o \
-	$(OUT_DIR)/Util.o $(OUT_DIR)/resource_loader.o
+	$(OUT_DIR)/Util.o $(OUT_DIR)/resource_loader.o $(OUT_DIR)/Font.o
 
 COMPILE_COMMAND= $(CC) $(CFLAGS) -c $(INCLUDE_DIRS) $(LIB_DIRS) $(LINK_COMMANDS)
 
@@ -42,7 +42,7 @@ $(OUT_DIR)/Util.o: src/util/Util.cpp src/util/Util.h
 $(OUT_DIR)/Display.o: src/display/Display.cpp src/display/Display.h
 	$(COMPILE_COMMAND) src/display/Display.cpp -o $(OUT_DIR)/Display.o
 
-$(OUT_DIR)/UI.o: src/display/UI.cpp src/display/UI.h
+$(OUT_DIR)/UI.o: src/display/UI.cpp src/display/UI.h src/model/Font.h
 	$(COMPILE_COMMAND) src/display/UI.cpp -o $(OUT_DIR)/UI.o
 
 $(OUT_DIR)/Transform.o: src/model/Transform.cpp src/model/Transform.h
@@ -52,6 +52,9 @@ $(OUT_DIR)/Vertex.o: src/model/Vertex.cpp src/model/Vertex.h
 	$(COMPILE_INCLUDES_NO_LINKS) src/model/Vertex.cpp -o $(OUT_DIR)/Vertex.o
 
 
+
+$(OUT_DIR)/Font.o: src/model/Font.cpp src/model/Font.h src/model/Texture.h
+	$(COMPILE_INCLUDES_NO_LINKS) src/model/Font.cpp -o $(OUT_DIR)/Font.o
 
 $(OUT_DIR)/Texture.o: src/model/Texture.cpp src/model/Texture.h src/loaders/stb_image.h
 	$(COMPILE_INCLUDES_NO_LINKS) src/model/Texture.cpp -o $(OUT_DIR)/Texture.o
@@ -65,7 +68,8 @@ $(OUT_DIR)/Shader.o: src/model/Shader.cpp src/model/Shader.h \
 	$(COMPILE_INCLUDES_NO_LINKS) src/model/Shader.cpp -o $(OUT_DIR)/Shader.o
 
 $(OUT_DIR)/resource_loader.o: src/loaders/resource_loader.cpp src/loaders/resource_loader.h \
- src/model/Shader.h src/model/Mesh.h src/model/Texture.h src/main/main.h
+ src/model/Shader.h src/model/Mesh.h src/model/Texture.h src/main/main.h \
+ src/model/Font.h
 	$(COMPILE_INCLUDES_NO_LINKS) src/loaders/resource_loader.cpp -o $(OUT_DIR)/resource_loader.o
 
 
@@ -74,7 +78,7 @@ $(OUT_DIR)/main.o: src/main/main.cpp src/main/main.h src/display/Display.h \
  src/input/InputEventHandler.h src/model/Shader.h src/model/Transform.h \
  src/model/Mesh.h src/loaders/obj_loader.h src/model/Vertex.h \
  src/model/Texture.h src/model/WorldObject.h src/model/Player.h \
- src/model/StaticObject.h
+ src/model/StaticObject.h src/model/Font.h src/display/UI.h
 	$(COMPILE_COMMAND) src/main/main.cpp -o $(OUT_DIR)/main.o
 
 $(OUT_DIR)/InputEventHandler.o: src/input/InputEventHandler.cpp \

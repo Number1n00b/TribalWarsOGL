@@ -10,27 +10,21 @@ const static string mesh_dir   = "F:/Programming_Projects/CPP/TribalWarsOGL/res/
 const static string font_dir   = "F:/Programming_Projects/CPP/TribalWarsOGL/res/fonts";
 
 //================= Fonts =====================
-void LoadFonts(unordered_map<string, FT_Face*>* catalogue){
+void LoadFonts(unordered_map<string, Font*>* catalogue){
 	FT_Library* ft_lib = new FT_Library();
 	if(FT_Init_FreeType( ft_lib )){
 		Game::FailAndExit("FreeType failed to initialize.");
 	}
 
     CreateFont(ft_lib, font_dir + "/28_days_later.ttf", "28_days_later", catalogue);
+
+	//Free resources.
+	FT_Done_FreeType(*ft_lib);
 }
 
-void CreateFont(FT_Library* ft_lib, string filename, string name, unordered_map<string, FT_Face*>* catalogue){
-    std::cout << "Loading font: \"" << filename << "\"" << std::endl;
-
-    FT_Face* face = new FT_Face();
-	if (FT_New_Face(*ft_lib, (font_dir + "/28_days_later.ttf").c_str(), 0, face)){
-		//We don't close the program here because we can use a standard font
-		//if others failed to load.
-		//@Robustness: Not sure if this is the best way to handle it, lets wait and see.
-		std::cout << "::ERROR:: Non_Critical: Failed to load font: '" << font_dir + "/28_days_later.ttf" << "'" << std::endl;
-	}else{
-		(*catalogue)[name] = face;
-	}
+void CreateFont(FT_Library* ft_lib, string filename, string name, unordered_map<string, Font*>* catalogue){
+    Font* f = new Font(ft_lib, filename, name);
+	(*catalogue)[name] = f;
 }
 //=============== END fonts ===================
 
@@ -42,7 +36,11 @@ void LoadShaders(unordered_map<string, Shader*>* catalogue){
 
 	//Sphere. (Colourful)
     CreateShader(shader_dir + "/sphereShader", "sphere",   catalogue);
+
+	//Text
+    CreateShader(shader_dir + "/textShader",   "text",     catalogue);
 }
+
 
 void CreateShader(string filename, string name, unordered_map<string, Shader*>* catalogue){
 	Shader *s = new Shader(filename);

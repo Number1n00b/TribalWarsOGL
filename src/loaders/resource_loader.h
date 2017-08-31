@@ -1,5 +1,7 @@
+#pragma once
+
 //Standard libs
-#include <string.h>
+#include <string>
 #include <unordered_map>
 
 //Freetype Libraries
@@ -11,6 +13,7 @@
 #include "../model/Shader.h"
 #include "../model/Mesh.h"
 #include "../model/Texture.h"
+#include "../model/Font.h"
 
 //Using / Namespace declarations.
 using std::string;
@@ -28,5 +31,5 @@ void LoadTextures(unordered_map<string, Texture*>* catalogue);
 void CreateTexture(string filename, string name, unordered_map<string, Texture*>* catalogue);
 
 
-void LoadFonts(unordered_map<string, FT_Face*>* catalogue);
-void CreateFont(FT_Library* ft_lib, string filename, string name, unordered_map<string, FT_Face*>* catalogue);
+void LoadFonts(unordered_map<string, Font*>* catalogue);
+void CreateFont(FT_Library* ft_lib, string filename, string name, unordered_map<string, Font*>* catalogue);

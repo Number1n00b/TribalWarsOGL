@@ -55,6 +55,10 @@ std::string Shader::GetName(){
 	return m_name;
 }
 
+GLuint Shader::GetProgram(){
+	return program;
+}
+
 void Shader::Bind() {
 	glUseProgram(program);
 }

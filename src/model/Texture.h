@@ -7,7 +7,10 @@ class Texture
 	public:
 		Texture(const std::string& fileName);
 
-		void Bind(unsigned int unit);
+		Texture(const std::string& name, GLint packingFormat,
+				int width, int height, const GLvoid* data);
+
+		void Bind(unsigned int uint);
 
 		~Texture();
 
@@ -15,4 +18,6 @@ class Texture
 		GLuint m_texture;
 
 		std::string m_name;
+
+		bool isCharacterTexture;
 };

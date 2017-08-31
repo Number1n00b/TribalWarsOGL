@@ -19,8 +19,6 @@ enum GAME_STATE {
 
 extern GAME_STATE game_state;
 
-void LoadResources();
-
 namespace Game {
     extern bool should_close;
     void FailAndExit(std::string message);

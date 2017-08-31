@@ -19,7 +19,7 @@ Solution = Create my own catalogue class.
 =================
 
 
-
+- Stop using globals for Display, Camera etc, no need for that anymore. 
 
 - Rewrite what is not mine, or use other, industry standard, free libaries (obj_loader and stb_image).
 

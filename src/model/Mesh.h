@@ -1,5 +1,5 @@
 #pragma once
-#include <string.h>
+#include <string>
 #include <glm/glm.hpp>
 #include <GL/glew.h>
 #include "../loaders/obj_loader.h"
