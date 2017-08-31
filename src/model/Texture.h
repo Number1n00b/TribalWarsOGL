@@ -12,6 +12,8 @@ class Texture
 
 		void Bind(unsigned int uint);
 
+		std::string GetName();
+
 		~Texture();
 
 	private:

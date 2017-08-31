@@ -3,6 +3,7 @@
 #include <windows.h> // To get exe path.
 #include <iostream>  // To print.
 #include <glm/glm.hpp>
+#include <stdio.h>  // for sprintf
 
 using std::string;
 
@@ -66,4 +67,14 @@ string get_exe_path(){
    GetModuleFileName( NULL, buffer, MAX_PATH );
    string::size_type pos = string( buffer ).find_last_of( "\\/" );
    return string( buffer ).substr( 0, pos);
+}
+
+
+string float_to_string(float f){
+    //@Robustness: could cause memory overflow if float is large.
+    char str[100];
+
+    sprintf(str, "%.2f", f);
+
+    return std::string(str);
 }

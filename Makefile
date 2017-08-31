@@ -130,6 +130,12 @@ run:
 rum:
 	@echo "Why is the rum gone?!"
 
+
+.PHONY: ruin
+ruin:
+	@echo "You ruined it! :("
+
+
 .PHONY: clean
 clean:
 	rm -rf $(OUT_DIR)/*.o $(EXE_DIR)/*.exe *~ $(EXE_DIR)/*.dll $(EXE_DIR)/*.lib

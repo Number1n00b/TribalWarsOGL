@@ -1,4 +1,5 @@
 #include "UI.h"
+#include <glm/gtc/type_ptr.hpp>
 
 UI::UI(Shader* textShader, float screen_width, float screen_height){
     this->textShader = textShader;
@@ -26,7 +27,8 @@ void UI::RenderText(Font* font, string text, GLfloat x, GLfloat y, GLfloat scale
     // Activate corresponding render state
     textShader->Bind();
     glUniform3f(glGetUniformLocation(textShader->GetProgram(), "textColor"), color.x, color.y, color.z);
-    glUniformMatrix4fv(glGetUniformLocation(textShader->GetProgram(), "projection"), 1, GL_FALSE, (GLfloat*)&m_projection);
+    glUniformMatrix4fv(glGetUniformLocation(textShader->GetProgram(), "projection"),
+                                            1, GL_FALSE, glm::value_ptr(m_projection));
 
     glBindVertexArray(m_VAO);
 
@@ -41,6 +43,7 @@ void UI::RenderText(Font* font, string text, GLfloat x, GLfloat y, GLfloat scale
 
         GLfloat w = ch.size.x * scale;
         GLfloat h = ch.size.y * scale;
+
         // Update VBO for each character
         GLfloat vertices[6][4] = {
             { xpos,     ypos + h,   0.0, 0.0 },

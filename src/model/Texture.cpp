@@ -45,14 +45,22 @@ Texture::Texture(const std::string& name, GLint packingFormat,
 	glGenTextures(1, &m_texture);
 	glBindTexture(GL_TEXTURE_2D, m_texture);
 
+	glTexImage2D(GL_TEXTURE_2D,
+		         0,
+				 packingFormat,
+				 width,
+				 height,
+				 0,
+				 packingFormat,
+				 GL_UNSIGNED_BYTE,
+				 data);
+
     //Where 'S' and 'T' are coordinates like x and y, so we are setting the two axis' wrapping perameters.
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	glTexImage2D(GL_TEXTURE_2D, 0, packingFormat, width, height, 0, packingFormat, GL_UNSIGNED_BYTE, data);
 }
 
 
@@ -63,7 +71,12 @@ void Texture::Bind(unsigned int uint) {
 	//@TODO @Hardcoded. Figure out how to set active tecture to the one I want.
 	//I dont fully remember what this is, or how to use it.
 	glActiveTexture(GL_TEXTURE0 + uint);
+
 	glBindTexture(GL_TEXTURE_2D, m_texture);
+}
+
+std::string Texture::GetName(){
+	return m_name;
 }
 
 Texture::~Texture(){

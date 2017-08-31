@@ -26,8 +26,8 @@ Camera::Camera(const glm::vec3& pos, glm::vec3 look_direction, glm::vec3 up_dire
     m_ReferenceMousePositionY = window_height / 2;
 
     //Currently useless.
-    m_XSensitivity = 0.1;
-    m_YSensitivity = 0.1;
+    m_XSensitivity = 0.08;
+    m_YSensitivity = 0.08;
 
     m_MouseMoved = false;
 

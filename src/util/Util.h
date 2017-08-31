@@ -27,3 +27,5 @@ namespace Math{
 }
 
 string get_exe_path();
+
+string float_to_string(float f);

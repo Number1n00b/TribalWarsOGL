@@ -86,6 +86,8 @@ static unordered_map<string, Shader*>* shader_catalogue;
 //Dictionary of all fonts.
 static unordered_map<string, Font*>* font_catalogue;
 
+static float curr_fps = 0;
+
 void Initialise_Graphics(){
 	//===============
     //     SDL
@@ -283,6 +285,13 @@ int main(int argc, char *argv[]) {
 
     //The main loop!
 	while (!Game::should_close) {
+		//@DEBUG
+		GLenum err;
+		while((err = glGetError()) != GL_NO_ERROR)
+		{
+  			cout << "\n+++++++++++ GL_Error: " << err << "++++++++++++++++\n";
+		}
+
         //Always handle events regardless of state.
         //Currently this works because WorldObjects only "Update" In the inner if statement: ie. when game is running.
         //However, the event norifications are ALWAYS sent. So if somethign changes in the "NotifyEvent" method, it will change even in pause menu.
@@ -311,10 +320,10 @@ int main(int argc, char *argv[]) {
         if (time_since_last_frame >= MS_PER_FRAME) {
             num_frames++;
 
-            //This is just to display FPS, once I figure out how to do text in OpenGL.
+            //This is just to display FPS
             if (num_frames == 100) {
                 fps_timer_end = curr_time;
-                //cout << "FPS: " << (float(num_frames) / (float(fps_timer_end - fps_timer_start) / 1000.0)) << endl;
+				curr_fps = (float(num_frames) / (float(fps_timer_end - fps_timer_start) / 1000.0));
                 fps_timer_start = fps_timer_end;
                 num_frames = 0;
             }
@@ -342,27 +351,27 @@ int main(int argc, char *argv[]) {
 
 	//Free shaders, meshes, textures and fonts.
 	for( const auto& n : *shader_catalogue ) {
-		delete(n.second);
+		delete n.second ;
 	}
 	delete shader_catalogue;
 
 	for( const auto& n : *mesh_catalogue ) {
-		delete(n.second);
+		delete n.second;
 	}
 	delete mesh_catalogue;
 
 	for( const auto& n : *texture_catalogue ) {
-		delete(n.second);
+		delete n.second;
 	}
 	delete texture_catalogue;
 
 	for( const auto& n : *font_catalogue ) {
-		delete(n.second);
+		delete n.second;
 	}
 	delete font_catalogue;
 
 	//Destroy the UI
-	delete(main_ui);
+	delete main_ui;
 
 	//Free SDL resources.
 	cout << "Deinitialising SDL..." << endl;
@@ -392,8 +401,11 @@ void Game::DrawFrame() {
     }
 
 	//Draw the UI
-	main_ui->RenderText((*font_catalogue)["28_days_later"], "PogChamp?",
-						window_width / 2, window_height / 2, 1.0f, glm::vec3(0.0f, 1.0f, 1.0f));
+	main_ui->RenderText((*font_catalogue)["28_days_later"], "PogChamp!",
+						25.0f, 25.0f, 1.0f, glm::vec3(0.0f, 0.8f, 0.8f));
+
+	main_ui->RenderText((*font_catalogue)["OpenSans_Regular"], "FPS: " + float_to_string(curr_fps),
+		window_width - 150, window_height - 50.0f, 0.6f, glm::vec3(0.5f, 0.8f, 0.2f));
 
     if (game_state == RUNNING) {
         //Warp the mouse to the center of the window.

@@ -16,6 +16,8 @@ Font::Font(FT_Library* ft_lib, string filename, string name){
 	}else{
         LoadCharacters(face);
 	}
+
+    delete face;
 }
 
 Font::LoadCharacters(FT_Face* f){
@@ -23,7 +25,12 @@ Font::LoadCharacters(FT_Face* f){
 
     FT_Face face = *f;
 
-    //Load the first 128 characters of the ascii table.
+    // Set size to load glyphs as 48
+    // @Hardcode @Robustness: maybe use an import to load it as a standard size.
+    //Currently just using scale to adjust this.
+    FT_Set_Pixel_Sizes(face, 0, 48);
+
+    //Load all 128 characters of the ascii table.
     for (GLubyte c = 0; c < 128; c++)
     {
         // Load character glyph
@@ -34,7 +41,6 @@ Font::LoadCharacters(FT_Face* f){
             continue;
         }
 
-        //@TODO make this use my own texture class somhow?
         // Generate texture
         Texture* t = new Texture(name + "_" + char(c), GL_RED,
                                 face->glyph->bitmap.width,

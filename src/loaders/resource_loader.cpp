@@ -18,8 +18,11 @@ void LoadFonts(unordered_map<string, Font*>* catalogue){
 
     CreateFont(ft_lib, font_dir + "/28_days_later.ttf", "28_days_later", catalogue);
 
+	CreateFont(ft_lib, font_dir + "/open-sans/OpenSans-Regular.ttf", "OpenSans_Regular", catalogue);
+
 	//Free resources.
 	FT_Done_FreeType(*ft_lib);
+	delete ft_lib;
 }
 
 void CreateFont(FT_Library* ft_lib, string filename, string name, unordered_map<string, Font*>* catalogue){
