@@ -8,7 +8,7 @@ EXE_NAME=MyTribalWarsGame
 
 INCLUDE_DIRS =-I include/SDL2 -I include/glew -I include/glm -I include/FreeType2
 
-LIB_DIRS=-L lib/glew -L lib/FreeType2
+LIB_DIRS=-L lib/glew -L lib/FreeType2 -L lib/sdl2
 LINK_COMMANDS=-lsdl2 -lopengl32 -lglew32 -lfreetype2
 
 OBJ_FILES=$(OUT_DIR)/stb_image.o $(OUT_DIR)/Display.o $(OUT_DIR)/UI.o \
@@ -118,7 +118,9 @@ $(OUT_DIR)/WorldObject.o: src/model/WorldObject.cpp src/model/WorldObject.h \
 CopyLibs:
 	cp lib/glew/glew32.dll bin
 	cp lib/sdl2/SDL2.dll bin
-	cp lib/FreeType2/FreeType2.dll bin
+
+	#Not sure why it needs to be called FreeType6 on my laptop.
+	cp lib/FreeType2/FreeType2.dll bin/FreeType6.dll
 
 
 .PHONY: run
@@ -143,7 +145,7 @@ riun:
 
 .PHONY: clean
 clean:
-	rm -rf $(OUT_DIR)/*.o $(EXE_DIR)/*.exe *~ $(EXE_DIR)/*.dll $(EXE_DIR)/*.lib
+	rm -rf $(OUT_DIR)/*.o $(EXE_DIR)/*.exe *~ $(EXE_DIR)/*.dll
 
 
 .PHONY: runVal
