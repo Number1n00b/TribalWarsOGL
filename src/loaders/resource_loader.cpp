@@ -11,6 +11,10 @@
 //const static string project_dir = "F:/Programming_Projects/CPP/TribalWarsOGL/";
 const static string project_dir = "D:/Programming_Projects/TribalWarsOGL/";
 
+//Non-existing directory for error testing.
+//@DEBUG
+//const static string project_dir = "P:/p/L/";
+
 const static string shader_dir  = project_dir + "res/shaders";
 const static string image_dir   = project_dir + "res/images";
 const static string mesh_dir    = project_dir + "res/meshes";

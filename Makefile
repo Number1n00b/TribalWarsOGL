@@ -16,7 +16,8 @@ OBJ_FILES=$(OUT_DIR)/stb_image.o $(OUT_DIR)/Display.o $(OUT_DIR)/UI.o \
 	$(OUT_DIR)/Camera.o $(OUT_DIR)/Mesh.o $(OUT_DIR)/Player.o \
 	$(OUT_DIR)/StaticObject.o $(OUT_DIR)/Texture.o $(OUT_DIR)/Transform.o \
 	$(OUT_DIR)/Vertex.o $(OUT_DIR)/WorldObject.o $(OUT_DIR)/Shader.o \
-	$(OUT_DIR)/Util.o $(OUT_DIR)/resource_loader.o $(OUT_DIR)/Font.o
+	$(OUT_DIR)/Util.o $(OUT_DIR)/resource_loader.o $(OUT_DIR)/Font.o \
+	$(OUT_DIR)/FileReader.o
 
 COMPILE_COMMAND= $(CC) $(CFLAGS) -c $(INCLUDE_DIRS) $(LIB_DIRS) $(LINK_COMMANDS)
 
@@ -35,6 +36,9 @@ $(OUT_DIR)/obj_loader.o: src/loaders/obj_loader.cpp src/loaders/obj_loader.h
 	$(COMPILE_INCLUDES_NO_LINKS) src/loaders/obj_loader.cpp -o $(OUT_DIR)/obj_loader.o
 
 
+
+$(OUT_DIR)/FileReader.o: src/input/FileReader.cpp src/input/FileReader.h
+	$(COMPILE_NO_EXTRAS) src/input/FileReader.cpp -o $(OUT_DIR)/FileReader.o
 
 $(OUT_DIR)/Util.o: src/util/Util.cpp src/util/Util.h
 	$(COMPILE_INCLUDES_NO_LINKS) src/util/Util.cpp -o $(OUT_DIR)/Util.o

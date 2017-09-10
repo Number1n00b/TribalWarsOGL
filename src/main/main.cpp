@@ -86,7 +86,7 @@ static unordered_map<string, Shader*>* shader_catalogue;
 //Dictionary of all fonts.
 static unordered_map<string, Font*>* font_catalogue;
 
-static float curr_fps = 0;
+static double curr_fps = 0.0;
 
 void Initialise_Graphics(){
 	//===============
@@ -267,6 +267,7 @@ int main(int argc, char *argv[]) {
     }
 
 	cout << "======================================" << endl;
+
     //Main loop setup.
 	cout << "\nEntering main loop." << endl;
 
@@ -276,67 +277,71 @@ int main(int argc, char *argv[]) {
 
     double time_since_last_frame = 0;
 
-    int num_frames = 0;
-    int fps_timer_start = prev_time;
-    int fps_timer_end;
+    int    num_frames = 0;
+    double fps_timer_start = prev_time;
 
     //Start the game.
     Game::ResumeGame();
 
     //The main loop!
 	while (!Game::should_close) {
-		//@DEBUG
-		GLenum err;
-		while((err = glGetError()) != GL_NO_ERROR)
-		{
-				//Unfortunately getting the error string is not supported because we don't
-				//have glu32.dll.
-				//const GLubyte* errorMessage = gluErrorString(err);
-  			cout << "\n+++++++++++ GL_Error: " << err << "++++++++++++++++\n";
+        //@DEBUG
+        GLenum err;
+        while((err = glGetError()) != GL_NO_ERROR)
+        {
+	        //Unfortunately getting the error string is not supported because we don't
+            //have glu32.dll.
+	        //const GLubyte* errorMessage = gluErrorString(err);
+            cout << "\n+++++++++++ GL_Error: " << err << "++++++++++++++++\n";
 		}
 
-      //Always handle events regardless of state.
-      //Currently this works because WorldObjects only "Update" In the inner if statement: ie. when game is running.
-      //However, the event norifications are ALWAYS sent. So if somethign changes in the "NotifyEvent" method, it will change even in pause menu.
-      event_handler->HandleSDLEvents();
+        //Always handle events regardless of state.
+        //Currently this works because WorldObjects only "Update" In the inner if statement: ie. when game is running.
+        //However, the event norifications are ALWAYS sent. So if somethign changes in the "NotifyEvent" method, it will change even in pause menu.
+        event_handler->HandleSDLEvents();
 
-      curr_time = SDL_GetTicks();
+        curr_time = SDL_GetTicks();
 
-      //dt here is time per loop
-      dt = curr_time - prev_time;
-      prev_time = curr_time;
+        //dt here is time since last update
+        dt = curr_time - prev_time;
+        prev_time = curr_time;
 
-      time_since_last_frame += dt;
+        time_since_last_frame += dt;
 
-      //Do physics updates
-      if (game_state == RUNNING && dt != 0) {
-          //Update all our objects.
-          for (std::vector<WorldObject*>::iterator it = world_objects.begin(); it != world_objects.end(); it++) {
-              (*it)->Update(dt);
-          }
+        //Do physics updates
+        if (game_state == RUNNING && dt != 0) {
+            //Update all our objects.
+            for (std::vector<WorldObject*>::iterator it = world_objects.begin(); it != world_objects.end(); it++) {
+                (*it)->Update(dt);
+            }
 
-          //Update the main camera.
-          main_camera->Update(dt);
-      }
+            //Update the main camera.
+            main_camera->Update(dt);
+        }
 
-      //Cap FPS and render only when needed. @NOTE: Physics updates done only on every render call.
-      if (time_since_last_frame >= MS_PER_FRAME) {
-          num_frames++;
+        //Cap FPS and render only when needed. @NOTE: Physics updates done only on every render call.
+        if (time_since_last_frame >= MS_PER_FRAME) {
 
-          //This is just to display FPS
-          if (num_frames == 100) {
-              fps_timer_end = curr_time;
-							curr_fps = (float(num_frames) / (float(fps_timer_end - fps_timer_start) / 1000.0));
-              fps_timer_start = fps_timer_end;
-              num_frames = 0;
-          }
+            //num_frames is a counter to calculate average FPS
+            num_frames++;
 
-          //Render
-          Game::DrawFrame();
+            //Render
+            Game::DrawFrame();
 
-          time_since_last_frame = 0.0;
-      }
-	}
+            time_since_last_frame = 0.0;
+        }
+
+        //This is to calculate FPS (average per 100 frames)
+        if (num_frames == 100) {
+            curr_fps = ((double(num_frames) / (curr_time - fps_timer_start)) * 1000.0); // *1000 to convert from ms to s.
+
+            //Reset average timer and counter.
+            fps_timer_start = curr_time;
+            num_frames = 0;
+
+            cout << "Calculated FPS: " << curr_fps << endl;
+        }
+    }
 
     game_state = CLOSING;
 
