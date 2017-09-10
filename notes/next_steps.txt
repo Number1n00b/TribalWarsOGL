@@ -1,6 +1,10 @@
 ===========
 Next Steps:
 ===========
+- Have a local copy of a file that contains the directory which to search
+    for all specified resources. That way I won't even have to recompile every time,
+    I can just modify that file and re-run.
+
 - Create a Catalogue class
 - Move the loading of textures shaders and meshes somewhere better.....
 - Decide how to deal with loading textures and meshes, should I load them all

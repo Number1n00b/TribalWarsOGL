@@ -257,7 +257,7 @@ int main(int argc, char *argv[]) {
 	cout << "\n====== Initialising UI ======" << endl;
 	Initialise_UI();
 
-	cout << "\n====== Creating World Objects ======" << endl;
+    cout << "\n====== Creating World Objects ======" << endl;
     //Create all the objects in the world.
     CreateWorldObjects();
 
@@ -289,50 +289,53 @@ int main(int argc, char *argv[]) {
 		GLenum err;
 		while((err = glGetError()) != GL_NO_ERROR)
 		{
+				//Unfortunately getting the error string is not supported because we don't
+				//have glu32.dll.
+				//const GLubyte* errorMessage = gluErrorString(err);
   			cout << "\n+++++++++++ GL_Error: " << err << "++++++++++++++++\n";
 		}
 
-        //Always handle events regardless of state.
-        //Currently this works because WorldObjects only "Update" In the inner if statement: ie. when game is running.
-        //However, the event norifications are ALWAYS sent. So if somethign changes in the "NotifyEvent" method, it will change even in pause menu.
-        event_handler->HandleSDLEvents();
+      //Always handle events regardless of state.
+      //Currently this works because WorldObjects only "Update" In the inner if statement: ie. when game is running.
+      //However, the event norifications are ALWAYS sent. So if somethign changes in the "NotifyEvent" method, it will change even in pause menu.
+      event_handler->HandleSDLEvents();
 
-        curr_time = SDL_GetTicks();
+      curr_time = SDL_GetTicks();
 
-        //dt here is time per loop
-        dt = curr_time - prev_time;
-        prev_time = curr_time;
+      //dt here is time per loop
+      dt = curr_time - prev_time;
+      prev_time = curr_time;
 
-        time_since_last_frame += dt;
+      time_since_last_frame += dt;
 
-        //Do physics updates
-        if (game_state == RUNNING && dt != 0) {
-            //Update all our objects.
-            for (std::vector<WorldObject*>::iterator it = world_objects.begin(); it != world_objects.end(); it++) {
-                (*it)->Update(dt);
-            }
+      //Do physics updates
+      if (game_state == RUNNING && dt != 0) {
+          //Update all our objects.
+          for (std::vector<WorldObject*>::iterator it = world_objects.begin(); it != world_objects.end(); it++) {
+              (*it)->Update(dt);
+          }
 
-            //Update the main camera.
-            main_camera->Update(dt);
-        }
+          //Update the main camera.
+          main_camera->Update(dt);
+      }
 
-        //Cap FPS and render only when needed. @NOTE: Physics updates done only on every render call.
-        if (time_since_last_frame >= MS_PER_FRAME) {
-            num_frames++;
+      //Cap FPS and render only when needed. @NOTE: Physics updates done only on every render call.
+      if (time_since_last_frame >= MS_PER_FRAME) {
+          num_frames++;
 
-            //This is just to display FPS
-            if (num_frames == 100) {
-                fps_timer_end = curr_time;
-				curr_fps = (float(num_frames) / (float(fps_timer_end - fps_timer_start) / 1000.0));
-                fps_timer_start = fps_timer_end;
-                num_frames = 0;
-            }
+          //This is just to display FPS
+          if (num_frames == 100) {
+              fps_timer_end = curr_time;
+							curr_fps = (float(num_frames) / (float(fps_timer_end - fps_timer_start) / 1000.0));
+              fps_timer_start = fps_timer_end;
+              num_frames = 0;
+          }
 
-            //Render
-            Game::DrawFrame();
+          //Render
+          Game::DrawFrame();
 
-            time_since_last_frame = 0.0;
-        }
+          time_since_last_frame = 0.0;
+      }
 	}
 
     game_state = CLOSING;
@@ -379,7 +382,7 @@ int main(int argc, char *argv[]) {
 
 	cout << "\n------------------ Ending Program ------------------" << endl;
 
-	return 0;
+    return EXIT_SUCCESS;
 }
 
 
@@ -424,7 +427,7 @@ void Game::DrawFrame() {
 void Game::FailAndExit(std::string message){
 	cout << "\n++++++\nTHE PROGRAM HAS FAILED\n++++++\n" << message << endl;
 	//cin.get();
-	exit(-1);
+	exit(EXIT_FAILURE);
 }
 
 void Game::TogglePause() {
