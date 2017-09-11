@@ -29,3 +29,7 @@ namespace Math{
 string get_exe_path();
 
 string float_to_string(float f);
+
+void init_array(double* array, int size, double value);
+
+double sum_array(double* array, int size);

@@ -39,6 +39,11 @@
 //Input
 #include "../input/InputEventHandler.h"
 
+
+//Defines
+//Buffer size for FPS moving average calculation.
+#define FPS_MOVING_AVERAGE_SIZE 30
+
 //Using / Namespace declarations.
 using std::cin;
 using std::cout;
@@ -268,7 +273,7 @@ int main(int argc, char *argv[]) {
     //Create all the objects in the world.
     CreateWorldObjects();
 
-    cout << "Created:\n";
+    cout << "Objects Created:\n";
     for (std::vector<WorldObject*>::iterator it = world_objects.begin(); it != world_objects.end(); it++) {
         cout << "\t" << (*it)->name << endl;
     }
@@ -284,7 +289,11 @@ int main(int argc, char *argv[]) {
 
     double time_since_last_frame = 0;
 
-    int    num_frames = 0;
+    int    curr_frame_index = 0;
+	double frame_dt_sum = 0;
+	double frame_times[FPS_MOVING_AVERAGE_SIZE];
+	init_array(frame_times, FPS_MOVING_AVERAGE_SIZE, 0);
+
     double fps_timer_start = prev_time;
 
     //Start the game.
@@ -329,23 +338,20 @@ int main(int argc, char *argv[]) {
         //Cap FPS and render only when needed. @NOTE: Physics updates done only on every render call.
         if (time_since_last_frame >= MS_PER_FRAME) {
 
-            //num_frames is a counter to calculate average FPS
-            num_frames++;
-
             //Render
             Game::DrawFrame();
+
+			//Do FPS calculation.
+			frame_times[curr_frame_index] = time_since_last_frame;
+			curr_frame_index = (curr_frame_index + 1) % (FPS_MOVING_AVERAGE_SIZE);
+
+			frame_dt_sum = sum_array(frame_times, FPS_MOVING_AVERAGE_SIZE);
+
+			curr_fps = 1000 / (frame_dt_sum / ((float)FPS_MOVING_AVERAGE_SIZE));
 
             time_since_last_frame = 0.0;
         }
 
-        //This is to calculate FPS (average per 100 frames)
-        if (num_frames == 100) {
-            curr_fps = ((double(num_frames) / (curr_time - fps_timer_start)) * 1000.0); // *1000 to convert from ms to s.
-
-            //Reset average timer and counter.
-            fps_timer_start = curr_time;
-            num_frames = 0;
-        }
     }
 
     game_state = CLOSING;

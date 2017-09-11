@@ -78,3 +78,20 @@ string float_to_string(float f){
 
     return std::string(str);
 }
+
+
+void init_array(double* array, int size, double value){
+    for(int ii = 0; ii < size; ii++){
+        array[ii] = value;
+    }
+}
+
+double sum_array(double* array, int size){
+    double sum = 0;
+
+    for(int ii = 0; ii < size; ii++){
+        sum += array[ii];
+    }
+
+    return sum;
+}
