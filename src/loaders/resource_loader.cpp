@@ -4,10 +4,21 @@
 #include "resource_loader.h"
 
 //@TODO @cleanup @robustness: Have these directories be relative and auto-find them
-const static string shader_dir = "F:/Programming_Projects/CPP/TribalWarsOGL/res/shaders";
-const static string image_dir  = "F:/Programming_Projects/CPP/TribalWarsOGL/res/images";
-const static string mesh_dir   = "F:/Programming_Projects/CPP/TribalWarsOGL/res/meshes";
-const static string font_dir   = "F:/Programming_Projects/CPP/TribalWarsOGL/res/fonts";
+//Or even just have a local copy of a file that contains the directory which to search
+//for all specified resources. That way I won't even have to recompile every time,
+//I can just modify that file and re-run.
+
+//const static string project_dir = "F:/Programming_Projects/CPP/TribalWarsOGL/";
+const static string project_dir = "D:/Programming_Projects/TribalWarsOGL/";
+
+//Non-existing directory for error testing.
+//@DEBUG
+//const static string project_dir = "P:/p/L/";
+
+const static string shader_dir  = project_dir + "res/shaders";
+const static string image_dir   = project_dir + "res/images";
+const static string mesh_dir    = project_dir + "res/meshes";
+const static string font_dir    = project_dir + "res/fonts";
 
 //================= Fonts =====================
 void LoadFonts(unordered_map<string, Font*>* catalogue){

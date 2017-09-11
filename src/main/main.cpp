@@ -86,7 +86,7 @@ static unordered_map<string, Shader*>* shader_catalogue;
 //Dictionary of all fonts.
 static unordered_map<string, Font*>* font_catalogue;
 
-static float curr_fps = 0;
+static double curr_fps = 0.0;
 
 void Initialise_Graphics(){
 	//===============
@@ -257,7 +257,7 @@ int main(int argc, char *argv[]) {
 	cout << "\n====== Initialising UI ======" << endl;
 	Initialise_UI();
 
-	cout << "\n====== Creating World Objects ======" << endl;
+    cout << "\n====== Creating World Objects ======" << endl;
     //Create all the objects in the world.
     CreateWorldObjects();
 
@@ -267,6 +267,7 @@ int main(int argc, char *argv[]) {
     }
 
 	cout << "======================================" << endl;
+
     //Main loop setup.
 	cout << "\nEntering main loop." << endl;
 
@@ -276,20 +277,22 @@ int main(int argc, char *argv[]) {
 
     double time_since_last_frame = 0;
 
-    int num_frames = 0;
-    int fps_timer_start = prev_time;
-    int fps_timer_end;
+    int    num_frames = 0;
+    double fps_timer_start = prev_time;
 
     //Start the game.
     Game::ResumeGame();
 
     //The main loop!
 	while (!Game::should_close) {
-		//@DEBUG
-		GLenum err;
-		while((err = glGetError()) != GL_NO_ERROR)
-		{
-  			cout << "\n+++++++++++ GL_Error: " << err << "++++++++++++++++\n";
+        //@DEBUG
+        GLenum err;
+        while((err = glGetError()) != GL_NO_ERROR)
+        {
+	        //Unfortunately getting the error string is not supported because we don't
+            //have glu32.dll.
+	        //const GLubyte* errorMessage = gluErrorString(err);
+            cout << "\n+++++++++++ GL_Error: " << err << "++++++++++++++++\n";
 		}
 
         //Always handle events regardless of state.
@@ -299,7 +302,7 @@ int main(int argc, char *argv[]) {
 
         curr_time = SDL_GetTicks();
 
-        //dt here is time per loop
+        //dt here is time since last update
         dt = curr_time - prev_time;
         prev_time = curr_time;
 
@@ -318,22 +321,27 @@ int main(int argc, char *argv[]) {
 
         //Cap FPS and render only when needed. @NOTE: Physics updates done only on every render call.
         if (time_since_last_frame >= MS_PER_FRAME) {
-            num_frames++;
 
-            //This is just to display FPS
-            if (num_frames == 100) {
-                fps_timer_end = curr_time;
-				curr_fps = (float(num_frames) / (float(fps_timer_end - fps_timer_start) / 1000.0));
-                fps_timer_start = fps_timer_end;
-                num_frames = 0;
-            }
+            //num_frames is a counter to calculate average FPS
+            num_frames++;
 
             //Render
             Game::DrawFrame();
 
             time_since_last_frame = 0.0;
         }
-	}
+
+        //This is to calculate FPS (average per 100 frames)
+        if (num_frames == 100) {
+            curr_fps = ((double(num_frames) / (curr_time - fps_timer_start)) * 1000.0); // *1000 to convert from ms to s.
+
+            //Reset average timer and counter.
+            fps_timer_start = curr_time;
+            num_frames = 0;
+
+            cout << "Calculated FPS: " << curr_fps << endl;
+        }
+    }
 
     game_state = CLOSING;
 
@@ -379,7 +387,7 @@ int main(int argc, char *argv[]) {
 
 	cout << "\n------------------ Ending Program ------------------" << endl;
 
-	return 0;
+    return EXIT_SUCCESS;
 }
 
 
@@ -424,7 +432,7 @@ void Game::DrawFrame() {
 void Game::FailAndExit(std::string message){
 	cout << "\n++++++\nTHE PROGRAM HAS FAILED\n++++++\n" << message << endl;
 	//cin.get();
-	exit(-1);
+	exit(EXIT_FAILURE);
 }
 
 void Game::TogglePause() {
