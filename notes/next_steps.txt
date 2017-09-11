@@ -1,6 +1,9 @@
 ===========
 Next Steps:
 ===========
+- Make UI draw a list of elements, in priority order instead of RenderText by itself.
+- Have loading of objects and UI elements be done from text files.
+    - Enable objects and UI elements to be written/read to and from text files.
 - Create a Catalogue class
 - Move the loading of textures shaders and meshes somewhere better.....
 - Decide how to deal with loading textures and meshes, should I load them all
