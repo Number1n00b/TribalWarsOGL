@@ -42,6 +42,7 @@
 
 //Defines
 //Buffer size for FPS moving average calculation.
+//@Robustness: This CANNOT be 0.. I'm not checking for this.
 #define FPS_MOVING_AVERAGE_SIZE 30
 
 //Using / Namespace declarations.
