@@ -19,17 +19,17 @@
 using std::string;
 using std::unordered_map;
 
-void LoadShaders(unordered_map<string, Shader*>* catalogue);
+void LoadShaders(unordered_map<string, Shader*>* catalogue, string shader_directory_path);
 void CreateShader(string filename, string name, unordered_map<string, Shader*>* catalogue);
 
 
-void LoadMeshes(unordered_map<string, Mesh*>* catalogue);
+void LoadMeshes(unordered_map<string, Mesh*>* catalogue, string mesh_directory_path);
 void CreateMesh(string filename, string name, unordered_map<string, Mesh*>* catalogue);
 
 
-void LoadTextures(unordered_map<string, Texture*>* catalogue);
+void LoadTextures(unordered_map<string, Texture*>* catalogue, string texture_directory_path);
 void CreateTexture(string filename, string name, unordered_map<string, Texture*>* catalogue);
 
 
-void LoadFonts(unordered_map<string, Font*>* catalogue);
+void LoadFonts(unordered_map<string, Font*>* catalogue, string font_directory_path);
 void CreateFont(FT_Library* ft_lib, string filename, string name, unordered_map<string, Font*>* catalogue);

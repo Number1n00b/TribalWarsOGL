@@ -3,33 +3,16 @@
 #include "../main/main.h"
 #include "resource_loader.h"
 
-//@TODO @cleanup @robustness: Have these directories be relative and auto-find them
-//Or even just have a local copy of a file that contains the directory which to search
-//for all specified resources. That way I won't even have to recompile every time,
-//I can just modify that file and re-run.
-
-//const static string project_dir = "F:/Programming_Projects/CPP/TribalWarsOGL/";
-const static string project_dir = "D:/Programming_Projects/TribalWarsOGL/";
-
-//Non-existing directory for error testing.
-//@DEBUG
-//const static string project_dir = "P:/p/L/";
-
-const static string shader_dir  = project_dir + "res/shaders";
-const static string image_dir   = project_dir + "res/images";
-const static string mesh_dir    = project_dir + "res/meshes";
-const static string font_dir    = project_dir + "res/fonts";
-
 //================= Fonts =====================
-void LoadFonts(unordered_map<string, Font*>* catalogue){
+void LoadFonts(unordered_map<string, Font*>* catalogue, string font_directory_path){
 	FT_Library* ft_lib = new FT_Library();
 	if(FT_Init_FreeType( ft_lib )){
 		Game::FailAndExit("FreeType failed to initialize.");
 	}
 
-    CreateFont(ft_lib, font_dir + "/28_days_later.ttf", "28_days_later", catalogue);
+    CreateFont(ft_lib, font_directory_path + "/28_days_later.ttf", "28_days_later", catalogue);
 
-	CreateFont(ft_lib, font_dir + "/open-sans/OpenSans-Regular.ttf", "OpenSans_Regular", catalogue);
+	CreateFont(ft_lib, font_directory_path + "/open-sans/OpenSans-Regular.ttf", "OpenSans_Regular", catalogue);
 
 	//Free resources.
 	FT_Done_FreeType(*ft_lib);
@@ -44,15 +27,15 @@ void CreateFont(FT_Library* ft_lib, string filename, string name, unordered_map<
 
 
 //================= Shaders =====================
-void LoadShaders(unordered_map<string, Shader*>* catalogue){
+void LoadShaders(unordered_map<string, Shader*>* catalogue, string shader_directory_path){
 	//Standard
-    CreateShader(shader_dir + "/basicShader",  "standard", catalogue);
+    CreateShader(shader_directory_path + "/basicShader",  "standard", catalogue);
 
 	//Sphere. (Colourful)
-    CreateShader(shader_dir + "/sphereShader", "sphere",   catalogue);
+    CreateShader(shader_directory_path + "/sphereShader", "sphere",   catalogue);
 
 	//Text
-    CreateShader(shader_dir + "/textShader",   "text",     catalogue);
+    CreateShader(shader_directory_path + "/textShader",   "text",     catalogue);
 }
 
 
@@ -64,11 +47,11 @@ void CreateShader(string filename, string name, unordered_map<string, Shader*>* 
 
 
 //================= Meshes =====================
-void LoadMeshes(unordered_map<string, Mesh*>* catalogue){
-	CreateMesh(mesh_dir + "/monkey3.obj",   "monkey3",   catalogue);
-	CreateMesh(mesh_dir + "/myCar.obj",     "my_car",    catalogue);
-	CreateMesh(mesh_dir + "/6x6_plane.obj", "6x6_plane", catalogue);
-	CreateMesh(mesh_dir + "/sphere.obj",    "sphere",    catalogue);
+void LoadMeshes(unordered_map<string, Mesh*>* catalogue, string mesh_directory_path){
+	CreateMesh(mesh_directory_path + "/monkey3.obj",   "monkey3",   catalogue);
+	CreateMesh(mesh_directory_path + "/myCar.obj",     "my_car",    catalogue);
+	CreateMesh(mesh_directory_path + "/6x6_plane.obj", "6x6_plane", catalogue);
+	CreateMesh(mesh_directory_path + "/sphere.obj",    "sphere",    catalogue);
 }
 
 void CreateMesh(string filename, string name, unordered_map<string, Mesh*>* catalogue){
@@ -79,15 +62,15 @@ void CreateMesh(string filename, string name, unordered_map<string, Mesh*>* cata
 
 
 //================= Textures =====================
-void LoadTextures(unordered_map<string, Texture*>* catalogue){
-    CreateTexture(image_dir + "/bricks.jpg",  "bricks",  catalogue);
-	CreateTexture(image_dir + "/sand.jpg",    "sand",    catalogue);
+void LoadTextures(unordered_map<string, Texture*>* catalogue, string image_directory_path){
+    CreateTexture(image_directory_path + "/bricks.jpg",  "bricks",  catalogue);
+	CreateTexture(image_directory_path + "/sand.jpg",    "sand",    catalogue);
 
-	CreateTexture(image_dir + "/x.jpg",       "x",       catalogue);
-	CreateTexture(image_dir + "/y.jpg",       "y",       catalogue);
-	CreateTexture(image_dir + "/z.jpg",       "z",       catalogue);
-	CreateTexture(image_dir + "/blue.jpg",    "blue",    catalogue);
-	CreateTexture(image_dir + "/my_grid.jpg", "my_grid", catalogue);
+	CreateTexture(image_directory_path + "/x.jpg",       "x",       catalogue);
+	CreateTexture(image_directory_path + "/y.jpg",       "y",       catalogue);
+	CreateTexture(image_directory_path + "/z.jpg",       "z",       catalogue);
+	CreateTexture(image_directory_path + "/blue.jpg",    "blue",    catalogue);
+	CreateTexture(image_directory_path + "/my_grid.jpg", "my_grid", catalogue);
 }
 
 void CreateTexture(string filename, string name, unordered_map<string, Texture*>* catalogue){

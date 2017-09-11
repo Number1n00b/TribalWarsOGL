@@ -164,10 +164,17 @@ void Initialise_Game(){
 }
 
 void LoadResources(){
-	LoadShaders(shader_catalogue);
-	LoadMeshes(mesh_catalogue);
-	LoadTextures(texture_catalogue);
-	LoadFonts(font_catalogue);
+	string project_dir = get_exe_path() + "../";
+
+	string shader_dir  = project_dir + "res/shaders";
+	string mesh_dir    = project_dir + "res/meshes";
+	string image_dir   = project_dir + "res/images";
+	string font_dir    = project_dir + "res/fonts";
+
+	LoadShaders(shader_catalogue, shader_dir);
+	LoadMeshes(mesh_catalogue, mesh_dir);
+	LoadTextures(texture_catalogue, image_dir);
+	LoadFonts(font_catalogue, font_dir);
 }
 
 void Initialise_UI(){
@@ -338,8 +345,6 @@ int main(int argc, char *argv[]) {
             //Reset average timer and counter.
             fps_timer_start = curr_time;
             num_frames = 0;
-
-            cout << "Calculated FPS: " << curr_fps << endl;
         }
     }
 
