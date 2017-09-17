@@ -60,7 +60,7 @@ int prev_cursor_X = 0;
 int prev_cursor_Y = 0;
 
 //Game state variables.
-GAME_STATE game_state;
+GAME_STATE Game::curr_state;
 bool Game::should_close = false;
 
 //Window paramentrs.
@@ -326,7 +326,7 @@ int main(int argc, char *argv[]) {
         time_since_last_frame += dt;
 
         //Do physics updates
-        if (game_state == RUNNING && dt != 0) {
+        if (Game::curr_state == RUNNING && dt != 0) {
             //Update all our objects.
             for (std::vector<WorldObject*>::iterator it = world_objects.begin(); it != world_objects.end(); it++) {
                 (*it)->Update(dt);
@@ -355,7 +355,7 @@ int main(int argc, char *argv[]) {
 
     }
 
-    game_state = CLOSING;
+    Game::curr_state = CLOSING;
 
 	cout << "End of main loop." << endl;
 
@@ -427,7 +427,7 @@ void Game::DrawFrame() {
 	main_ui->RenderText((*font_catalogue)["OpenSans_Regular"], "FPS: " + float_to_string(curr_fps),
 		window_width - 150, window_height - 40.0f, 0.6f, glm::vec3(0.5f, 0.8f, 0.2f));
 
-    if (game_state == RUNNING) {
+    if (Game::curr_state == RUNNING) {
         //Warp the mouse to the center of the window.
         SDL_WarpMouseInWindow(NULL, main_window->GetWidth() / 2,
                                     main_window->GetHeight() / 2);
@@ -448,16 +448,16 @@ void Game::FailAndExit(std::string message){
 }
 
 void Game::TogglePause() {
-    if (game_state == PAUSED) {
+    if (Game::curr_state == PAUSED) {
         Game::ResumeGame();
     }
-    else if (game_state == RUNNING) {
+    else if (Game::curr_state == RUNNING) {
         Game::PauseGame();
     }
 }
 
 void Game::PauseGame() {
-    game_state = PAUSED;
+    Game::curr_state = PAUSED;
 
     //Let go of the cursor.
     SetCursorClip(false);
@@ -474,7 +474,7 @@ void Game::PauseGame() {
 }
 
 void Game::ResumeGame() {
-    game_state = RUNNING;
+    Game::curr_state = RUNNING;
 
     //Empty the event queue so that actions done while paused does not affect the game.
     SDL_PumpEvents();

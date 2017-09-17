@@ -1,15 +1,4 @@
 #pragma once
-#include <unordered_map>
-
-#include "../display/Display.h"
-#include "../model/Camera.h"
-
-#include "../model/Shader.h"
-#include "../model/Mesh.h"
-#include "../model/Texture.h"
-
-using std::string;
-using std::unordered_map;
 
 enum GAME_STATE {
     RUNNING,
@@ -17,10 +6,11 @@ enum GAME_STATE {
     CLOSING
 };
 
-extern GAME_STATE game_state;
-
 namespace Game {
+    //State variables.
+    extern GAME_STATE curr_state;
     extern bool should_close;
+
     void FailAndExit(std::string message);
     void SetCursorClip(bool clip);
     void TogglePause();

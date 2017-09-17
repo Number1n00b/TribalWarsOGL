@@ -166,7 +166,7 @@ void Camera::NotifyMouseEvent(SDL_Event e) {
     switch (e.type) {
         case SDL_MOUSEMOTION:
         {
-            if (game_state == GAME_STATE::RUNNING) {
+            if (Game::curr_state == GAME_STATE::RUNNING) {
                 //cout << "{Camera}: Mouse Moved: (" << e.motion.x << ", " << e.motion.y << ")" << endl;
                 glm::vec2 relative = glm::vec2(e.motion.x - m_ReferenceMousePositionX, e.motion.y - m_ReferenceMousePositionY);
                 m_MouseDelta = glm::normalize(relative);

@@ -18,15 +18,12 @@ Solution = Create my own catalogue class.
 
 =================
 
+- Re-structure the way I handle input.  Right now I use observer as well as global
+    keydown list. Decide on a more consistant way.
 
 - Stop using globals for Display, Camera etc, no need for that anymore.
 
-- Rewrite what is not mine, or use other, industry standard, free libaries (obj_loader and stb_image).
-
-- Find a way to initialise GLEW outside of Display.cpp so that if it fails we can close the program. (Do memory management too, deleting context etc).
-    //This should be done with the dependancy injection pattern.
-
-- Find out how to draw UI elements. (Possibly use a different shader).
+- Rewrite what is not mine, or use other, industry standard, free libaries (obj_loader)
 
 - Restructure main into an app class with all the variables required, use main to initialise and start the app class.
 
@@ -42,14 +39,13 @@ Solution = Create my own catalogue class.
 
 - Make cross platform with ifdef guards fow windows and others.
 
+- Make UI draw a list of elements, in priority order instead of RenderText by itself.
+
+- Have loading of objects and UI elements be done from text files.
+    - Enable objects and UI elements to be written/read to and from text files.
 
 
+- Decide how to deal with loading textures and meshes, should I load them all
+    on startup, or should I only load them when required?
 
-
-
-
-
-
-
-
-myEOF
+- Use text to make buttons. (Command pattern)
