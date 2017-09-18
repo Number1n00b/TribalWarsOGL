@@ -1,5 +1,5 @@
 CC=g++
-CFLAGS=-std=c++11 -g -ggdb
+CFLAGS=-Wall -pedantic -std=c++11 -g -ggdb
 
 OUT_DIR=bin/obj
 EXE_DIR=bin
