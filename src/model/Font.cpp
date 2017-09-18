@@ -20,7 +20,7 @@ Font::Font(FT_Library* ft_lib, string filename, string name){
     delete face;
 }
 
-Font::LoadCharacters(FT_Face* f){
+void Font::LoadCharacters(FT_Face* f){
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1); // Disable byte-alignment restriction
 
     FT_Face face = *f;

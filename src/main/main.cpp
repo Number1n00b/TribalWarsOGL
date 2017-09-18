@@ -199,13 +199,7 @@ void CreateWorldObjects() {
     oriented_monkey.SetPos(0, 0, 20);
     oriented_monkey.SetRotation(0, 3.14, 0);
 
-    //Create our drawable game objects.
-    vec3 x_axis = vec3(1, 0, 0);
-    vec3 y_axis = vec3(0, 1, 0);
-    vec3 z_axis = vec3(0, 0, 1);
-    float speed = 3;
-    float amplitude = 6;
-
+	//Create our drawable game objects.
     //Create a standing monkey.
     Transform still_pos;
     still_pos.SetPos(0, 0, 0);
@@ -294,8 +288,6 @@ int main(int argc, char *argv[]) {
 	double frame_dt_sum = 0;
 	double frame_times[FPS_MOVING_AVERAGE_SIZE];
 	init_array(frame_times, FPS_MOVING_AVERAGE_SIZE, 0);
-
-    double fps_timer_start = prev_time;
 
     //Start the game.
     Game::ResumeGame();

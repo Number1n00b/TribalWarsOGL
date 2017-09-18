@@ -171,7 +171,7 @@ IndexedModel OBJModel::ToIndexedModel()
 	}
 
 	return result;
-};
+}
 
 unsigned int OBJModel::FindLastVertexIndex(const std::vector<OBJIndex*>& indexLookup, const OBJIndex* currentIndex, const IndexedModel& result)
 {

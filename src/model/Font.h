@@ -33,7 +33,7 @@ class Font{
         unordered_map<GLchar, Character> characters;
 
 	private:
-        LoadCharacters(FT_Face* f);
+        void LoadCharacters(FT_Face* f);
 
         string name;
 };

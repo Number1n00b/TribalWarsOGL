@@ -258,3 +258,7 @@ void Camera::SetZFar(float z_far) {
 	m_zFar = z_far;
 	UpdatePerspective();
 }
+
+Camera::~Camera(){
+    //Empty
+}

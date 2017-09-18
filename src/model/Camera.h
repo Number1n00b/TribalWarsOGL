@@ -47,6 +47,8 @@ class Camera : public MouseListener, public KeyboardListener
 
         void Update(double delta);
 
+		virtual ~Camera();
+
 	private:
 		//Perspective variables.
 		glm::mat4 m_Perspective;
