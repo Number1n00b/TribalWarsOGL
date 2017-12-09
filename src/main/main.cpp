@@ -169,13 +169,18 @@ void Initialise_Game(){
 	font_catalogue = new unordered_map<string, Font*>();
 }
 
-void LoadResources(){
-	string project_dir = get_exe_path() + "../";
+/*
+* Calls helper functions to load Shaders, Meshes, Textures and Fonts.
+* Loads resources from the ../res directory relative to the executable.
+*/
 
-	string shader_dir  = project_dir + "res/shaders";
-	string mesh_dir    = project_dir + "res/meshes";
-	string image_dir   = project_dir + "res/images";
-	string font_dir    = project_dir + "res/fonts";
+void LoadResources(){
+	string exe_dir = get_exe_path() + "../";
+
+	string shader_dir  = exe_dir + "res/shaders";
+	string mesh_dir    = exe_dir + "res/meshes";
+	string image_dir   = exe_dir + "res/images";
+	string font_dir    = exe_dir + "res/fonts";
 
 	LoadShaders(shader_catalogue, shader_dir);
 	LoadMeshes(mesh_catalogue, mesh_dir);
