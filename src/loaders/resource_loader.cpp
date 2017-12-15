@@ -28,14 +28,17 @@ void CreateFont(FT_Library* ft_lib, string filename, string name, unordered_map<
 
 //================= Shaders =====================
 void LoadShaders(unordered_map<string, Shader*>* catalogue, string shader_directory_path){
+	//Primitive shapes
+	CreateShader(shader_directory_path + "/primShader",  "primitives", catalogue);
+
 	//Standard
-    CreateShader(shader_directory_path + "/basicShader",  "standard", catalogue);
+    CreateShader(shader_directory_path + "/basicShader",  "standard",  catalogue);
 
 	//Sphere. (Colourful)
-    CreateShader(shader_directory_path + "/sphereShader", "sphere",   catalogue);
+    CreateShader(shader_directory_path + "/sphereShader", "sphere",    catalogue);
 
 	//Text
-    CreateShader(shader_directory_path + "/textShader",   "text",     catalogue);
+    CreateShader(shader_directory_path + "/textShader",   "text",      catalogue);
 }
 
 

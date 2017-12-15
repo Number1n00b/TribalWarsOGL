@@ -434,6 +434,20 @@ void Game::DrawFrame() {
         SDL_FlushEvent(SDL_MOUSEMOTION);
     }
 
+	// Swap to standard shader.
+	(*shader_catalogue)["standard"]->Bind();
+
+	glBegin(GL_QUADS);
+		glColor3d(0,0,0.5);
+		glVertex3f(-1,-1, 0);
+		glColor3d(0,0,0.5);
+		glVertex3f(1,-1,0);
+		glColor3d(0,0,0.5);
+		glVertex3f(1,1,0);
+		glColor3d(0,0,0.5);
+		glVertex3f(-1,1,0);
+   	glEnd();
+
     //Swap buffers.
     main_window->Update();
 }
