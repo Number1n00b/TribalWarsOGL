@@ -7,6 +7,8 @@
 
 using std::string;
 
+// @Refactor Math stuff into it's own files. 02/04/18 - Chris
+
 float Math::clamp(float val, float min, float max) {
     if (val > max) {
         return max;

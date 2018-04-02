@@ -4,6 +4,8 @@
 
 using std::string;
 
+// @Refactor Math stuff into it's own files. 02/04/18 - Chris
+
 namespace Math{
     # define PI 3.14159265358979323846
 

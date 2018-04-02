@@ -152,6 +152,7 @@ void Camera::NotifyKeyEvent(SDL_Event e) {
 }
 
 void Camera::ResetPositionAndRotation() {
+    //Reset position for debug purposes.
     m_Position = m_StartingPos;
 
     m_LookDirection = m_StartingLookDir;

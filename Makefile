@@ -4,7 +4,7 @@ CFLAGS=-Wall -pedantic -std=c++11 -g -ggdb
 OUT_DIR=bin/obj
 EXE_DIR=bin
 
-EXE_NAME=MyTribalWarsGame
+EXE_NAME=GLEngine
 
 INCLUDE_DIRS =-I include/SDL2 -I include/glew -I include/glm -I include/FreeType2
 
@@ -25,7 +25,7 @@ COMPILE_WITH_INCLUDES=$(CC) $(CFLAGS) -c $(INCLUDE_DIRS)
 all: executable
 
 executable: $(OBJ_FILES) CopyLibs
-	$(CC) $(CFLAGS) $(OBJ_FILES) -o $(EXE_DIR)/$(EXE_NAME) $(INCLUDE_DIRS) $(LIB_DIRS) $(LINK_COMMANDS)
+	$(CC) $(CFLAGS) $(OBJ_FILES) -o $(EXE_DIR)/$(EXE_NAME) $(LIB_DIRS) $(LINK_COMMANDS)
 
 $(OUT_DIR)/stb_image.o: src/loaders/stb_image.c src/loaders/stb_image.h
 	$(COMPILE_NO_EXTRAS) src/loaders/stb_image.c -o $(OUT_DIR)/stb_image.o
@@ -130,6 +130,11 @@ run:
 	./bin/$(EXE_NAME)
 
 
+.PHONY: urn
+urn:
+	@echo "You don't know how to make an urn."
+
+
 .PHONY: rum
 rum:
 	@echo "Why is the rum gone?!"
@@ -150,6 +155,10 @@ clean:
 	rm -rf $(OUT_DIR)/*.o $(EXE_DIR)/*.exe *~ $(EXE_DIR)/*.dll
 
 
+.PHONY: runMem
+runMem:
+	drmemory ./bin/$(EXE_NAME).exe
+
 .PHONY: runVal
 runVal:
-	drmemory ./bin/$(EXE_NAME).exe
+	valgrind ./bin/$(EXE_NAME).exe
