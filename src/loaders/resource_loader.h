@@ -1,4 +1,5 @@
-#pragma once
+#ifndef RESOURCE_LOADER_H
+#define RESOURCE_LOADER_H
 
 //Standard libs
 #include <string>
@@ -33,3 +34,6 @@ void CreateTexture(string filename, string name, unordered_map<string, Texture*>
 
 void LoadFonts(unordered_map<string, Font*>* catalogue, string font_directory_path);
 void CreateFont(FT_Library* ft_lib, string filename, string name, unordered_map<string, Font*>* catalogue);
+
+
+#endif RESOURCE_LOADER_H

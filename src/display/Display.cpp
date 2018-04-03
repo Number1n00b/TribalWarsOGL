@@ -14,7 +14,6 @@ Display::Display(int width, int height, const std::string& title) {
 
     //Number of bits stored for each colour. (2^n). Use 8(256) for standard.
     int colour_size = 8;
-
 	SDL_GL_SetAttribute(SDL_GL_RED_SIZE, colour_size);
 	SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, colour_size);
 	SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, colour_size);
@@ -23,7 +22,7 @@ Display::Display(int width, int height, const std::string& title) {
 	//Number of bits allocated per pixel. In this case we want 4*colour_zie, enough for all 4 declared above.
 	SDL_GL_SetAttribute(SDL_GL_BUFFER_SIZE, colour_size * 4);
 
-	//Sets a depth buffer so that there is no erronius pixel overlapping.
+	//Sets a depth buffer so that there is no erronious pixel overlapping.
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 16);
 
 	//Enable double buffering.
@@ -56,7 +55,7 @@ float Display::GetAspectRatio() {
 	return (float)m_width / (float)m_height;
 }
 
-void Display::Update() {
+void Display::SwapBuffers() {
 	//Swap buffers.
 	SDL_GL_SwapWindow(m_window);
 }

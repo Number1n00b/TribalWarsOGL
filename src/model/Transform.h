@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TRANSFORM_H
+#define TRANSFORM_H
 
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
@@ -6,21 +7,22 @@
 class Transform
 {
 	public:
-		Transform(const glm::vec3& pos = glm::vec3(),
-			const glm::vec3& rotation = glm::vec3(),
-			const glm::vec3& scale = glm::vec3(1.0f, 1.0f, 1.0f))
-			:m_pos(pos), m_rotation(rotation), m_scale(scale)
+		Transform(const glm::vec3& pos      = glm::vec3(),
+				  const glm::vec3& rotation = glm::vec3(),
+			      const glm::vec3& scale    = glm::vec3(1.0f, 1.0f, 1.0f))
 		{
-			//Empty body.
+			m_pos = pos;
+			m_rotation = rotation;
+			m_scale = scale;
 		}
 
 		//In OpenGL the matrix containing position rotarion and scale is called 'Model Matrix' or 'World Matrix'
-		inline glm::mat4 GetModel() const {
+		glm::mat4 GetModel() {
 			glm::mat4 posMatrix = glm::translate(m_pos);
 
 			glm::mat4 scaleMatrix = glm::scale(m_scale);
 
-			//@ Cleaup. Use Quaternions
+			//@Cleaup. Use Quaternions
 			glm::mat4 rotationXMatrix = glm::rotate(m_rotation.x, glm::vec3(1, 0, 0));
 			glm::mat4 rotationYMatrix = glm::rotate(m_rotation.y, glm::vec3(0, 1, 0));
 			glm::mat4 rotationZMatrix = glm::rotate(m_rotation.z, glm::vec3(0, 0, 1));
@@ -44,14 +46,12 @@ class Transform
 		inline void SetScale(glm::vec3 scale) { m_scale = scale; }
         inline void SetScale(float x, float y, float z) { m_scale = glm::vec3(x, y, z); }
 
-	   	~Transform()
-      	{
-			//Empty
-		}
-
+	   	~Transform() { /* Empty */ }
 
 	private:
 		glm::vec3 m_pos;
 		glm::vec3 m_rotation;
 		glm::vec3 m_scale;
 };
+
+#endif //TRANSFORM_H

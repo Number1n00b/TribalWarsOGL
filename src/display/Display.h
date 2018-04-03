@@ -1,4 +1,6 @@
-#pragma once
+#ifndef DISPLAY_H
+#define DISPLAY_H
+
 #include <string>
 #include <SDL.h>
 
@@ -8,7 +10,7 @@ class Display{
 
 		void Clear(float r, float g, float b, float a);
 
-		void Update();
+		void SwapBuffers();
 
 		float GetAspectRatio();
 
@@ -28,3 +30,5 @@ class Display{
 		SDL_Window *m_window;
 		SDL_GLContext m_GLContext;
 };
+
+#endif //DISPLAY_H

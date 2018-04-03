@@ -1,63 +1,7 @@
 stb_image.o: src/loaders/stb_image.c src/loaders/stb_image.h
 Display.o: src/display/Display.cpp src/display/Display.h
-UI.o: src/display/UI.cpp src/display/UI.h
-InputEventHandler.o: src/input/InputEventHandler.cpp \
- src/input/InputEventHandler.h src/input/KeyboardListener.h \
- src/input/MouseListener.h src/input/../main/main.h \
- src/input/../main/../display/Display.h \
- src/input/../main/../model/Camera.h \
- src/input/../main/../shaders/Shader.h \
- src/input/../main/../shaders/../model/Transform.h \
- src/input/../main/../model/Mesh.h \
- src/input/../main/../model/../loaders/obj_loader.h \
- src/input/../main/../model/Vertex.h src/input/../main/../model/Texture.h
-obj_loader.o: src/loaders/obj_loader.cpp src/loaders/obj_loader.h
 main.o: src/main/main.cpp src/main/main.h src/main/../display/Display.h \
- src/main/../model/Camera.h src/main/../model/../input/MouseListener.h \
- src/main/../model/../input/KeyboardListener.h \
- src/main/../model/../input/InputEventHandler.h \
- src/main/../shaders/Shader.h src/main/../shaders/../model/Transform.h \
- src/main/../model/Mesh.h src/main/../model/../loaders/obj_loader.h \
- src/main/../model/Vertex.h src/main/../model/Texture.h \
- src/main/../model/WorldObject.h src/main/../model/Player.h \
- src/main/../model/StaticObject.h
-Camera.o: src/model/Camera.cpp src/model/Camera.h \
- src/model/../input/MouseListener.h src/model/../input/KeyboardListener.h \
- src/model/../input/InputEventHandler.h src/model/../main/main.h \
- src/model/../main/../display/Display.h \
- src/model/../main/../shaders/Shader.h \
- src/model/../main/../shaders/../model/Transform.h \
- src/model/../main/../model/Mesh.h \
- src/model/../main/../model/../loaders/obj_loader.h \
- src/model/../main/../model/Vertex.h src/model/../main/../model/Texture.h \
- src/model/../util/Util.h
-Mesh.o: src/model/Mesh.cpp src/model/Mesh.h \
- src/model/../loaders/obj_loader.h src/model/Vertex.h
-Player.o: src/model/Player.cpp src/model/Player.h src/model/WorldObject.h \
- src/model/Transform.h src/model/Texture.h src/model/Mesh.h \
- src/model/../loaders/obj_loader.h src/model/Vertex.h src/model/Camera.h \
- src/model/../input/MouseListener.h src/model/../input/KeyboardListener.h \
- src/model/../input/InputEventHandler.h src/model/../shaders/Shader.h
-StaticObject.o: src/model/StaticObject.cpp src/model/StaticObject.h \
- src/model/WorldObject.h src/model/Transform.h src/model/Texture.h \
- src/model/Mesh.h src/model/../loaders/obj_loader.h src/model/Vertex.h \
- src/model/Camera.h src/model/../input/MouseListener.h \
- src/model/../input/KeyboardListener.h \
- src/model/../input/InputEventHandler.h src/model/../shaders/Shader.h
-Texture.o: src/model/Texture.cpp src/model/Texture.h \
- src/model/../loaders/stb_image.h
+ src/main/../model/Transform.h
 Transform.o: src/model/Transform.cpp src/model/Transform.h
-Vertex.o: src/model/Vertex.cpp src/model/Vertex.h
-WorldObject.o: src/model/WorldObject.cpp src/model/WorldObject.h \
- src/model/Transform.h src/model/Texture.h src/model/Mesh.h \
- src/model/../loaders/obj_loader.h src/model/Vertex.h src/model/Camera.h \
- src/model/../input/MouseListener.h src/model/../input/KeyboardListener.h \
- src/model/../input/InputEventHandler.h src/model/../shaders/Shader.h \
- src/model/../main/main.h src/model/../main/../display/Display.h
-Shader.o: src/shaders/Shader.cpp src/shaders/Shader.h \
- src/shaders/../model/Transform.h src/shaders/../model/Camera.h \
- src/shaders/../model/../input/MouseListener.h \
- src/shaders/../model/../input/KeyboardListener.h \
- src/shaders/../model/../input/InputEventHandler.h \
- src/shaders/../util/Util.h
+MathUtil.o: src/util/MathUtil.cpp src/util/MathUtil.h
 Util.o: src/util/Util.cpp src/util/Util.h

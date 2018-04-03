@@ -1,4 +1,5 @@
-#pragma once
+#ifndef MAIN_H
+#define MAIN_H
 
 enum GAME_STATE {
     RUNNING,
@@ -11,12 +12,11 @@ namespace Game {
     extern GAME_STATE curr_state;
     extern bool should_close;
 
-    void FailAndExit(std::string message);
-    void SetCursorClip(bool clip);
-    void TogglePause();
-    void PauseGame();
-    void ResumeGame();
+    //Global game objects.
+    extern Camera *main_camera;
+    extern InputEventHandler *event_handler;
 
-    void ResizeWindow(int width, int height);
-    void DrawFrame();
+    void FailAndExit(std::string error_message);
 }
+
+#endif //MAIN_H
