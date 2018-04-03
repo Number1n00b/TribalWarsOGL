@@ -1,6 +1,11 @@
 #ifndef MAIN_H
 #define MAIN_H
 
+#include "../model/Camera.h"
+
+// Must forward declare camera here to due circular dependancies.
+class Camera;
+
 enum GAME_STATE {
     RUNNING,
     PAUSED,
@@ -14,7 +19,6 @@ namespace Game {
 
     //Global game objects.
     extern Camera *main_camera;
-    extern InputEventHandler *event_handler;
 
     void FailAndExit(std::string error_message);
 }

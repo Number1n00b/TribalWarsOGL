@@ -22,8 +22,6 @@
 
 //Model Classes
 #include "../model/Transform.h"
-#include "../model/Camera.h"
-
 
 //Using / Namespace declarations.
 //IO
@@ -33,9 +31,7 @@ using std::endl;
 
 //Types
 using std::chrono::milliseconds;
-using std::unordered_map;
 using std::string;
-using std::vector;
 using glm::vec3;
 
 
@@ -43,8 +39,14 @@ using glm::vec3;
 GAME_STATE Game::curr_state;
 bool Game::should_close = false;
 
+//Global main camera
+Camera* Game::main_camera;
+
 
 /* ------ Statics ------ */
+
+//The main game window.
+static Display *main_window;
 
 //Mouse position, used to capture and reset mouse on pause / unpause.
 static int prev_cursor_X = 0;
@@ -58,8 +60,22 @@ static int window_height = 800;
 static const int TARGET_FPS = 60;
 static const double MS_PER_FRAME = 1000.0 / TARGET_FPS;
 
+// ------ Forward Declarations ------
+static void DrawFrame();
+void Game::FailAndExit(std::string error_message);
+static float Get_Current_Time();
+static void ToggleWireframes();
 
-void Initialis_Graphics(){
+static void ResizeWindow(int width, int height);
+static void WarpMouse(float x, float y);
+static void SetCursorClip(bool clip);
+
+static void TogglePause();
+static void PauseGame();
+static void ResumeGame();
+
+
+void Initialise_Graphics(){
 	//===============
     //     SDL
     //===============
@@ -102,7 +118,7 @@ void Initialise_Game(){
     float cam_fov = 70;
     float cam_z_near = 0.01;
     float cam_z_far = 1000;
-    main_camera = new Camera(cam_position, cam_look_direction, cam_up_direaction,
+    Game::main_camera = new Camera(cam_position, cam_look_direction, cam_up_direaction,
 		 					 cam_fov, main_window->GetAspectRatio(),
 							 cam_z_near, cam_z_far, window_width, window_height);
 
@@ -131,7 +147,7 @@ int main(int argc, char *argv[]) {
     float dt = 0;
 
     //Start the game.
-    Game::ResumeGame();
+    ResumeGame();
 
     //The main loop!
 	while (!Game::should_close) {
@@ -157,7 +173,7 @@ int main(int argc, char *argv[]) {
         if (dt >= MS_PER_FRAME) {
 
 			//Update objects first.
-			main_camera->Update(dt);
+			Game::main_camera->Update(dt);
 
             //Render
             DrawFrame();
@@ -173,7 +189,7 @@ int main(int argc, char *argv[]) {
 
 	cout << "\n====== Freeing Resources ======" << endl;
 	delete main_window;
-	delete main_camera;
+	delete Game::main_camera;
 
 	//Free SDL resources.
 	cout << "Deinitialising SDL..." << endl;
@@ -200,14 +216,19 @@ static void DrawFrame() {
 /* === Below are administrative events and actions === */
 
 void Game::FailAndExit(std::string error_message){
-	cout << "\n++++++\nTHE PROGRAM HAS FAILED\n++++++\n" << message << endl;
+	cout << "\n++++++\nTHE PROGRAM HAS FAILED\n++++++\n" << error_message << endl;
 	//cin.get();
 	exit(EXIT_FAILURE);
 }
 
 
+//Returns the time in milliseconds since the program launched.
 static float Get_Current_Time(){
-	return std::chrono::duration_cast<float>(system_clock::now().time_since_epoch());
+	static auto launch_time = std::chrono::high_resolution_clock::now();
+
+	std::chrono::duration<float> curr = std::chrono::high_resolution_clock::now() - launch_time;
+
+	return curr.count();
 }
 
 
@@ -231,14 +252,14 @@ static void ResizeWindow(int width, int height) {
 	window_width = width;
 	window_height = height;
     main_window->UpdateViewport(window_width, window_height);
-    main_camera->NotifyScreenResize(window_width, window_height);
+    Game::main_camera->NotifyScreenResize(window_width, window_height);
 }
 
 
 static void WarpMouse(float x = -1, float y = -1){
 	//By default, warp the mouse to the center of the screen.
-	if (x < 0) { x = main_window->GetWidth() / 2 }
-	if (y < 0) { y = main_window->GetHeight() / 2 }
+	if (x < 0) { x = main_window->GetWidth() / 2; }
+	if (y < 0) { y = main_window->GetHeight() / 2; }
 
 	SDL_WarpMouseInWindow(NULL, x, y);
 
@@ -288,10 +309,10 @@ static void SetCursorClip(bool clip) {
 
 static void TogglePause() {
     if (Game::curr_state == PAUSED) {
-        Game::ResumeGame();
+        ResumeGame();
     }
     else if (Game::curr_state == RUNNING) {
-        Game::PauseGame();
+        PauseGame();
     }
 }
 

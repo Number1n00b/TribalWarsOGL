@@ -28,6 +28,10 @@ all: executable
 executable: $(OBJ_FILES) CopyLibs
 	$(CC) $(CFLAGS) $(OBJ_FILES) -o $(EXE_DIR)/$(EXE_NAME) $(LIB_DIRS) $(LINK_COMMANDS)
 
+$(OUT_DIR)/main.o: src/main/main.cpp src/main/main.h src/display/Display.h \
+				   src/model/Camera.h src/model/Transform.h
+	$(COMPILE_WITH_INCLUDES) src/main/main.cpp -o $(OUT_DIR)/main.o -Wno-unused-function
+
 $(OUT_DIR)/stb_image.o: src/loaders/stb_image.c src/loaders/stb_image.h
 	$(COMPILE_NO_EXTRAS) src/loaders/stb_image.c -o $(OUT_DIR)/stb_image.o
 
@@ -35,16 +39,15 @@ $(OUT_DIR)/stb_image.o: src/loaders/stb_image.c src/loaders/stb_image.h
 $(OUT_DIR)/Util.o: src/util/Util.cpp src/util/Util.h
 	$(COMPILE_WITH_INCLUDES) src/util/Util.cpp -o $(OUT_DIR)/Util.o
 
+$(OUT_DIR)/MathUtil.o: src/util/MathUtil.cpp src/util/MathUtil.h
+	$(COMPILE_WITH_INCLUDES) src/util/MathUtil.cpp -o $(OUT_DIR)/MathUtil.o
+
 $(OUT_DIR)/Display.o: src/display/Display.cpp src/display/Display.h
 	$(COMPILE_WITH_INCLUDES) src/display/Display.cpp -o $(OUT_DIR)/Display.o
 
 $(OUT_DIR)/Transform.o: src/model/Transform.cpp src/model/Transform.h
 	$(COMPILE_WITH_INCLUDES) src/model/Transform.cpp -o $(OUT_DIR)/Transform.o
 
-
-$(OUT_DIR)/main.o: src/main/main.cpp src/main/main.h src/display/Display.h \
- src/model/Camera.h src/model/Transform.h
-	$(COMPILE_WITH_INCLUDES) src/main/main.cpp -o $(OUT_DIR)/main.o
 
 $(OUT_DIR)/Camera.o: src/model/Camera.cpp src/model/Camera.h
 	$(COMPILE_WITH_INCLUDES) src/model/Camera.cpp -o $(OUT_DIR)/Camera.o
