@@ -27,17 +27,7 @@
 #include "../model/Shader.h"
 
 //Model Classes
-#include "../model/Mesh.h"
 #include "../model/Transform.h"
-#include "../model/Texture.h"
-#include "../model/Camera.h"
-#include "../model/WorldObject.h"
-#include "../model/Player.h"
-#include "../model/StaticObject.h"
-#include "../model/Font.h"
-
-//Input
-#include "../input/InputEventHandler.h"
 
 
 //Defines
