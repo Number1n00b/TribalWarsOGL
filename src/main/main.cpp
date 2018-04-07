@@ -3,6 +3,7 @@
 #include <windows.h> //For window events and manupulation. Also needed for glew.
 #include <string>
 #include <chrono>    //Timekeeping
+#include <stdio.h>
 
 //Graphics libs.
 #include <GL/glew.h>
@@ -57,13 +58,14 @@ static int window_width = 1080;
 static int window_height = 800;
 
 //FPS params. @TODO make these modifiable.
-static const int TARGET_FPS = 60;
-static const double MS_PER_FRAME = 1000.0 / TARGET_FPS;
+static const int TARGET_FPS = 4;
+static const int MS_PER_FRAME = 1000.0 / TARGET_FPS;
 
 // ------ Forward Declarations ------
+static void HandleSDLEvents();
 static void DrawFrame();
 void Game::FailAndExit(std::string error_message);
-static float Get_Current_Time();
+static float GetCurentTime_MS();
 static void ToggleWireframes();
 
 static void ResizeWindow(int width, int height);
@@ -73,6 +75,7 @@ static void SetCursorClip(bool clip);
 static void TogglePause();
 static void PauseGame();
 static void ResumeGame();
+
 
 
 void Initialise_Graphics(){
@@ -142,12 +145,24 @@ int main(int argc, char *argv[]) {
     //Main loop setup.
 	cout << "\nEntering main loop." << endl;
 
-    float curr_time = Get_Current_Time();
+    float curr_time = GetCurentTime_MS();
+
+	//prev_time is the time at which the previous loop itteration ran.
     float prev_time = curr_time;
+
+	//dt here is the total time since last frame.
     float dt = 0;
 
     //Start the game.
     ResumeGame();
+
+	//@DEBUG Just to see the cursor at game start and be able to exit.
+	SetCursorClip(false);
+	SDL_ShowCursor(true);
+
+	//FPS calculation variables.
+	float fps_smoothing = 0.3; // Favour recent values more.
+	float current_fps = 0;
 
     //The main loop!
 	while (!Game::should_close) {
@@ -161,22 +176,25 @@ int main(int argc, char *argv[]) {
 		}
 
 		/* Handle input events here. */
+		HandleSDLEvents();
 
-        curr_time = Get_Current_Time();
+        curr_time = GetCurentTime_MS();
 
-        //dt here is time since last frame.
-        dt = curr_time - prev_time;
+        dt += curr_time - prev_time;
         prev_time = curr_time;
 
 
         //Cap FPS and render only when needed.
         if (dt >= MS_PER_FRAME) {
-
 			//Update objects first.
-			Game::main_camera->Update(dt);
+			//for all objects in {object list}: object.update(dt)
 
             //Render
             DrawFrame();
+
+			// Calculate fps value
+			current_fps = (current_fps * fps_smoothing) + ( ((1 / dt) * 1000) * (1.0 - fps_smoothing) );
+			printf("FPS (%f): %f\n", dt, current_fps);
 
             dt = 0.0;
         }
@@ -201,9 +219,80 @@ int main(int argc, char *argv[]) {
 }
 
 
+static void HandleSDLEvents(){
+    SDL_Event e;
+
+    while (SDL_PollEvent(&e)) {
+        switch (e.type) {
+            //Handle special quit event,
+            case SDL_QUIT:
+            {
+                Game::should_close = true;
+                break;
+            }
+
+            //Handle resize events.
+            case SDL_WINDOWEVENT:
+            {
+                if (e.window.event == SDL_WINDOWEVENT_RESIZED) {
+                    ResizeWindow(e.window.data1, e.window.data2);
+                }
+                break;
+            }
+
+			//Handle any key press.
+            case SDL_KEYDOWN: case SDL_KEYUP: case SDL_TEXTINPUT:
+            {
+				//@TODO later abstract this into listeners, with UI listening for esacpe key
+				// HandleKeyPress(e.key.keysym.sym);
+
+                //Handle special button events. (Escape)
+                //Ensure only to handle special events on KeyDown.
+                if(e.type == SDL_KEYDOWN){
+                    switch (e.key.keysym.sym) {
+                        //Pause event. RGUI and LGUI are the windows keys.
+                        case SDLK_ESCAPE: case SDLK_RGUI: case SDLK_LGUI:
+                        {
+                            TogglePause();
+                            break;
+                        }
+                    }
+                 }
+                break;
+            }
+
+            case SDL_MOUSEMOTION: case SDL_MOUSEWHEEL: case SDL_MOUSEBUTTONDOWN: case SDL_MOUSEBUTTONUP:
+            {
+				//NotifyMouseListeners(e);
+                break;
+            }
+
+            //Common events I am unsure of.
+            case 770:
+            {
+                //Do nothing.
+                break;
+            }
+
+            default:
+            {
+                cout << "Unknown event: " << e.type << endl;
+                break;
+            }
+        }
+    }
+}
+
+
 static void DrawFrame() {
-    //Clear the window.
-    main_window->Clear(0.5, 0.5, 0.5, 0.5);
+	//@Debug
+	static int x = 1;
+	if(x){
+		main_window->Clear(0.0, 0.0, 1.0, 1.0);
+	}else{
+		main_window->Clear(1.0, 1.0, 1.0, 1.0);
+	}
+	x = !x;
 
     //Draw our drawables.
 	/* @TODO draw shit */
@@ -223,12 +312,12 @@ void Game::FailAndExit(std::string error_message){
 
 
 //Returns the time in milliseconds since the program launched.
-static float Get_Current_Time(){
+static float GetCurentTime_MS(){
 	static auto launch_time = std::chrono::high_resolution_clock::now();
 
 	std::chrono::duration<float> curr = std::chrono::high_resolution_clock::now() - launch_time;
 
-	return curr.count();
+	return curr.count() * 1000;
 }
 
 

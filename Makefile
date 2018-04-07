@@ -6,10 +6,10 @@ EXE_DIR=bin
 
 EXE_NAME=GLEngine
 
-INCLUDE_DIRS =-I include/SDL2 -I include/glew -I include/glm -I include/FreeType2
+INCLUDE_DIRS =-I include/SDL2 -I include/glew -I include/glm #-I include/FreeType2
 
-LIB_DIRS=-L lib/glew -L lib/FreeType2 -L lib/sdl2
-LINK_COMMANDS=-lsdl2 -lopengl32 -lglew32 -lfreetype2
+LIB_DIRS=-L lib/glew -L lib/sdl2 #-L lib/FreeType2 
+LINK_COMMANDS=-lsdl2 -lopengl32 -lglew32 #-lfreetype2
 
 OBJ_FILES=\
 	$(OUT_DIR)/main.o \
@@ -57,9 +57,6 @@ $(OUT_DIR)/Camera.o: src/model/Camera.cpp src/model/Camera.h
 CopyLibs:
 	cp lib/glew/glew32.dll bin
 	cp lib/sdl2/SDL2.dll bin
-
-	#Not sure why it needs to be called FreeType6 on my laptop.
-	cp lib/FreeType2/FreeType2.dll bin/FreeType6.dll
 
 
 .PHONY: run

@@ -1,19 +1,4 @@
-Player.cpp - L: 39-72
-    rotation for player is rotating around a central axis instead of itself.
 
-
-WorldObject:
-    Right now I am using the exact SAME mesh and texture for all objects using
-    that type. I am not even making copies. That means if I change the mesh
-    at runtime for any of them, all objects using that mesh will change too.
-
-
-
-Draw() / OpenGL:
-  If I fail to load a texture or mesh, the program won't even run, it will just
-  crash with GLError: 1282.
-
-  This is because the object is still technically being 'created' and added to
-  the world_objects list, causing the Draw() call to use uninitialsied data.
-
-  (makefile error -1073741819) - Probably a garbage value.
+Window resize events:
+    When the user clicks or holds on the window to resize or move it, SDL
+    will cease to render. No way to fix this as of yet.
