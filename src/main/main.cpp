@@ -5,7 +5,7 @@
 #include <chrono>    //Timekeeping
 #include <stdio.h>
 
-//Graphics libs.
+//Graphics libs. (Ensure this is included before any SDL files!)
 #include <GL/glew.h>
 
 //Stops SDL from redefining main causing undefined reference to WinMain@16.
@@ -23,6 +23,7 @@
 
 //Model Classes
 #include "../model/Transform.h"
+#include "../model/Shader.h"
 
 //Using / Namespace declarations.
 //IO
@@ -58,12 +59,13 @@ static int window_width = 1080;
 static int window_height = 800;
 
 //FPS params. @TODO make these modifiable.
-static const int TARGET_FPS = 4;
+static const int TARGET_FPS = 2;
 static const int MS_PER_FRAME = 1000.0 / TARGET_FPS;
+static const float fps_smoothing = 0.3; // Favour newer values more.
 
 // ------ Forward Declarations ------
+//@Temporary to test stuff.
 static void HandleSDLEvents();
-static void DrawFrame();
 void Game::FailAndExit(std::string error_message);
 static float GetCurentTime_MS();
 static void ToggleWireframes();
@@ -76,21 +78,16 @@ static void TogglePause();
 static void PauseGame();
 static void ResumeGame();
 
-
+//Declare Game::Time variables.
+float Game::Time::curr_time_ms = 0;
+float Game::Time::time_since_last_frame = 0;
+float Game::Time::dt = 0;
 
 void Initialise_Graphics(){
-	//===============
-    //     SDL
-    //===============
-	std::cout << "Initialising SDL..." << std::endl;
-	if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-        Game::FailAndExit("SDL failed to initialize.");
-	}
-
     //Note: A glContext must be created before initialising GLEW.
     //Therefore we have to create a Display first.
     //===============
-    //     Display
+    // Display + SDL
     //===============
     //Craete the window and context.
     main_window = new Display(window_width, window_height, "Main window.");
@@ -99,6 +96,7 @@ void Initialise_Graphics(){
     //     GLEW
     //===============
     std::cout << "Initialising GLEW..." << std::endl;
+	glewExperimental = GL_TRUE;
     GLenum status = glewInit();
     if (status != GLEW_OK) {
         std::cout << "GLEW Error: " << glewGetErrorString(status) << std::endl;
@@ -128,30 +126,61 @@ void Initialise_Game(){
 }
 
 
+
+
+
+//@TEMP
+
+// Shader sources
+const GLchar* vertexSource = R"glsl(
+    #version 150 core
+    in vec2 position;
+    void main()
+    {
+        gl_Position = vec4(position, 0.0, 1.0);
+    }
+)glsl";
+const GLchar* fragmentSource = R"glsl(
+    #version 150 core
+    out vec4 outColor;
+    void main()
+    {
+        outColor = vec4(1.0, 1.0, 1.0, 1.0);
+    }
+)glsl";
+
+
+
+
 int main(int argc, char *argv[]) {
 	cout << "------------------ Starting Program ------------------" << endl;
 
     //Initialise SDL, GLEW
-	cout << "\n====== Initlialising Graphics ======" << endl;
+	cout << "\n======== Initlialising Graphics ==========" << endl;
     Initialise_Graphics();
 
     //Initalise the basics: Display and Camera
-	cout << "\n====== Initlialising Game Elements. ======" << endl;
+	cout << "\n====== Initlialising Game Elements =======" << endl;
     Initialise_Game();
 
-	cout << "------------------------------------------------------" << endl;
+	//Load resources: Shaders
+	//cout << "\n============ Loading Shaders =============" << endl;
+    //Load_Shaders();
 
+	cout << "\n------------------------------------------------------" << endl;
 
     //Main loop setup.
 	cout << "\nEntering main loop." << endl;
 
-    float curr_time = GetCurentTime_MS();
+	//Declare Game::Time variables.
+	Game::Time::curr_time_ms = GetCurentTime_MS();
+	Game::Time::time_since_last_frame = 0;
+	Game::Time::dt = 0;
 
-	//prev_time is the time at which the previous loop itteration ran.
-    float prev_time = curr_time;
+	//prev_time_ms is the time at which the previous loop itteration ran.
+	float prev_time_ms = Game::Time::curr_time_ms;
 
-	//dt here is the total time since last frame.
-    float dt = 0;
+	float current_fps = 0;
 
     //Start the game.
     ResumeGame();
@@ -160,11 +189,64 @@ int main(int argc, char *argv[]) {
 	SetCursorClip(false);
 	SDL_ShowCursor(true);
 
-	//FPS calculation variables.
-	float fps_smoothing = 0.3; // Favour recent values more.
-	float current_fps = 0;
+	//Use this namespace for greater clarity and ease of coding.
+	using namespace Game::Time;
+
+	/*@TEMP ============================================================= */
+	// Create Vertex Array Object
+	    GLuint vao;
+	    glGenVertexArrays(1, &vao);
+	    glBindVertexArray(vao);
+
+	    // Create a Vertex Buffer Object and copy the vertex data to it
+	    GLuint vbo;
+	    glGenBuffers(1, &vbo);
+
+	    GLfloat vertices[] = {
+	         0.0f,  1.0f,
+	         1.0f, -1.0f,
+	        -1.0f, -1.0f
+	    };
+
+	    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	    // Create and compile the vertex shader
+	    GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
+	    glShaderSource(vertexShader, 1, &vertexSource, NULL);
+	    glCompileShader(vertexShader);
+
+	    // Create and compile the fragment shader
+	    GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
+	    glShaderSource(fragmentShader, 1, &fragmentSource, NULL);
+	    glCompileShader(fragmentShader);
+
+	    // Link the vertex and fragment shader into a shader program
+	    GLuint shaderProgram = glCreateProgram();
+	    glAttachShader(shaderProgram, vertexShader);
+	    glAttachShader(shaderProgram, fragmentShader);
+	    glBindFragDataLocation(shaderProgram, 0, "outColor");
+	    glLinkProgram(shaderProgram);
+	    glUseProgram(shaderProgram);
+
+	    // Specify the layout of the vertex data
+	    GLint posAttrib = glGetAttribLocation(shaderProgram, "position");
+	    glEnableVertexAttribArray(posAttrib);
+	    glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 0, 0);
+
+		GLint status;
+		glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &status);
+
+		if (status != GL_TRUE){
+			printf("Status: %d\n", status);
+		}else{
+			printf("SUCESSS\n");
+		}
+
+	/*@TEMP ============================================================= */
 
     //The main loop!
+	main_window->Clear(1.0, 0.0, 0.0, 1.0);
 	while (!Game::should_close) {
         //@DEBUG
         GLenum err;
@@ -178,34 +260,51 @@ int main(int argc, char *argv[]) {
 		/* Handle input events here. */
 		HandleSDLEvents();
 
-        curr_time = GetCurentTime_MS();
+        curr_time_ms = GetCurentTime_MS();
 
-        dt += curr_time - prev_time;
-        prev_time = curr_time;
+        dt = curr_time_ms - prev_time_ms;
+		prev_time_ms = curr_time_ms;
 
+        time_since_last_frame += dt;
+
+		//Update objects regardless of time passed. @TODO
+		/* for all objects in {object list}: object.update(dt) */
+
+		dt = 0;
 
         //Cap FPS and render only when needed.
-        if (dt >= MS_PER_FRAME) {
-			//Update objects first.
-			//for all objects in {object list}: object.update(dt)
+        if (time_since_last_frame >= MS_PER_FRAME) {
+			//Clear the current buffer.
+			//main_window->Clear(0.0, 0.0, 0.0, 1.0);
 
-            //Render
-            DrawFrame();
+			// Draw all objects.
+
+			//Swap buffers.
+			main_window->SwapBuffers();
 
 			// Calculate fps value
-			current_fps = (current_fps * fps_smoothing) + ( ((1 / dt) * 1000) * (1.0 - fps_smoothing) );
+			current_fps = (current_fps * fps_smoothing) + ( ((1 / time_since_last_frame) * 1000) * (1.0 - fps_smoothing) );
 			printf("FPS (%f): %f\n", dt, current_fps);
 
-            dt = 0.0;
+			time_since_last_frame = 0;
         }
 
     }
 
     Game::curr_state = CLOSING;
 
-	cout << "End of main loop." << endl;
+	glDeleteProgram(shaderProgram);
+    glDeleteShader(fragmentShader);
+    glDeleteShader(vertexShader);
 
-	cout << "\n====== Freeing Resources ======" << endl;
+    glDeleteBuffers(1, &vbo);
+
+    glDeleteVertexArrays(1, &vao);
+
+
+
+	cout << "End of main loop." << endl;
+	cout << "\n=========== Freeing Resources ============" << endl;
 	delete main_window;
 	delete Game::main_camera;
 
@@ -213,12 +312,13 @@ int main(int argc, char *argv[]) {
 	cout << "Deinitialising SDL..." << endl;
 	SDL_Quit();
 
-	cout << "\n------------------ Ending Program ------------------" << endl;
+	cout << "\n------------------- Ending Program -------------------" << endl;
 
     return EXIT_SUCCESS;
 }
 
 
+//@TODO later move this into an input file
 static void HandleSDLEvents(){
     SDL_Event e;
 
@@ -281,24 +381,6 @@ static void HandleSDLEvents(){
             }
         }
     }
-}
-
-
-static void DrawFrame() {
-	//@Debug
-	static int x = 1;
-	if(x){
-		main_window->Clear(0.0, 0.0, 1.0, 1.0);
-	}else{
-		main_window->Clear(1.0, 1.0, 1.0, 1.0);
-	}
-	x = !x;
-
-    //Draw our drawables.
-	/* @TODO draw shit */
-
-    //Swap buffers.
-    main_window->SwapBuffers();
 }
 
 

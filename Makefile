@@ -8,7 +8,7 @@ EXE_NAME=GLEngine
 
 INCLUDE_DIRS =-I include/SDL2 -I include/glew -I include/glm #-I include/FreeType2
 
-LIB_DIRS=-L lib/glew -L lib/sdl2 #-L lib/FreeType2 
+LIB_DIRS=-L lib/glew -L lib/sdl2 #-L lib/FreeType2
 LINK_COMMANDS=-lsdl2 -lopengl32 -lglew32 #-lfreetype2
 
 OBJ_FILES=\
@@ -17,6 +17,7 @@ OBJ_FILES=\
 	$(OUT_DIR)/Display.o \
 	$(OUT_DIR)/Camera.o \
 	$(OUT_DIR)/Transform.o \
+	$(OUT_DIR)/Shader.o \
 	$(OUT_DIR)/Util.o \
 	$(OUT_DIR)/MathUtil.o
 
@@ -34,6 +35,9 @@ $(OUT_DIR)/main.o: src/main/main.cpp src/main/main.h src/display/Display.h \
 
 $(OUT_DIR)/stb_image.o: src/loaders/stb_image.c src/loaders/stb_image.h
 	$(COMPILE_NO_EXTRAS) src/loaders/stb_image.c -o $(OUT_DIR)/stb_image.o
+
+$(OUT_DIR)/Shader.o: src/model/Shader.cpp src/model/Shader.h
+	$(COMPILE_WITH_INCLUDES) src/model/Shader.cpp -o $(OUT_DIR)/Shader.o
 
 
 $(OUT_DIR)/Util.o: src/util/Util.cpp src/util/Util.h
