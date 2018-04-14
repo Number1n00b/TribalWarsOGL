@@ -22,14 +22,8 @@ Display::Display(int width, int height, const std::string& title) {
 	m_width = width;
 	m_height = height;
 
-	//Ensure that SDL creates a forward compatable OpenGL 3.2 context.
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
-	SDL_GL_SetAttribute(SDL_GL_STENCIL_SIZE, 8);
-
     //Number of bits stored for each colour. (2^n). Use 8(256) for standard.
-    int colour_size = 8;
+	int colour_size = 8;
 	SDL_GL_SetAttribute(SDL_GL_RED_SIZE, colour_size);
 	SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, colour_size);
 	SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, colour_size);
@@ -52,6 +46,8 @@ Display::Display(int width, int height, const std::string& title) {
 
 	//Create the GL context.
 	m_GLContext = SDL_GL_CreateContext(m_window);
+
+	m_vsync_enabled = true;
 }
 
 void Display::UpdateViewport(int width, int height) {
@@ -86,6 +82,22 @@ int Display::GetWidth(){
 
 int Display::GetHeight(){
 	return m_height;
+}
+
+
+void Display::ToggleVSync(){
+	m_vsync_enabled = !m_vsync_enabled;
+	SDL_GL_SetSwapInterval(m_vsync_enabled);
+}
+
+void Display::EnableVSync(){
+	m_vsync_enabled = true;
+	SDL_GL_SetSwapInterval(m_vsync_enabled);
+}
+
+void Display::DisableVSync(){
+	m_vsync_enabled = false;
+	SDL_GL_SetSwapInterval(m_vsync_enabled);
 }
 
 

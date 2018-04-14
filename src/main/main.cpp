@@ -59,14 +59,13 @@ static int window_width = 1080;
 static int window_height = 800;
 
 //FPS params. @TODO make these modifiable.
-static const int TARGET_FPS = 2;
+static const int TARGET_FPS = 1000;
 static const int MS_PER_FRAME = 1000.0 / TARGET_FPS;
 static const float fps_smoothing = 0.3; // Favour newer values more.
 
 // ------ Forward Declarations ------
-//@Temporary to test stuff.
-static void HandleSDLEvents();
 void Game::FailAndExit(std::string error_message);
+static void HandleSDLEvents();
 static float GetCurentTime_MS();
 static void ToggleWireframes();
 
@@ -96,7 +95,6 @@ void Initialise_Graphics(){
     //     GLEW
     //===============
     std::cout << "Initialising GLEW..." << std::endl;
-	glewExperimental = GL_TRUE;
     GLenum status = glewInit();
     if (status != GLEW_OK) {
         std::cout << "GLEW Error: " << glewGetErrorString(status) << std::endl;
@@ -107,7 +105,7 @@ void Initialise_Graphics(){
     glEnable(GL_DEPTH_TEST);
 
     //Enable culling faces for proper depth handling.
-    glEnable(GL_CULL_FACE);
+    // glEnable(GL_CULL_FACE); // @Temp this causes 2D triangles not to render??
     glCullFace(GL_BACK);
 }
 
@@ -126,32 +124,6 @@ void Initialise_Game(){
 }
 
 
-
-
-
-//@TEMP
-
-// Shader sources
-const GLchar* vertexSource = R"glsl(
-    #version 150 core
-    in vec2 position;
-    void main()
-    {
-        gl_Position = vec4(position, 0.0, 1.0);
-    }
-)glsl";
-const GLchar* fragmentSource = R"glsl(
-    #version 150 core
-    out vec4 outColor;
-    void main()
-    {
-        outColor = vec4(1.0, 1.0, 1.0, 1.0);
-    }
-)glsl";
-
-
-
-
 int main(int argc, char *argv[]) {
 	cout << "------------------ Starting Program ------------------" << endl;
 
@@ -165,12 +137,17 @@ int main(int argc, char *argv[]) {
 
 	//Load resources: Shaders
 	//cout << "\n============ Loading Shaders =============" << endl;
-    //Load_Shaders();
+    // Load_Shaders();
+    //@TEMP
+    Shader standard_shader = Shader("res/shaders/colored_2D_shader");
 
 	cout << "\n------------------------------------------------------" << endl;
 
     //Main loop setup.
 	cout << "\nEntering main loop." << endl;
+    
+    //Use this namespace for greater clarity and ease of coding.
+    using namespace Game::Time;
 
 	//Declare Game::Time variables.
 	Game::Time::curr_time_ms = GetCurentTime_MS();
@@ -189,64 +166,37 @@ int main(int argc, char *argv[]) {
 	SetCursorClip(false);
 	SDL_ShowCursor(true);
 
-	//Use this namespace for greater clarity and ease of coding.
-	using namespace Game::Time;
+    //@TEMP
+    // Create Vertex Array Object
+    GLuint vao;
+    glGenVertexArrays(1, &vao);
+    glBindVertexArray(vao);
 
-	/*@TEMP ============================================================= */
-	// Create Vertex Array Object
-	    GLuint vao;
-	    glGenVertexArrays(1, &vao);
-	    glBindVertexArray(vao);
+    // Create a Vertex Buffer Object and copy the vertex data to it
+    GLuint vbo;
+    glGenBuffers(1, &vbo);
 
-	    // Create a Vertex Buffer Object and copy the vertex data to it
-	    GLuint vbo;
-	    glGenBuffers(1, &vbo);
+    GLfloat vertices[] = {
+         0.0f,  0.5f,
+         0.5f, -0.5f,
+        -0.5f, -0.5f
+    };
 
-	    GLfloat vertices[] = {
-	         0.0f,  1.0f,
-	         1.0f, -1.0f,
-	        -1.0f, -1.0f
-	    };
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
-	    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    standard_shader.Bind();
 
-	    // Create and compile the vertex shader
-	    GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	    glShaderSource(vertexShader, 1, &vertexSource, NULL);
-	    glCompileShader(vertexShader);
+    // Specify the layout of the vertex data
+    GLint posAttrib = glGetAttribLocation(standard_shader.GetProgram(), "position");
+    glEnableVertexAttribArray(posAttrib);
+    glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 0, 0);
 
-	    // Create and compile the fragment shader
-	    GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	    glShaderSource(fragmentShader, 1, &fragmentSource, NULL);
-	    glCompileShader(fragmentShader);
-
-	    // Link the vertex and fragment shader into a shader program
-	    GLuint shaderProgram = glCreateProgram();
-	    glAttachShader(shaderProgram, vertexShader);
-	    glAttachShader(shaderProgram, fragmentShader);
-	    glBindFragDataLocation(shaderProgram, 0, "outColor");
-	    glLinkProgram(shaderProgram);
-	    glUseProgram(shaderProgram);
-
-	    // Specify the layout of the vertex data
-	    GLint posAttrib = glGetAttribLocation(shaderProgram, "position");
-	    glEnableVertexAttribArray(posAttrib);
-	    glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 0, 0);
-
-		GLint status;
-		glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &status);
-
-		if (status != GL_TRUE){
-			printf("Status: %d\n", status);
-		}else{
-			printf("SUCESSS\n");
-		}
-
-	/*@TEMP ============================================================= */
+    // Get the location of the color uniform
+    GLint uniColor = glGetUniformLocation(standard_shader.GetProgram(), "triangleColor");
+    //@TEMP
 
     //The main loop!
-	main_window->Clear(1.0, 0.0, 0.0, 1.0);
 	while (!Game::should_close) {
         //@DEBUG
         GLenum err;
@@ -275,16 +225,18 @@ int main(int argc, char *argv[]) {
         //Cap FPS and render only when needed.
         if (time_since_last_frame >= MS_PER_FRAME) {
 			//Clear the current buffer.
-			//main_window->Clear(0.0, 0.0, 0.0, 1.0);
+			main_window->Clear(0.0, 0.5, 0.0, 1.0);
 
 			// Draw all objects.
+            glUniform3f(uniColor, sin(curr_time_ms), 0.0f, 0.0f);
+            glDrawArrays(GL_TRIANGLES, 0, 3);
 
 			//Swap buffers.
 			main_window->SwapBuffers();
 
 			// Calculate fps value
 			current_fps = (current_fps * fps_smoothing) + ( ((1 / time_since_last_frame) * 1000) * (1.0 - fps_smoothing) );
-			printf("FPS (%f): %f\n", dt, current_fps);
+			printf("FPS: %f\n", current_fps);
 
 			time_since_last_frame = 0;
         }
@@ -292,16 +244,6 @@ int main(int argc, char *argv[]) {
     }
 
     Game::curr_state = CLOSING;
-
-	glDeleteProgram(shaderProgram);
-    glDeleteShader(fragmentShader);
-    glDeleteShader(vertexShader);
-
-    glDeleteBuffers(1, &vbo);
-
-    glDeleteVertexArrays(1, &vao);
-
-
 
 	cout << "End of main loop." << endl;
 	cout << "\n=========== Freeing Resources ============" << endl;
@@ -355,6 +297,11 @@ static void HandleSDLEvents(){
                         {
                             TogglePause();
                             break;
+                        }
+
+                        case SDLK_LALT:
+                        {
+                            main_window->ToggleVSync();
                         }
                     }
                  }

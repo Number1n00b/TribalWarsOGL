@@ -21,11 +21,18 @@ class Display{
 		int GetWidth();
 		int GetHeight();
 
+		void ToggleVSync();
+		void EnableVSync();
+		void DisableVSync();
+
+
 		virtual ~Display();
 
 	private:
 		int m_width;
 		int m_height;
+
+		bool m_vsync_enabled = true;
 
 		SDL_Window *m_window;
 		SDL_GLContext m_GLContext;
