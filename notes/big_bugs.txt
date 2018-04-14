@@ -1,4 +1,0 @@
-
-Window resize events:
-    When the user clicks or holds on the window to resize or move it, SDL
-    will cease to render. No way to fix this as of yet.

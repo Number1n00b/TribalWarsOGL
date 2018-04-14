@@ -1,8 +1,0 @@
-===============================================================================
-In some places I may be incrementing counters indefinately.
-When this runs for a long time it could cause overflow and crash.
-
-This is resedue from before forking, in Oscilating and Rotating objects. Not sure
-if this is still the case, but I should check to make sure.
-
-===============================================================================

@@ -61,7 +61,8 @@ static int window_height = 800;
 //FPS params. @TODO make these modifiable.
 static const int TARGET_FPS = 1000;
 static const int MS_PER_FRAME = 1000.0 / TARGET_FPS;
-static const float fps_smoothing = 0.3; // Favour newer values more.
+static const float FPS_SMOOTHING = 0.3; // Favour newer values more.
+static const int FPS_PRINT_INTERVAL_SECS = 2; // Favour newer values more.
 
 // ------ Forward Declarations ------
 void Game::FailAndExit(std::string error_message);
@@ -81,6 +82,13 @@ static void ResumeGame();
 float Game::Time::curr_time_ms = 0;
 float Game::Time::time_since_last_frame = 0;
 float Game::Time::dt = 0;
+
+/*
+* @Next steps:
+*  Abstract shape drawing into their own functions, maybe even classes. (prob not).
+*  Be able to draw triangles and rectangles at any location and with any size.
+*  Learn tectures -> how to map them onto 2d shapes.
+*/
 
 void Initialise_Graphics(){
     //Note: A glContext must be created before initialising GLEW.
@@ -145,7 +153,7 @@ int main(int argc, char *argv[]) {
 
     //Main loop setup.
 	cout << "\nEntering main loop." << endl;
-    
+
     //Use this namespace for greater clarity and ease of coding.
     using namespace Game::Time;
 
@@ -158,6 +166,7 @@ int main(int argc, char *argv[]) {
 	float prev_time_ms = Game::Time::curr_time_ms;
 
 	float current_fps = 0;
+    float seconds_since_fps_printed = FPS_PRINT_INTERVAL_SECS - 0.75;
 
     //Start the game.
     ResumeGame();
@@ -166,7 +175,7 @@ int main(int argc, char *argv[]) {
 	SetCursorClip(false);
 	SDL_ShowCursor(true);
 
-    //@TEMP
+    //@TEMP (move to mesh or object code)
     // Create Vertex Array Object
     GLuint vao;
     glGenVertexArrays(1, &vao);
@@ -177,9 +186,10 @@ int main(int argc, char *argv[]) {
     glGenBuffers(1, &vbo);
 
     GLfloat vertices[] = {
-         0.0f,  0.5f,
-         0.5f, -0.5f,
-        -0.5f, -0.5f
+        -0.5f,  0.5f, 1.0f, 0.0f, 0.0f, // Top-left
+        0.5f,  0.5f, 0.0f, 1.0f, 0.0f, // Top-right
+        0.5f, -0.5f, 0.0f, 0.0f, 1.0f, // Bottom-right
+        -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, // Bottom-left
     };
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -190,11 +200,28 @@ int main(int argc, char *argv[]) {
     // Specify the layout of the vertex data
     GLint posAttrib = glGetAttribLocation(standard_shader.GetProgram(), "position");
     glEnableVertexAttribArray(posAttrib);
-    glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 0, 0);
+    glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 5*sizeof(float), 0);
 
     // Get the location of the color uniform
-    GLint uniColor = glGetUniformLocation(standard_shader.GetProgram(), "triangleColor");
-    //@TEMP
+    GLint colorAttrib = glGetAttribLocation(standard_shader.GetProgram(), "color");
+    glEnableVertexAttribArray(colorAttrib);
+    glVertexAttribPointer(colorAttrib, 3, GL_FLOAT, GL_FALSE, 5*sizeof(float),
+                          (void*)(2*sizeof(GLfloat)));
+
+    // A list of the elements in the above array.
+    GLuint elements[] = {
+        0, 1, 2,
+        2, 3, 0
+    };
+
+    //Load this element buffer object into grpahics memory.
+    GLuint ebo;
+    glGenBuffers(1, &ebo);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER,
+                 sizeof(elements), elements, GL_STATIC_DRAW);
+
+    //@TEMP (move to mesh or object code)
 
     //The main loop!
 	while (!Game::should_close) {
@@ -216,6 +243,7 @@ int main(int argc, char *argv[]) {
 		prev_time_ms = curr_time_ms;
 
         time_since_last_frame += dt;
+        seconds_since_fps_printed += dt / 1000;
 
 		//Update objects regardless of time passed. @TODO
 		/* for all objects in {object list}: object.update(dt) */
@@ -228,15 +256,19 @@ int main(int argc, char *argv[]) {
 			main_window->Clear(0.0, 0.5, 0.0, 1.0);
 
 			// Draw all objects.
-            glUniform3f(uniColor, sin(curr_time_ms), 0.0f, 0.0f);
-            glDrawArrays(GL_TRIANGLES, 0, 3);
+            glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+            // glDrawArrays(GL_TRIANGLES, 0, 6);
 
 			//Swap buffers.
 			main_window->SwapBuffers();
 
 			// Calculate fps value
-			current_fps = (current_fps * fps_smoothing) + ( ((1 / time_since_last_frame) * 1000) * (1.0 - fps_smoothing) );
-			printf("FPS: %f\n", current_fps);
+			current_fps = (current_fps * FPS_SMOOTHING) + ( ((1 / time_since_last_frame) * 1000) * (1.0 - FPS_SMOOTHING) );
+            if(seconds_since_fps_printed >= FPS_PRINT_INTERVAL_SECS){
+                printf("FPS: %f\n", current_fps);
+                seconds_since_fps_printed = 0;
+            }
+
 
 			time_since_last_frame = 0;
         }
