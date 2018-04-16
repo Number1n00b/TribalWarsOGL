@@ -65,8 +65,6 @@ int main(void){
         list->Print(&printInt);
         printf("List size: %d\n", list->Length());
         printf("\n");
-
-        delete element;
     }
 
     delete list;
