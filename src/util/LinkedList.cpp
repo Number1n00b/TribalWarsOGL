@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include "LinkedList.h"
 
 template<class T>

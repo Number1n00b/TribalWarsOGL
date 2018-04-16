@@ -16,9 +16,6 @@
 //=== My headers ===
 #include "main.h"
 
-//Loaders
-#include "../loaders/resource_loader.h"
-
 //Output
 #include "../display/Display.h"
 #include "../display/UI.h"

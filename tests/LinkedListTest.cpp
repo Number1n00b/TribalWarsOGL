@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "../util/LinkedList.h"
+#include "../src/util/LinkedList.h"
 
 class te{
     public:

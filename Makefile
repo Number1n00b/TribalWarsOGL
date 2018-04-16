@@ -63,10 +63,38 @@ CopyLibs:
 	cp lib/sdl2/SDL2.dll bin
 
 
+
+# Run stuff
 .PHONY: run
 run:
-	./bin/$(EXE_NAME)
+	./$(EXE_DIR)/$(EXE_NAME)
 
+.PHONY: runMem
+runMem:
+	drmemory ./bin/$(EXE_NAME).exe
+
+.PHONY: runVal
+runVal:
+	valgrind ./bin/$(EXE_NAME).exe
+
+
+
+# Tests
+testLL: tests/LinkedListTest.cpp \
+		src/util/LinkedList.cpp src/util/LinkedList.h
+	$(CC) tests/LinkedListTest.cpp src/util/LinkedList.cpp -o bin/tests/LinkedListTest
+	./bin/tests/LinkedListTest
+
+
+
+# Clean
+.PHONY: clean
+clean:
+	rm -rf $(OUT_DIR)/*.o $(EXE_DIR)/*.exe *~ $(EXE_DIR)/*.dll`
+
+
+
+# Memes
 
 .PHONY: urn
 urn:
@@ -86,17 +114,3 @@ ruin:
 .PHONY: riun
 riun:
 	@echo "Dam dude... can't even ruin it right. :\\"
-
-
-.PHONY: clean
-clean:
-	rm -rf $(OUT_DIR)/*.o $(EXE_DIR)/*.exe *~ $(EXE_DIR)/*.dll
-
-
-.PHONY: runMem
-runMem:
-	drmemory ./bin/$(EXE_NAME).exe
-
-.PHONY: runVal
-runVal:
-	valgrind ./bin/$(EXE_NAME).exe
