@@ -67,8 +67,8 @@ CopyLibs:
 
 testLL: $(OBJ_DIR)/LinkedList.o tests/LinkedListTest.cpp
 	$(COMPILE_NO_EXTRAS) tests/LinkedListTest.cpp -c -o $(OBJ_DIR)/LinkedListTest.o
-	$(CC) $(OBJ_DIR)/LinkedList.o $(OBJ_DIR)/LinkedListTest.o -o $(TEST_DIR)/LinkedListTest
-	./$(TEST_DIR)/LinkedListTest
+	$(CC) $(OBJ_DIR)/LinkedList.o $(OBJ_DIR)/LinkedListTest.o -o $(TEST_DIR)/LinkedListTest.exe
+	./$(TEST_DIR)/LinkedListTest.exe
 
 
 # Run stuff
@@ -76,9 +76,9 @@ testLL: $(OBJ_DIR)/LinkedList.o tests/LinkedListTest.cpp
 run:
 	./$(EXE_DIR)/$(EXE_NAME)
 
-.PHONY: runMem
-runMem:
-	drmemory ./bin/$(EXE_NAME).exe
+.PHONY: runValTestLL
+runValTestLL:
+	valgrind ./$(TEST_DIR)/LinkedListTest.exe
 
 .PHONY: runVal
 runVal:
