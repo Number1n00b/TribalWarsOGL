@@ -54,9 +54,8 @@ class LinkedList
                 new_node->prev = m_Tail;
 
                 m_Tail = new_node;
+                m_NodeCount++;
             }
-
-            m_NodeCount++;
         }
 
 
@@ -72,6 +71,7 @@ class LinkedList
             return curr->data;
         }
 
+
         T* RemoveElement(int index){
             //Retrieve the node from the list.
             LinkedListNode<T>* curr = GetNode(index);
@@ -82,8 +82,29 @@ class LinkedList
             }
 
             //Remove the element from the list.
-            curr->prev->next = curr->next;
-            curr->next->prev = curr->prev;
+            // If it's the only element.
+            if(m_NodeCount == 1){
+                m_Head = nullptr;
+                m_Tail = nullptr;
+            }
+
+            // If it's the first element.
+            else if(index == 0){
+                m_Head = curr->next;
+                m_Head->prev = nullptr;
+            }
+
+            // If it's the last element.
+            else if(index == m_NodeCount - 1){
+                m_Tail = curr->prev;
+                m_Tail->next = nullptr;
+            }
+
+            // If it's any element in between.
+            else{
+                curr->prev->next = curr->next;
+                curr->next->prev = curr->prev;
+            }
 
             T* data = curr->data;
 
@@ -95,24 +116,27 @@ class LinkedList
             return data;
         }
 
-        void DeleteElement(int index){
-            //Retrieve the node from the list.
-            LinkedListNode<T>* curr = GetNode(index);
 
-            //If the retrieved node is null: the index is out of range.
-            if(curr == nullptr){
-                return;
+        // Uses the == opperator to determine equality.
+        T* RemoveElementByValue(T* ElementToRemove){
+            LinkedListNode<T>* curr;
+
+            for(int ii = 0; ii < m_NodeCount; ii++){
+                curr = GetNode(ii);
+
+                if( *ElementToRemove == *(curr->data) ){
+                    return RemoveElement(ii);
+                }
             }
 
-            //Remove the element from the list.
-            curr->prev->next = curr->next;
-            curr->next->prev = curr->prev;
+            return nullptr;
+        }
 
-            //Cleanup memory.
-            delete curr->data;
-            delete curr;
 
-            m_NodeCount--;
+        void DeleteElement(int index){
+            T* data = RemoveElement(index);
+
+            delete data;
         }
 
         int Length(){

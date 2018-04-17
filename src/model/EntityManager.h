@@ -4,13 +4,13 @@
 class EntityManager
 {
 	public:
-        EntityManager<T>();
+        EntityManager();
 
         void registerEntity(Entity* e);
 
+
 	private:
-        //@TODO later we can make this of type <Entities>
-        //and also have one for type <drawables>
+        //@TODO later we can make different lists too, eg <Drawable>'s
         LinkedList<Entity>* entities;
 };
 

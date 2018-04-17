@@ -67,6 +67,20 @@ int main(void){
         printf("\n");
     }
 
+    printf("\n============ ================== ============\n");
+    printf("Removing some elements by criteria:\n");
+    int* removed = nullptr;
+    for(ii = 9; ii >= 7; ii--){
+        list->Print(&printInt);
+        removed = list->RemoveElementByValue(&ii);
+        printf("Removed: %d\n", *removed);
+        delete removed;
+        list->Print(&printInt);
+        printf("List size: %d\n", list->Length());
+        printf("\n");
+    }
+
+
     delete list;
 
     return 0;
