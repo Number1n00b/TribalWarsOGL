@@ -80,6 +80,19 @@ int main(void){
         printf("\n");
     }
 
+    printf("\n============ ================== ============\n");
+    printf("Removing remaining elements:\n");
+    int* removed = nullptr;
+    do{
+        list->Print(&printInt);
+        removed = list->RemoveElement(0);
+        printf("Removed: %d\n", *removed);
+        delete removed;
+        list->Print(&printInt);
+        printf("List size: %d\n", list->Length());
+        printf("\n");
+    }while(removed != nullptr);
+
 
     delete list;
 
