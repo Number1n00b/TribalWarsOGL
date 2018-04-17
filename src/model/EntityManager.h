@@ -2,14 +2,17 @@
 #define ENTITY_MANAGER_H
 
 #include "Entity.h"
+#include "../util/containers/LinkedList.h"
 
 class EntityManager
 {
 	public:
         EntityManager();
 
-        void registerEntity(Entity* e);
-		void removeEntity(Entity* e);
+        void RegisterEntity(Entity* e);
+		void RemoveEntity(Entity* e);
+
+		void PrintAllEntities();
 
 		~EntityManager();
 	private:

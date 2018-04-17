@@ -19,6 +19,8 @@ OBJ_FILES=\
 	$(OBJ_DIR)/Shader.o \
 	\
 	$(OBJ_DIR)/Transform.o \
+	$(OBJ_DIR)/Entity.o \
+	$(OBJ_DIR)/EntityManager.o \
 	\
 	$(OBJ_DIR)/Util.o \
 	$(OBJ_DIR)/MathUtil.o \
@@ -47,6 +49,13 @@ $(OBJ_DIR)/Shader.o: src/model/Shader.cpp src/model/Shader.h
 $(OBJ_DIR)/Transform.o: src/model/Transform.cpp src/model/Transform.h
 	$(COMPILE_WITH_INCLUDES) src/model/Transform.cpp -o $(OBJ_DIR)/Transform.o
 
+$(OBJ_DIR)/Entity.o: src/model/Entity.cpp src/model/Entity.h
+	$(COMPILE_NO_EXTRAS) src/model/Entity.cpp -o $(OBJ_DIR)/Entity.o
+
+$(OBJ_DIR)/EntityManager.o: src/model/EntityManager.cpp src/model/EntityManager.h \
+							src/util/containers/LinkedList.h
+	$(COMPILE_NO_EXTRAS) src/model/EntityManager.cpp -o $(OBJ_DIR)/EntityManager.o
+
 
 $(OBJ_DIR)/Util.o: src/util/Util.cpp src/util/Util.h
 	$(COMPILE_WITH_INCLUDES) src/util/Util.cpp -o $(OBJ_DIR)/Util.o
@@ -69,6 +78,13 @@ testLL: $(OBJ_DIR)/LinkedList.o tests/LinkedListTest.cpp
 	$(COMPILE_NO_EXTRAS) tests/LinkedListTest.cpp -c -o $(OBJ_DIR)/LinkedListTest.o
 	$(CC) $(OBJ_DIR)/LinkedList.o $(OBJ_DIR)/LinkedListTest.o -o $(TEST_DIR)/LinkedListTest.exe
 	./$(TEST_DIR)/LinkedListTest.exe
+
+testEM: $(OBJ_DIR)/LinkedList.o $(OBJ_DIR)/Entity.o $(OBJ_DIR)/EntityManager.o \
+		tests/EntityManagerTest.cpp
+	$(COMPILE_NO_EXTRAS) tests/EntityManagerTest.cpp -c -o $(OBJ_DIR)/EntityManagerTest.o
+	$(CC) $(OBJ_DIR)/LinkedList.o $(OBJ_DIR)/Entity.o $(OBJ_DIR)/EntityManagerTest.o \
+	$(OBJ_DIR)/EntityManager.o -o $(TEST_DIR)/EntityManagerTest.exe
+	./$(TEST_DIR)/EntityManagerTest.exe
 
 
 # Run stuff
