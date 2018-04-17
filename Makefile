@@ -76,15 +76,15 @@ CopyLibs:
 
 testLL: $(OBJ_DIR)/LinkedList.o tests/LinkedListTest.cpp
 	$(COMPILE_NO_EXTRAS) tests/LinkedListTest.cpp -c -o $(OBJ_DIR)/LinkedListTest.o
-	$(CC) $(OBJ_DIR)/LinkedList.o $(OBJ_DIR)/LinkedListTest.o -o $(TEST_DIR)/LinkedListTest.exe
-	./$(TEST_DIR)/LinkedListTest.exe
+	$(CC) $(OBJ_DIR)/LinkedList.o $(OBJ_DIR)/LinkedListTest.o -o $(TEST_DIR)/LinkedListTest
+	./$(TEST_DIR)/LinkedListTest
 
 testEM: $(OBJ_DIR)/LinkedList.o $(OBJ_DIR)/Entity.o $(OBJ_DIR)/EntityManager.o \
 		tests/EntityManagerTest.cpp
 	$(COMPILE_NO_EXTRAS) tests/EntityManagerTest.cpp -c -o $(OBJ_DIR)/EntityManagerTest.o
 	$(CC) $(OBJ_DIR)/LinkedList.o $(OBJ_DIR)/Entity.o $(OBJ_DIR)/EntityManagerTest.o \
-	$(OBJ_DIR)/EntityManager.o -o $(TEST_DIR)/EntityManagerTest.exe
-	./$(TEST_DIR)/EntityManagerTest.exe
+	$(OBJ_DIR)/EntityManager.o -o $(TEST_DIR)/EntityManagerTest
+	./$(TEST_DIR)/EntityManagerTest
 
 
 # Run stuff
@@ -92,19 +92,24 @@ testEM: $(OBJ_DIR)/LinkedList.o $(OBJ_DIR)/Entity.o $(OBJ_DIR)/EntityManager.o \
 run:
 	./$(EXE_DIR)/$(EXE_NAME)
 
-.PHONY: runValTestLL
-runValTestLL:
-	valgrind ./$(TEST_DIR)/LinkedListTest.exe
-
 .PHONY: runVal
 runVal:
-	valgrind ./bin/$(EXE_NAME).exe
+	valgrind ./bin/$(EXE_NAME)
+
+#Tests
+.PHONY: runValTestLL
+runValTestLL:
+	valgrind ./$(TEST_DIR)/LinkedListTest
+
+.PHONY: runValTestEM
+runValTestEM:
+	valgrind ./$(TEST_DIR)/EntityManagerTest
 
 
 # Clean
 .PHONY: clean
 clean:
-	rm -rf $(OBJ_DIR)/*.o $(EXE_DIR)/*.exe *~ $(EXE_DIR)/*.dll bin/tests/*.exe
+	rm -rf $(OBJ_DIR)/*.o $(EXE_DIR)/$(EXE_NAME) *~ $(EXE_DIR)/*.dll bin/tests/*
 
 
 # Memes

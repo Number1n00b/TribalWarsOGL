@@ -10,6 +10,9 @@ class EntityManager
         EntityManager();
 
         void RegisterEntity(Entity* e);
+
+		// Designed to only be called by the entity that is asking to be removed
+		// itself, or anything with a poitner to it.
 		void RemoveEntity(Entity* e);
 
 		void PrintAllEntities();
