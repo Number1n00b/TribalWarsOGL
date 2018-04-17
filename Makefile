@@ -13,11 +13,13 @@ LIB_DIRS=-L lib/glew -L lib/sdl2 #-L lib/FreeType2
 LINK_COMMANDS=-lsdl2 -lopengl32 -lglew32 #-lfreetype2
 
 OBJ_FILES=\
+	\
 	$(OBJ_DIR)/main.o \
 	$(OBJ_DIR)/Display.o \
-	$(OBJ_DIR)/Camera.o \
-	$(OBJ_DIR)/Transform.o \
 	$(OBJ_DIR)/Shader.o \
+	\
+	$(OBJ_DIR)/Transform.o \
+	\
 	$(OBJ_DIR)/Util.o \
 	$(OBJ_DIR)/MathUtil.o \
 	$(OBJ_DIR)/LinkedList.o
@@ -30,12 +32,20 @@ all: executable
 executable: $(OBJ_FILES) CopyLibs
 	$(CC) $(CFLAGS) $(OBJ_FILES) -o $(EXE_DIR)/$(EXE_NAME) $(LIB_DIRS) $(LINK_COMMANDS)
 
+
 $(OBJ_DIR)/main.o: src/main/main.cpp src/main/main.h src/display/Display.h \
-				   src/model/Camera.h src/model/Transform.h
+				   src/model/Transform.h
 	$(COMPILE_WITH_INCLUDES) src/main/main.cpp -o $(OBJ_DIR)/main.o -Wno-unused-function
+
+$(OBJ_DIR)/Display.o: src/display/Display.cpp src/display/Display.h
+	$(COMPILE_WITH_INCLUDES) src/display/Display.cpp -o $(OBJ_DIR)/Display.o
 
 $(OBJ_DIR)/Shader.o: src/model/Shader.cpp src/model/Shader.h
 	$(COMPILE_WITH_INCLUDES) src/model/Shader.cpp -o $(OBJ_DIR)/Shader.o
+
+
+$(OBJ_DIR)/Transform.o: src/model/Transform.cpp src/model/Transform.h
+	$(COMPILE_WITH_INCLUDES) src/model/Transform.cpp -o $(OBJ_DIR)/Transform.o
 
 
 $(OBJ_DIR)/Util.o: src/util/Util.cpp src/util/Util.h
@@ -44,19 +54,9 @@ $(OBJ_DIR)/Util.o: src/util/Util.cpp src/util/Util.h
 $(OBJ_DIR)/MathUtil.o: src/util/MathUtil.cpp src/util/MathUtil.h
 	$(COMPILE_WITH_INCLUDES) src/util/MathUtil.cpp -o $(OBJ_DIR)/MathUtil.o
 
-$(OBJ_DIR)/Display.o: src/display/Display.cpp src/display/Display.h
-	$(COMPILE_WITH_INCLUDES) src/display/Display.cpp -o $(OBJ_DIR)/Display.o
-
-$(OBJ_DIR)/Transform.o: src/model/Transform.cpp src/model/Transform.h
-	$(COMPILE_WITH_INCLUDES) src/model/Transform.cpp -o $(OBJ_DIR)/Transform.o
-
-
-$(OBJ_DIR)/Camera.o: src/model/Camera.cpp src/model/Camera.h
-	$(COMPILE_WITH_INCLUDES) src/model/Camera.cpp -o $(OBJ_DIR)/Camera.o
-
-
 $(OBJ_DIR)/LinkedList.o: src/util/containers/LinkedList.cpp src/util/containers/LinkedList.h
 	$(COMPILE_NO_EXTRAS) src/util/containers/LinkedList.cpp -o $(OBJ_DIR)/LinkedList.o
+
 
 # Ensure dlls are in the same directory as the exe.
 .PHONY: CopyLibs

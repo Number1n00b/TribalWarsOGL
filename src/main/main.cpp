@@ -41,9 +41,6 @@ using glm::vec3;
 GAME_STATE Game::curr_state;
 bool Game::should_close = false;
 
-//Global main camera
-Camera* Game::main_camera;
-
 
 /* ------ Statics ------ */
 
@@ -118,17 +115,7 @@ void Initialise_Graphics(){
 }
 
 void Initialise_Game(){
-    //Create the main camera.
-    vec3 cam_position = vec3(0, 0, 0);
-    vec3 cam_look_direction = vec3(0, 0, 1);
-    vec3 cam_up_direaction = vec3(0, 1, 0);
-    float cam_fov = 70;
-    float cam_z_near = 0.01;
-    float cam_z_far = 1000;
-    Game::main_camera = new Camera(cam_position, cam_look_direction, cam_up_direaction,
-		 					 cam_fov, main_window->GetAspectRatio(),
-							 cam_z_near, cam_z_far, window_width, window_height);
-
+    // This is where we would initialize the game camera and some other stuff.
 }
 
 
@@ -139,7 +126,7 @@ int main(int argc, char *argv[]) {
 	cout << "\n======== Initlialising Graphics ==========" << endl;
     Initialise_Graphics();
 
-    //Initalise the basics: Display and Camera
+    //Initalise the basics: Camera
 	cout << "\n====== Initlialising Game Elements =======" << endl;
     Initialise_Game();
 
@@ -280,7 +267,6 @@ int main(int argc, char *argv[]) {
 	cout << "End of main loop." << endl;
 	cout << "\n=========== Freeing Resources ============" << endl;
 	delete main_window;
-	delete Game::main_camera;
 
 	//Free SDL resources.
 	cout << "Deinitialising SDL..." << endl;
@@ -402,7 +388,6 @@ static void ResizeWindow(int width, int height) {
 	window_width = width;
 	window_height = height;
     main_window->UpdateViewport(window_width, window_height);
-    Game::main_camera->NotifyScreenResize(window_width, window_height);
 }
 
 
