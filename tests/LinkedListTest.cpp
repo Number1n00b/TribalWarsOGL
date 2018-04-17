@@ -82,12 +82,14 @@ int main(void){
 
     printf("\n============ ================== ============\n");
     printf("Removing remaining elements:\n");
-    int* removed = nullptr;
+    removed = nullptr;
     do{
         list->Print(&printInt);
         removed = list->RemoveElement(0);
-        printf("Removed: %d\n", *removed);
-        delete removed;
+        if(removed){
+            printf("Removed: %d\n", *removed);
+            delete removed;
+        }
         list->Print(&printInt);
         printf("List size: %d\n", list->Length());
         printf("\n");
