@@ -1,9 +1,13 @@
 #include "Entity.h"
 
-Entity::Entity(std::string name, float x_pos, float y_pos){
+Entity::Entity(EntityManager* manager, std::string name, float x_pos, float y_pos){
+    m_Manager = manager;
+
     m_Name = name;
     m_XPos = x_pos;
     m_YPos = y_pos;
+
+    m_Manager->RegisterEntity(this);
 }
 
 std::string Entity::GetName(){

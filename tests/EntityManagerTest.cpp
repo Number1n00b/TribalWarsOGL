@@ -16,7 +16,7 @@ int main(void){
     for(ii = 0; ii < 10; ii++){
         std::stringstream n;
         n << "name" << ii;
-        manager->RegisterEntity(new Entity(n.str(), ii, 10 - ii));
+        new Entity(manager, n.str(), ii, 10 - ii);
         manager->PrintAllEntities();
     }
 

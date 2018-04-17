@@ -2,10 +2,13 @@
 #define ENTITY_H
 
 #include <string>
+#include "EntityManager.h"
+
+class EntityManager;
 
 class Entity{
     public:
-        Entity(std::string name, float x_pos, float y_pos);
+        Entity(EntityManager* manager, std::string name, float x_pos, float y_pos);
 
         std::string GetName();
         float GetXPos();
@@ -16,6 +19,8 @@ class Entity{
         ~Entity();
     private:
         //EntityType type; (?)
+
+        EntityManager* m_Manager;
 
         std::string m_Name;
 

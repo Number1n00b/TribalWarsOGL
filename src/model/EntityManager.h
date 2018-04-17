@@ -4,6 +4,9 @@
 #include "Entity.h"
 #include "../util/containers/LinkedList.h"
 
+// Forward declare class to remove Circular dependancy.
+class Entity;
+
 class EntityManager
 {
 	public:

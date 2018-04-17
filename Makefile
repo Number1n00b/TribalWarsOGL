@@ -49,11 +49,11 @@ $(OBJ_DIR)/Shader.o: src/model/Shader.cpp src/model/Shader.h
 $(OBJ_DIR)/Transform.o: src/model/Transform.cpp src/model/Transform.h
 	$(COMPILE_WITH_INCLUDES) src/model/Transform.cpp -o $(OBJ_DIR)/Transform.o
 
-$(OBJ_DIR)/Entity.o: src/model/Entity.cpp src/model/Entity.h
+$(OBJ_DIR)/Entity.o: src/model/Entity.cpp src/model/Entity.h src/model/EntityManager.h
 	$(COMPILE_NO_EXTRAS) src/model/Entity.cpp -o $(OBJ_DIR)/Entity.o
 
 $(OBJ_DIR)/EntityManager.o: src/model/EntityManager.cpp src/model/EntityManager.h \
-							src/util/containers/LinkedList.h
+							src/model/Entity.h src/util/containers/LinkedList.h
 	$(COMPILE_NO_EXTRAS) src/model/EntityManager.cpp -o $(OBJ_DIR)/EntityManager.o
 
 
