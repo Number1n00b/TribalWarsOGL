@@ -7,6 +7,7 @@
 
 //Graphics libs. (Ensure this is included before any SDL files!)
 #include <GL/glew.h>
+#include <glm/glm.hpp>
 
 //Stops SDL from redefining main causing undefined reference to WinMain@16.
 #define SDL_MAIN_HANDLED
@@ -22,7 +23,7 @@
 #include "../display/Display.h"
 
 //Model Classes
-#include "../model/Transform.h"
+#include "../model/Drawable.h"
 #include "../model/Shader.h"
 
 //Using / Namespace declarations.
@@ -48,14 +49,15 @@ bool Game::should_close = false;
 static Display *main_window;
 
 //Mouse position, used to capture and reset mouse on pause / unpause.
-static int prev_cursor_X = 0;
-static int prev_cursor_Y = 0;
+//@Temp commented out to remove unwanted variable warnubgs. @DecideLater
+//static int prev_cursor_X = 0;
+//static int prev_cursor_Y = 0;
 
 //Window paramentrs.
 static int window_width = 1080;
 static int window_height = 800;
 
-//FPS params. @TODO make these modifiable.
+//FPS params. @TODO make these modifiable (config / settings).
 static const int TARGET_FPS = 1000;
 static const int MS_PER_FRAME = 1000.0 / TARGET_FPS;
 static const float FPS_SMOOTHING = 0.3; // Favour newer values more.
@@ -80,12 +82,6 @@ float Game::Time::curr_time_ms = 0;
 float Game::Time::time_since_last_frame = 0;
 float Game::Time::dt = 0;
 
-/*
-* @Next steps:
-*  Abstract shape drawing into their own functions, maybe even classes. (prob not).
-*  Be able to draw triangles and rectangles at any location and with any size.
-*  Learn tectures -> how to map them onto 2d shapes.
-*/
 
 void Initialise_Graphics(){
     //Note: A glContext must be created before initialising GLEW.
@@ -115,7 +111,7 @@ void Initialise_Graphics(){
 }
 
 void Initialise_Game(){
-    // This is where we would initialize the game camera and some other stuff.
+    // This is where we would initialize the game camera and maybe some other stuff.
 }
 
 
@@ -133,7 +129,7 @@ int main(int argc, char *argv[]) {
 	//Load resources: Shaders
 	//cout << "\n============ Loading Shaders =============" << endl;
     // Load_Shaders();
-    //@TEMP
+    //@TEMP - move to loaders.cpp or something. Have a shader catalogue.
     Shader standard_shader = Shader("res/shaders/colored_2D_shader");
 
 	cout << "\n------------------------------------------------------" << endl;
@@ -158,57 +154,8 @@ int main(int argc, char *argv[]) {
     //Start the game.
     ResumeGame();
 
-	//@DEBUG Just to see the cursor at game start and be able to exit.
-	SetCursorClip(false);
-	SDL_ShowCursor(true);
-
-    //@TEMP (move to mesh or object code)
-    // Create Vertex Array Object
-    GLuint vao;
-    glGenVertexArrays(1, &vao);
-    glBindVertexArray(vao);
-
-    // Create a Vertex Buffer Object and copy the vertex data to it
-    GLuint vbo;
-    glGenBuffers(1, &vbo);
-
-    GLfloat vertices[] = {
-        -0.5f,  0.5f, 1.0f, 0.0f, 0.0f, // Top-left
-        0.5f,  0.5f, 0.0f, 1.0f, 0.0f, // Top-right
-        0.5f, -0.5f, 0.0f, 0.0f, 1.0f, // Bottom-right
-        -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, // Bottom-left
-    };
-
-    glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-    standard_shader.Bind();
-
-    // Specify the layout of the vertex data
-    GLint posAttrib = glGetAttribLocation(standard_shader.GetProgram(), "position");
-    glEnableVertexAttribArray(posAttrib);
-    glVertexAttribPointer(posAttrib, 2, GL_FLOAT, GL_FALSE, 5*sizeof(float), 0);
-
-    // Get the location of the color uniform
-    GLint colorAttrib = glGetAttribLocation(standard_shader.GetProgram(), "color");
-    glEnableVertexAttribArray(colorAttrib);
-    glVertexAttribPointer(colorAttrib, 3, GL_FLOAT, GL_FALSE, 5*sizeof(float),
-                          (void*)(2*sizeof(GLfloat)));
-
-    // A list of the elements in the above array.
-    GLuint elements[] = {
-        0, 1, 2,
-        2, 3, 0
-    };
-
-    //Load this element buffer object into grpahics memory.
-    GLuint ebo;
-    glGenBuffers(1, &ebo);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER,
-                 sizeof(elements), elements, GL_STATIC_DRAW);
-
-    //@TEMP (move to mesh or object code)
+    //@TEMP
+    Drawable thing = Drawable(&standard_shader);
 
     //The main loop!
 	while (!Game::should_close) {
@@ -243,8 +190,7 @@ int main(int argc, char *argv[]) {
 			main_window->Clear(0.0, 0.5, 0.0, 1.0);
 
 			// Draw all objects.
-            glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-            // glDrawArrays(GL_TRIANGLES, 0, 6);
+            thing.Draw();
 
 			//Swap buffers.
 			main_window->SwapBuffers();
@@ -454,12 +400,13 @@ static void TogglePause() {
 static void PauseGame() {
     Game::curr_state = PAUSED;
 
-    //Let go of the cursor.
+    // @DecideLater: Currently I just want to always be able to see the mouse.
+    /*//Let go of the cursor.
     SetCursorClip(false);
     SDL_ShowCursor(true);
 
     //Put the cursor back to where it was before we took control.
-    SDL_WarpMouseInWindow(NULL, prev_cursor_X, prev_cursor_Y);
+    SDL_WarpMouseInWindow(NULL, prev_cursor_X, prev_cursor_Y);*/
 
     //Then ignore the mouse event generated.
     SDL_PumpEvents();
@@ -477,12 +424,14 @@ static void ResumeGame() {
     while (SDL_PollEvent(&e)) {
         //Do nothing.
     }
-    //Save the position of the mouse before we take over.
+
+    // @DecideLater: Currently I just want to always be able to see the mouse.
+    /*//Save the position of the mouse before we take over.
     SDL_GetMouseState(&prev_cursor_X, &prev_cursor_Y);
 
     //Grab the cursor.
     SetCursorClip(true);
-    SDL_ShowCursor(false);
+    SDL_ShowCursor(false);*/
 
     cout << "Resuming... " << endl;
 }

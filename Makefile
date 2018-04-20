@@ -15,28 +15,29 @@ LINK_COMMANDS=-lsdl2 -lopengl32 -lglew32 #-lfreetype2
 OBJ_FILES=\
 	\
 	$(OBJ_DIR)/main.o \
-	$(OBJ_DIR)/Display.o \
-	$(OBJ_DIR)/Shader.o \
 	\
-	$(OBJ_DIR)/Transform.o \
+	$(OBJ_DIR)/Display.o \
+	\
+	$(OBJ_DIR)/Shader.o \
 	$(OBJ_DIR)/Entity.o \
 	$(OBJ_DIR)/EntityManager.o \
+	$(OBJ_DIR)/Drawable.o \
+	\
+	$(OBJ_DIR)/LinkedList.o \
 	\
 	$(OBJ_DIR)/Util.o \
-	$(OBJ_DIR)/MathUtil.o \
-	$(OBJ_DIR)/LinkedList.o
+	$(OBJ_DIR)/MathUtil.o
 
 COMPILE_WITH_CFLAGS=$(CC) $(CFLAGS)
-COMPILE_WITH_INCLUDES=$(CC) $(CFLAGS) -c $(INCLUDE_DIRS)
+COMPILE_WITH_INCLUDES=$(CC) $(CFLAGS) $(INCLUDE_DIRS)
 
 all: executable
 
 executable: $(OBJ_FILES) CopyLibs
-	$(CC) $(CFLAGS) $(OBJ_FILES) -o $(EXE_DIR)/$(EXE_NAME) $(LIB_DIRS) $(LINK_COMMANDS)
+	$(CC) $(OBJ_FILES) -o $(EXE_DIR)/$(EXE_NAME) $(LIB_DIRS) $(LINK_COMMANDS)
 
 
-$(OBJ_DIR)/main.o: src/main/main.cpp src/main/main.h src/display/Display.h \
-				   src/model/Transform.h
+$(OBJ_DIR)/main.o: src/main/main.cpp src/main/main.h src/display/Display.h
 	$(COMPILE_WITH_INCLUDES) src/main/main.cpp -o $(OBJ_DIR)/main.o -Wno-unused-function
 
 $(OBJ_DIR)/Display.o: src/display/Display.cpp src/display/Display.h
@@ -46,15 +47,17 @@ $(OBJ_DIR)/Shader.o: src/model/Shader.cpp src/model/Shader.h
 	$(COMPILE_WITH_INCLUDES) src/model/Shader.cpp -o $(OBJ_DIR)/Shader.o
 
 
-$(OBJ_DIR)/Transform.o: src/model/Transform.cpp src/model/Transform.h
-	$(COMPILE_WITH_INCLUDES) src/model/Transform.cpp -o $(OBJ_DIR)/Transform.o
-
 $(OBJ_DIR)/Entity.o: src/model/Entity.cpp src/model/Entity.h src/model/EntityManager.h
 	$(COMPILE_WITH_CFLAGS) src/model/Entity.cpp -o $(OBJ_DIR)/Entity.o
+
+$(OBJ_DIR)/Drawable.o: src/model/Drawable.cpp src/model/Drawable.h \
+					   src/model/Entity.h src/model/Shader.h
+	$(COMPILE_WITH_INCLUDES) src/model/Drawable.cpp -o $(OBJ_DIR)/Drawable.o
 
 $(OBJ_DIR)/EntityManager.o: src/model/EntityManager.cpp src/model/EntityManager.h \
 							src/model/Entity.h src/util/containers/LinkedList.h
 	$(COMPILE_WITH_CFLAGS) src/model/EntityManager.cpp -o $(OBJ_DIR)/EntityManager.o
+
 
 
 $(OBJ_DIR)/Util.o: src/util/Util.cpp src/util/Util.h
