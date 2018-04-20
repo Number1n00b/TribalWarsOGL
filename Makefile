@@ -1,5 +1,5 @@
 CC=g++
-CFLAGS=-std=c++11 -Wall -pedantic -g -ggdb
+CFLAGS=-std=c++11 -Wall -pedantic -g -ggdb -c
 
 TEST_DIR=bin/tests
 OBJ_DIR=bin/obj
@@ -26,7 +26,7 @@ OBJ_FILES=\
 	$(OBJ_DIR)/MathUtil.o \
 	$(OBJ_DIR)/LinkedList.o
 
-COMPILE_NO_EXTRAS=$(CC) $(CFLAGS) -c
+COMPILE_WITH_CFLAGS=$(CC) $(CFLAGS)
 COMPILE_WITH_INCLUDES=$(CC) $(CFLAGS) -c $(INCLUDE_DIRS)
 
 all: executable
@@ -50,11 +50,11 @@ $(OBJ_DIR)/Transform.o: src/model/Transform.cpp src/model/Transform.h
 	$(COMPILE_WITH_INCLUDES) src/model/Transform.cpp -o $(OBJ_DIR)/Transform.o
 
 $(OBJ_DIR)/Entity.o: src/model/Entity.cpp src/model/Entity.h src/model/EntityManager.h
-	$(COMPILE_NO_EXTRAS) src/model/Entity.cpp -o $(OBJ_DIR)/Entity.o
+	$(COMPILE_WITH_CFLAGS) src/model/Entity.cpp -o $(OBJ_DIR)/Entity.o
 
 $(OBJ_DIR)/EntityManager.o: src/model/EntityManager.cpp src/model/EntityManager.h \
 							src/model/Entity.h src/util/containers/LinkedList.h
-	$(COMPILE_NO_EXTRAS) src/model/EntityManager.cpp -o $(OBJ_DIR)/EntityManager.o
+	$(COMPILE_WITH_CFLAGS) src/model/EntityManager.cpp -o $(OBJ_DIR)/EntityManager.o
 
 
 $(OBJ_DIR)/Util.o: src/util/Util.cpp src/util/Util.h
@@ -64,7 +64,7 @@ $(OBJ_DIR)/MathUtil.o: src/util/MathUtil.cpp src/util/MathUtil.h
 	$(COMPILE_WITH_INCLUDES) src/util/MathUtil.cpp -o $(OBJ_DIR)/MathUtil.o
 
 $(OBJ_DIR)/LinkedList.o: src/util/containers/LinkedList.cpp src/util/containers/LinkedList.h
-	$(COMPILE_NO_EXTRAS) src/util/containers/LinkedList.cpp -o $(OBJ_DIR)/LinkedList.o
+	$(COMPILE_WITH_CFLAGS) src/util/containers/LinkedList.cpp -o $(OBJ_DIR)/LinkedList.o
 
 
 # Ensure dlls are in the same directory as the exe.
@@ -75,13 +75,13 @@ CopyLibs:
 
 
 testLL: $(OBJ_DIR)/LinkedList.o tests/LinkedListTest.cpp
-	$(COMPILE_NO_EXTRAS) tests/LinkedListTest.cpp -c -o $(OBJ_DIR)/LinkedListTest.o
+	$(COMPILE_WITH_CFLAGS) tests/LinkedListTest.cpp -c -o $(OBJ_DIR)/LinkedListTest.o
 	$(CC) $(OBJ_DIR)/LinkedList.o $(OBJ_DIR)/LinkedListTest.o -o $(TEST_DIR)/LinkedListTest
 	./$(TEST_DIR)/LinkedListTest
 
 testEM: $(OBJ_DIR)/LinkedList.o $(OBJ_DIR)/Entity.o $(OBJ_DIR)/EntityManager.o \
 		tests/EntityManagerTest.cpp
-	$(COMPILE_NO_EXTRAS) tests/EntityManagerTest.cpp -c -o $(OBJ_DIR)/EntityManagerTest.o
+	$(COMPILE_WITH_CFLAGS) tests/EntityManagerTest.cpp -c -o $(OBJ_DIR)/EntityManagerTest.o
 	$(CC) $(OBJ_DIR)/LinkedList.o $(OBJ_DIR)/Entity.o $(OBJ_DIR)/EntityManagerTest.o \
 	$(OBJ_DIR)/EntityManager.o -o $(TEST_DIR)/EntityManagerTest
 	./$(TEST_DIR)/EntityManagerTest
@@ -94,7 +94,7 @@ run:
 
 .PHONY: runVal
 runVal:
-	valgrind ./bin/$(EXE_NAME)
+	valgrind ./$(EXE_DIR)/$(EXE_NAME)
 
 #Tests
 .PHONY: runValTestLL
@@ -109,7 +109,7 @@ runValTestEM:
 # Clean
 .PHONY: clean
 clean:
-	rm -rf $(OBJ_DIR)/*.o $(EXE_DIR)/$(EXE_NAME) *~ $(EXE_DIR)/*.dll bin/tests/*
+	rm -rf $(OBJ_DIR)/*.o $(EXE_DIR)/$(EXE_NAME) $(EXE_DIR)/*.dll $(TEST_DIR)/* *~*
 
 
 # Memes
