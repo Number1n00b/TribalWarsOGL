@@ -37,7 +37,8 @@ executable: $(OBJ_FILES) CopyLibs
 	$(CC) $(OBJ_FILES) -o $(EXE_DIR)/$(EXE_NAME) $(LIB_DIRS) $(LINK_COMMANDS)
 
 
-$(OBJ_DIR)/main.o: src/main/main.cpp src/main/main.h src/display/Display.h
+$(OBJ_DIR)/main.o: src/main/main.cpp src/main/main.h src/display/Display.h \
+				   src/model/EntityManager.h
 	$(COMPILE_WITH_INCLUDES) src/main/main.cpp -o $(OBJ_DIR)/main.o -Wno-unused-function
 
 $(OBJ_DIR)/Display.o: src/display/Display.cpp src/display/Display.h
@@ -47,7 +48,7 @@ $(OBJ_DIR)/Shader.o: src/model/Shader.cpp src/model/Shader.h
 	$(COMPILE_WITH_INCLUDES) src/model/Shader.cpp -o $(OBJ_DIR)/Shader.o
 
 
-$(OBJ_DIR)/Entity.o: src/model/Entity.cpp src/model/Entity.h src/model/EntityManager.h
+$(OBJ_DIR)/Entity.o: src/model/Entity.cpp src/model/Entity.h
 	$(COMPILE_WITH_CFLAGS) src/model/Entity.cpp -o $(OBJ_DIR)/Entity.o
 
 $(OBJ_DIR)/Drawable.o: src/model/Drawable.cpp src/model/Drawable.h \
@@ -55,8 +56,9 @@ $(OBJ_DIR)/Drawable.o: src/model/Drawable.cpp src/model/Drawable.h \
 	$(COMPILE_WITH_INCLUDES) src/model/Drawable.cpp -o $(OBJ_DIR)/Drawable.o
 
 $(OBJ_DIR)/EntityManager.o: src/model/EntityManager.cpp src/model/EntityManager.h \
-							src/model/Entity.h src/util/containers/LinkedList.h
-	$(COMPILE_WITH_CFLAGS) src/model/EntityManager.cpp -o $(OBJ_DIR)/EntityManager.o
+							src/model/Entity.h src/util/containers/LinkedList.h \
+							src/model/Drawable.h
+	$(COMPILE_WITH_INCLUDES) src/model/EntityManager.cpp -o $(OBJ_DIR)/EntityManager.o
 
 
 

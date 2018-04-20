@@ -6,9 +6,9 @@
 #include "Entity.h"
 #include "Shader.h"
 
-class Drawable{
+class Drawable : public Entity{
     public:
-        Drawable(Shader* shader);
+        Drawable(std::string name, float x_pos, float y_pos, Shader* shader);
 
         void Draw();
 
@@ -18,6 +18,9 @@ class Drawable{
         Shader* m_Shader;
         GLuint m_vao;
         GLuint m_vbo;
+
+        //GLfloat* m_Vertices;
+        int m_Drawcount;
 };
 
 

@@ -14,7 +14,7 @@ namespace Game {
     //State variables.
     extern GAME_STATE curr_state;
     extern bool should_close;
-    extern EntityManager entity_manager;
+    extern EntityManager* entity_manager;
 
     void FailAndExit(std::string error_message);
 

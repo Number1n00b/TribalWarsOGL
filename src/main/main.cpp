@@ -38,11 +38,6 @@ using std::string;
 using glm::vec3;
 
 
-//Game state variables.
-GAME_STATE Game::curr_state;
-bool Game::should_close = false;
-
-
 /* ------ Statics ------ */
 
 //The main game window.
@@ -77,11 +72,17 @@ static void TogglePause();
 static void PauseGame();
 static void ResumeGame();
 
+//Declare game state variables.
+GAME_STATE Game::curr_state;
+bool Game::should_close = false;
+
 //Declare Game::Time variables.
 float Game::Time::curr_time_ms = 0;
 float Game::Time::time_since_last_frame = 0;
 float Game::Time::dt = 0;
 
+//Declare game entity manager.
+EntityManager* Game::entity_manager;
 
 void Initialise_Graphics(){
     //Note: A glContext must be created before initialising GLEW.
@@ -111,7 +112,10 @@ void Initialise_Graphics(){
 }
 
 void Initialise_Game(){
-    // This is where we would initialize the game camera and maybe some other stuff.
+    // @TODO Initialise camera once we get it set up.
+
+    //Initialise the entity manager.
+    Game::entity_manager = new EntityManager();
 }
 
 
@@ -154,8 +158,9 @@ int main(int argc, char *argv[]) {
     //Start the game.
     ResumeGame();
 
-    //@TEMP
-    Drawable thing = Drawable(&standard_shader);
+    //Create some entitties. These should automatically register with the entity manager.
+    new Drawable("t1", 0, 0, &standard_shader);
+    new Drawable("t2", 1, 1, &standard_shader);
 
     //The main loop!
 	while (!Game::should_close) {
@@ -190,7 +195,9 @@ int main(int argc, char *argv[]) {
 			main_window->Clear(0.0, 0.5, 0.0, 1.0);
 
 			// Draw all objects.
-            thing.Draw();
+            /*printf("Num Entities: %d\n", Game::entity_manager->NumEntities());
+            Game::entity_manager->PrintAllEntities();*/
+            Game::entity_manager->DrawAllDrawables();
 
 			//Swap buffers.
 			main_window->SwapBuffers();
@@ -212,6 +219,7 @@ int main(int argc, char *argv[]) {
 
 	cout << "End of main loop." << endl;
 	cout << "\n=========== Freeing Resources ============" << endl;
+    delete Game::entity_manager;
 	delete main_window;
 
 	//Free SDL resources.

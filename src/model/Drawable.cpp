@@ -1,7 +1,9 @@
 #include "Drawable.h"
 
 
-Drawable::Drawable(Shader* shader){
+Drawable::Drawable(std::string name, float x_pos, float y_pos, Shader* shader)
+                   : Entity(name, x_pos, y_pos)
+{
     m_Shader = shader;
 
     // Create Vertex Array Object
@@ -9,18 +11,18 @@ Drawable::Drawable(Shader* shader){
     glBindVertexArray(m_vao);
 
     // Create a Vertex Buffer Object and copy the vertex data to it
-    GLuint m_vbo;
     glGenBuffers(1, &m_vbo);
 
-    GLfloat vertices[] = {
-        -0.5f,  0.5f, 1.0f, 0.0f, 0.0f, // Top-left
-        0.5f,  0.5f, 0.0f, 1.0f, 0.0f, // Top-right
-        0.5f, -0.5f, 0.0f, 0.0f, 1.0f, // Bottom-right
-        -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, // Bottom-left
+    GLfloat m_Vertices[] =
+    {
+        x_pos + -0.5f, y_pos + 0.5f,  1.0f, 0.0f, 0.0f, // Top-left
+        x_pos + 0.5f,  y_pos + 0.5f,  0.0f, 1.0f, 0.0f, // Top-right
+        x_pos + 0.5f,  y_pos + -0.5f, 0.0f, 0.0f, 1.0f, // Bottom-right
+        x_pos + -0.5f, y_pos + -0.5f, 0.0f, 0.0f, 0.0f, // Bottom-left
     };
 
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(m_Vertices), m_Vertices, GL_STATIC_DRAW);
 
 
     // Specify the layout of the vertex data
@@ -40,6 +42,9 @@ Drawable::Drawable(Shader* shader){
         2, 3, 0
     };
 
+    //This may need to change, not too sure.
+    m_Drawcount = sizeof(elements);
+
     //Load this element buffer object into grpahics memory.
     GLuint ebo;
     glGenBuffers(1, &ebo);
@@ -51,9 +56,15 @@ Drawable::Drawable(Shader* shader){
 
 void Drawable::Draw(){
     m_Shader->Bind();
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+
+    glBindVertexArray(m_vao);
+
+    glDrawElements(GL_TRIANGLES, m_Drawcount, GL_UNSIGNED_INT, 0);
+
+    glBindVertexArray(0);
 }
 
 Drawable::~Drawable(){
-    // Empty
+    glDeleteVertexArrays(1, &m_vao);
+    // Probably have to do more cleanup, vbo / ebo?
 }
