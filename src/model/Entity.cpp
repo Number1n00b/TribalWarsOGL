@@ -11,8 +11,6 @@ Entity::Entity(std::string name, float x_pos, float y_pos){
     m_uid = next_id;
     next_id++;
 
-    printf("Self registering: %s\n", name.c_str());
-
     Game::entity_manager->RegisterEntity(this);
 }
 

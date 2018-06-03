@@ -86,7 +86,7 @@ EntityManager* Game::entity_manager;
 
 void Initialise_Graphics(){
     //Note: A glContext must be created before initialising GLEW.
-    //Therefore we have to create a Display first.
+    //      Therefore we have to create a Display first.
     //===============
     // Display + SDL
     //===============
@@ -136,7 +136,7 @@ int main(int argc, char *argv[]) {
     //@TEMP - move to loaders.cpp or something. Have a shader catalogue.
     Shader standard_shader = Shader("res/shaders/colored_2D_shader");
 
-	cout << "\n------------------------------------------------------" << endl;
+	cout << "\n----------------- Entering main loop -----------------" << endl;
 
     //Main loop setup.
 	cout << "\nEntering main loop." << endl;
@@ -195,8 +195,6 @@ int main(int argc, char *argv[]) {
 			main_window->Clear(0.0, 0.5, 0.0, 1.0);
 
 			// Draw all objects.
-            /*printf("Num Entities: %d\n", Game::entity_manager->NumEntities());
-            Game::entity_manager->PrintAllEntities();*/
             Game::entity_manager->DrawAllDrawables();
 
 			//Swap buffers.
@@ -217,7 +215,7 @@ int main(int argc, char *argv[]) {
 
     Game::curr_state = CLOSING;
 
-	cout << "End of main loop." << endl;
+	cout << "\n------------------ End of main loop ------------------" << endl;
 	cout << "\n=========== Freeing Resources ============" << endl;
     delete Game::entity_manager;
 	delete main_window;

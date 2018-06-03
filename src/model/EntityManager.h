@@ -15,6 +15,8 @@ class EntityManager
 		// itself, or anything with a poitner to it.
 		void RemoveEntity(Entity* e);
 
+		Entity* GetEntityByName(std::string name);
+
 		int NumEntities();
 
 		void DrawAllDrawables();

@@ -3,13 +3,10 @@
 
 EntityManager::EntityManager(){
     m_Entities = new LinkedList<Entity>;
-    printf("Created EM!\n");
 }
 
 void EntityManager::RegisterEntity(Entity* e){
-    printf("Registering. Curr size: %d\n", m_Entities->Length());
     m_Entities->AddElementToStart(e);
-    printf("Registered: %s. New size: %d\n", e->GetName().c_str(), m_Entities->Length());
 }
 
 
@@ -20,6 +17,17 @@ void EntityManager::RemoveEntity(Entity* e){
 int EntityManager::NumEntities(){
     return m_Entities->Length();
 }
+
+Entity* EntityManager::GetEntityByName(std::string name){
+    for(int ii = 0; ii < m_Entities->Length(); ii++){
+        Entity* curr = m_Entities->GetElement(ii);
+
+        if (curr->GetName() == name) return curr;
+    }
+
+    return nullptr;
+}
+
 
 void EntityManager::DrawAllDrawables(){
     // @TODO have a separate LL for drawable entities, and only draw them
