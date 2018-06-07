@@ -204,7 +204,7 @@ def write_makefile_rules(makefile, config):
 
     makefile.write("all: executable\n\n")
 
-    makefile.write("executable: $(OBJ_FILES)\n")
+    makefile.write("executable: $(OBJ_FILES) CopyLibs\n")
     makefile.write("\t$(CC) $(OBJ_FILES) -o $(EXE_DIR)/$(EXE_NAME) $(LIB_DIRS) $(LINK_COMMANDS)\n\n")
 
     obj_prefix = "$(OBJ_DIR)/"

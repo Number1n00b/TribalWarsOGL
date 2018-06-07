@@ -27,9 +27,9 @@ OBJ_FILES=\
 	$(OBJ_DIR)/MathUtil.o\
 	$(OBJ_DIR)/Util.o
 
-all: executable CopyLibs
+all: executable
 
-executable: $(OBJ_FILES)
+executable: $(OBJ_FILES) CopyLibs
 	$(CC) $(OBJ_FILES) -o $(EXE_DIR)/$(EXE_NAME) $(LIB_DIRS) $(LINK_COMMANDS)
 
 $(OBJ_DIR)/Display.o: src/display/Display.cpp \
@@ -148,3 +148,5 @@ ruin:
 .PHONY: riun
 riun:
 	@echo "Dam dude... can't even ruin it right. :\\"
+
+
