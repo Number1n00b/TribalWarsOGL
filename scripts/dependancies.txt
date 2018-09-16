@@ -1,7 +1,0 @@
-stb_image.o: src/loaders/stb_image.c src/loaders/stb_image.h
-Display.o: src/display/Display.cpp src/display/Display.h
-main.o: src/main/main.cpp src/main/main.h src/main/../display/Display.h \
- src/main/../model/Transform.h
-Transform.o: src/model/Transform.cpp src/model/Transform.h
-MathUtil.o: src/util/MathUtil.cpp src/util/MathUtil.h
-Util.o: src/util/Util.cpp src/util/Util.h

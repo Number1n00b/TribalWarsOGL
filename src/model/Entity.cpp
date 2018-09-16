@@ -1,5 +1,5 @@
-#include "../main/main.h"
-#include "Entity.h"
+#include "main/main.h"
+#include "model/Entity.h"
 
 int Entity::next_id = 1337;
 

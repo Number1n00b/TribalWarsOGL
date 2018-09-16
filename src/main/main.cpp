@@ -17,14 +17,14 @@
 #include <SDL_syswm.h>
 
 //=== My headers ===
-#include "main.h"
+#include "main/main.h"
 
 //Output
-#include "../display/Display.h"
+#include "display/Display.h"
 
 //Model Classes
-#include "../model/Drawable.h"
-#include "../model/Shader.h"
+#include "model/Drawable.h"
+#include "model/Shader.h"
 
 //Using / Namespace declarations.
 //IO

@@ -1,8 +1,8 @@
-#include "Util.h"
-
 #include <windows.h> // To get exe path.
 #include <iostream>  // To print.
 #include <stdio.h>   // for sprintf
+
+#include "util/Util.h"
 
 
 std::string get_exe_path(){

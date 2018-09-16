@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 
-#include "Shader.h"
+#include "model/Shader.h"
 
 const static std::string   VERTEX_EXTENSION = ".v.glsl";
 const static std::string FRAGMENT_EXTENSION = ".f.glsl";

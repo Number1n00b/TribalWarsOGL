@@ -4,8 +4,8 @@
 #include <GL/glew.h>
 #include <SDL_syswm.h>
 
-#include "Display.h"
-#include "../main/main.h"
+#include "display/Display.h"
+#include "main/main.h"
 
 
 Display::Display(int width, int height, const std::string& title) {

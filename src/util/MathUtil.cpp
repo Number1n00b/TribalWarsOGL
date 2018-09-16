@@ -1,4 +1,4 @@
-#include "MathUtil.h"
+#include "util/MathUtil.h"
 
 float Math::clamp(float val, float min, float max) {
     if (val > max) {
