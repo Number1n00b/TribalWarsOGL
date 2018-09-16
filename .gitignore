@@ -3,7 +3,7 @@
 
 # CMake Files
 CMakeFiles/*
-CmakeCache.txt
+CMakeCache.txt
 lib/*
 
 # Compiled Static libraries
